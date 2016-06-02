@@ -25,6 +25,7 @@
 #include "value.h"
 #include "tiscript.hpp"
 
+#ifndef C2NIM
 #if !defined(WINDOWS)
   #include <stdlib.h>
   #include <unistd.h>
@@ -35,6 +36,7 @@
 
 #if defined(OSX)
   #include <dlfcn.h>
+#endif
 #endif
 
 struct SciterGraphicsAPI;
@@ -48,8 +50,14 @@ typedef struct _ISciterAPI {
   BOOL    SCFN( SciterDataReady )(HWINDOW hwnd,LPCWSTR uri,LPCBYTE data, UINT dataLength);
   BOOL    SCFN( SciterDataReadyAsync )(HWINDOW hwnd,LPCWSTR uri, LPCBYTE data, UINT dataLength, LPVOID requestId);
 #ifdef WINDOWS
-  LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-  LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
+  #ifndef C2NIM
+    LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
+  #else
+    #@SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT
+      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM, pbHandled ptr BOOL): LRESULT
+    @#
+  #endif
 #endif
   BOOL    SCFN( SciterLoadFile )(HWINDOW hWndSciter, LPCWSTR filename);
 
@@ -66,22 +74,44 @@ typedef struct _ISciterAPI {
   BOOL    SCFN( SciterEval )( HWINDOW hwnd, LPCWSTR script, UINT scriptLength, SCITER_VALUE* pretval);
   VOID    SCFN( SciterUpdateWindow)(HWINDOW hwnd);
 #ifdef WINDOWS
-  BOOL    SCFN( SciterTranslateMessage )(MSG* lpMsg);
+  #ifndef C2NIM
+    BOOL    SCFN( SciterTranslateMessage )(MSG* lpMsg);
+  #else
+    #@SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL
+    @#
+  #endif
 #endif
   BOOL    SCFN( SciterSetOption )(HWINDOW hWnd, UINT option, UINT_PTR value );
   VOID    SCFN( SciterGetPPI )(HWINDOW hWndSciter, UINT* px, UINT* py);
   BOOL    SCFN( SciterGetViewExpando )( HWINDOW hwnd, VALUE* pval );
 #ifdef WINDOWS
-  BOOL    SCFN( SciterRenderD2D )(HWINDOW hWndSciter, ID2D1RenderTarget* prt);
-  BOOL    SCFN( SciterD2DFactory )(ID2D1Factory ** ppf);
-  BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
+  #ifndef C2NIM
+    BOOL    SCFN( SciterRenderD2D )(HWINDOW hWndSciter, ID2D1RenderTarget* prt);
+    BOOL    SCFN( SciterD2DFactory )(ID2D1Factory ** ppf);
+    BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
+  #else
+    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): BOOL
+      SciterD2DFactory*: proc (ppf:ptr ID2D1FactoryPtr): BOOL
+      SciterDWFactory*: proc (ppf:ptr IDWriteFactoryPtr): BOOL
+    @#
+  #endif
 #endif
   BOOL    SCFN( SciterGraphicsCaps )(LPUINT pcaps);
   BOOL    SCFN( SciterSetHomeURL )(HWINDOW hWndSciter, LPCWSTR baseUrl);
 #if defined(OSX)
-  HWINDOW SCFN( SciterCreateNSView )( LPRECT frame ); // returns NSView*
+  #ifndef C2NIM
+    HWINDOW SCFN( SciterCreateNSView )( LPRECT frame ); // returns NSView*
+  #else
+    #@SciterCreateNSView*: proc (frame:LPRECT): HWINDOW
+    @#
+  #endif
 #elif defined(LINUX)
-  HWINDOW SCFN( SciterCreateWidget )( LPRECT frame ); // returns GtkWidget
+  #ifndef C2NIM
+    HWINDOW SCFN( SciterCreateWidget )( LPRECT frame ); // returns GtkWidget
+  #else
+    #@SciterCreateWidget*: proc (frame:LPRECT): HWINDOW
+    @#
+  #endif
 #endif
 
   HWINDOW SCFN( SciterCreateWindow )( UINT creationFlags,LPRECT frame, SciterWindowDelegate* delegate, LPVOID delegateParam, HWINDOW parent);
@@ -251,19 +281,26 @@ typedef struct _ISciterAPI {
   LPSciterRequestAPI SCFN( GetSciterRequestAPI )();
 
 #ifdef WINDOWS
-  BOOL SCFN( SciterCreateOnDirectXWindow ) (HWINDOW hwnd, IDXGISwapChain* pSwapChain);
-  BOOL SCFN( SciterRenderOnDirectXWindow ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer);
-  BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
+  #ifndef C2NIM
+    BOOL SCFN( SciterCreateOnDirectXWindow ) (HWINDOW hwnd, IDXGISwapChain* pSwapChain);
+    BOOL SCFN( SciterRenderOnDirectXWindow ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer);
+    BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
+  #else
+    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): BOOL
+      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:BOOL): BOOL
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): BOOL
+    @#
+  #endif
 #endif
 
   void for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field; // c2nim needs this :(
 
 } ISciterAPI;
 
+#ifndef C2NIM
 typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
 
 // getting ISciterAPI reference:
-#ifndef C2NIM
 
 #ifdef STATIC_LIB
 
@@ -435,6 +472,24 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
     return _rapi;
   }
 
+#endif
+
+#ifdef C2NIM
+#@
+import dynlib
+
+proc SAPI*():ptr ISciterAPI  {.inline.} =
+  var libhandle = loadLib(SCITER_DLL_NAME)
+  var procPtr = symAddr(libhandle, "SciterAPI")
+  return cast[ptr ISciterAPI](procPtr)
+  
+proc gapi*():LPSciterGraphicsAPI {.inline.} =
+  return SAPI().GetSciterGraphicsAPI()
+  
+proc rapi*():LPSciterRequestAPI {.inline.} =
+  return SAPI().GetSciterRequestAPI()
+
+@#
 #endif
 
   // defining "official" API functions:
