@@ -12,6 +12,18 @@
 #ifndef __SCITER_API_X__
 #define __SCITER_API_X__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def EXTERN_C
+  #def SC_CALLBACK
+  #def CALLBACK
+  // #def LRESULT long
+  // #def BOOL bool
+  // #def MSG pointer
+#endif
+
 #include "sciter-x-types.h"
 #include "sciter-x-def.h"
 #include "sciter-x-dom.h"
@@ -19,6 +31,7 @@
 #include "value.h"
 #include "tiscript.hpp"
 
+#ifndef C2NIM
 #if !defined(WINDOWS)
   #include <stdlib.h>
   #include <unistd.h>
@@ -29,6 +42,7 @@
 
 #if defined(OSX)
   #include <dlfcn.h>
+#endif
 #endif
 
 struct SciterGraphicsAPI;
@@ -42,8 +56,14 @@ typedef struct _ISciterAPI {
   BOOL    SCFN( SciterDataReady )(HWINDOW hwnd,LPCWSTR uri,LPCBYTE data, UINT dataLength);
   BOOL    SCFN( SciterDataReadyAsync )(HWINDOW hwnd,LPCWSTR uri, LPCBYTE data, UINT dataLength, LPVOID requestId);
 #ifdef WINDOWS
-  LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-  LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
+  #ifndef C2NIM
+    LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
+  #else
+  #@
+    SciterProc*: proc (hwnd: HWINDOW, msg: UINT, wParam:WPARAM, lParam:LPARAM): VOID
+  @# 
+  #endif
 #endif
   BOOL    SCFN( SciterLoadFile )(HWINDOW hWndSciter, LPCWSTR filename);
 
@@ -71,10 +91,10 @@ typedef struct _ISciterAPI {
   BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
 #endif
   BOOL    SCFN( SciterGraphicsCaps )(LPUINT pcaps);
-  BOOL    SCFN( SciterSetHomeURL )(HWINDOW hWndSciter, LPCWSTR baseUrl);
 #if defined(OSX)
   HWINDOW SCFN( SciterCreateNSView )( LPRECT frame ); // returns NSView*
 #endif
+  BOOL    SCFN( SciterSetHomeURL )(HWINDOW hWndSciter, LPCWSTR baseUrl);
 #if defined(LINUX)
   HWINDOW SCFN( SciterCreateWidget )( LPRECT frame ); // returns GtkWidget
 #endif
@@ -243,7 +263,6 @@ typedef struct _ISciterAPI {
   UINT_PTR SCFN( SciterPostCallback )(HWINDOW hwnd, UINT_PTR wparam, UINT_PTR lparam, UINT timeoutms);
 
   LPSciterGraphicsAPI SCFN( GetSciterGraphicsAPI )();
-  LPSciterRequestAPI SCFN( GetSciterRequestAPI )();
 
 #ifdef WINDOWS
   BOOL SCFN( SciterCreateOnDirectXWindow ) (HWINDOW hwnd, IDXGISwapChain* pSwapChain);
@@ -251,13 +270,15 @@ typedef struct _ISciterAPI {
   BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
 #endif
 
+  LPSciterRequestAPI SCFN( GetSciterRequestAPI )();
+
 
 } ISciterAPI;
 
 typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
 
 // getting ISciterAPI reference:
-
+#ifndef C2NIM
 #ifdef STATIC_LIB
 
     EXTERN_C ISciterAPI* SCAPI SciterAPI();
@@ -268,7 +289,9 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
        if( !_api )
        {
           _api = SciterAPI();
+#ifndef C2NIM
           tiscript::ni( _api->TIScriptAPI() );
+#endif
        }
        assert(_api);
        return _api;
@@ -292,8 +315,10 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
             SciterAPI_ptr sciterAPI = (SciterAPI_ptr) GetProcAddress(hm, "SciterAPI");
             if( sciterAPI ) {
               _api = sciterAPI();
+#ifndef C2NIM
 #if defined(__cplusplus)
               tiscript::ni( _api->TIScriptAPI() );
+#endif
 #endif
             } else {
               FreeLibrary(hm);
@@ -428,6 +453,7 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
     return _rapi;
   }
 
+#endif
 
   // defining "official" API functions:
 
