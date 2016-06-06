@@ -1,6 +1,51 @@
 #ifndef __value_h__
 #define __value_h__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  #def LPUINT UINT*
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT RECT*
+  #def LPCRECT RECT*
+  #def PPOINT POINT*
+  #def LPPOINT POINT*
+  #def PSIZE SIZE*
+  #def LPSIZE SIZE*
+  
+  #pp SCDOM_RESULT
+
+#@
+import xtypes
+@#
+#endif
+
 #include "sciter-x-types.h"
 
 enum VALUE_RESULT
@@ -18,7 +63,14 @@ typedef struct
   UINT64   d;
 } VALUE;
 
-#define FLOAT_VALUE   double
+#ifndef C2NIM
+    #define FLOAT_VALUE   double
+#else
+#@
+type
+    FLOAT_VALUE* = cdouble
+@#
+#endif
 
 enum VALUE_TYPE
 {
@@ -91,7 +143,7 @@ enum VALUE_UNIT_TYPE_STRING
 typedef VOID NATIVE_FUNCTOR_INVOKE( VOID* tag, UINT argc, const VALUE* argv, VALUE* retval); // retval may contain error definition
 typedef VOID NATIVE_FUNCTOR_RELEASE( VOID* tag );
 
-
+#ifndef C2NIM
 /**
  * ValueInit - initialize VALUE storage
  * This call has to be made before passing VALUE* to any other functions
@@ -206,11 +258,13 @@ UINT SCAPI ValueNthElementValue( const VALUE* pval, INT n, VALUE* pretval);
  */
 UINT SCAPI ValueNthElementValueSet( VALUE* pval, INT n, const VALUE* pval_to_set);
 
+#endif
 /**Callback function used with #ValueEnumElements().
  * return TRUE to continue enumeration
  */
 typedef BOOL SC_CALLBACK KeyValueCallback( LPVOID param, const VALUE* pkey, const VALUE* pval );
 
+#ifndef C2NIM
 /**
  * ValueEnumElements - enumeartes key/value pairs of T_MAP, T_FUNCTION and T_OBJECT values
  * - T_MAP - key of nth key/value pair in the map;
@@ -242,6 +296,8 @@ UINT SCAPI ValueSetValueToKey( VALUE* pval, const VALUE* pkey, const VALUE* pval
  */
 UINT SCAPI ValueGetValueOfKey( const VALUE* pval, const VALUE* pkey, VALUE* pretval);
 
+#endif
+
 enum VALUE_STRING_CVT_TYPE
 {
   CVT_SIMPLE,        ///< simple conversion of terminal values 
@@ -250,6 +306,8 @@ enum VALUE_STRING_CVT_TYPE
   CVT_XJSON_LITERAL, ///< x-json parsing/emission, date is emitted as ISO8601 date literal, currency is emitted in the form DDDD$CCC
                                                    
 };
+
+#ifndef C2NIM
 
 /**
  * ValueToString - converts value to T_STRING inplace:
@@ -297,7 +355,9 @@ UINT SCAPI ValueNativeFunctorSet( VALUE* pval,
 
 BOOL SCAPI ValueIsNativeFunctor( const VALUE* pval);
 
+#endif
 
+#ifndef C2NIM
 #if defined(__cplusplus) && !defined(__value_hpp__)
 
   #include "value.hpp"
@@ -313,5 +373,6 @@ BOOL SCAPI ValueIsNativeFunctor( const VALUE* pval);
   }
 
 #endif //defined(__cplusplus)
+#endif
 
 #endif
