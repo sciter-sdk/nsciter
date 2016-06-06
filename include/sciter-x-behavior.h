@@ -15,6 +15,50 @@
 #ifndef __sciter_x_behavior_h__
 #define __sciter_x_behavior_h__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  #def LPUINT UINT*
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT RECT*
+  #def LPCRECT RECT*
+  #def PPOINT POINT*
+  #def LPPOINT POINT*
+  #def PSIZE SIZE*
+  #def LPSIZE SIZE*
+  
+  #pp SCDOM_RESULT
+#@
+import xtypes,xdom
+@#
+#endif
+
 /*!\file
 \brief Behaiviors support (a.k.a windowless scriptable controls)
 */
@@ -515,9 +559,12 @@ typedef BOOL SC_CALLBACK SciterBehaviorFactory( LPCSTR, HELEMENT, LPElementEvent
   {
     UINT         methodID;
     SCITER_VALUE val;
+#ifndef C2NIM
 #ifdef __cplusplus
     VALUE_PARAMS(bool do_set) { methodID = do_set? SET_VALUE : GET_VALUE; }
 #endif
+#endif
+    VOID invalid_field_to_bypass_c2nim;
   };
 
   // IS_EMPTY method params
@@ -525,9 +572,12 @@ typedef BOOL SC_CALLBACK SciterBehaviorFactory( LPCSTR, HELEMENT, LPElementEvent
   {
     UINT methodID;
     UINT is_empty; // !0 - is empty
+#ifndef C2NIM
 #ifdef __cplusplus
     IS_EMPTY_PARAMS():is_empty(0) { methodID = IS_EMPTY; }
 #endif
+#endif
+    VOID invalid_field_to_bypass_c2nim;
   };
 
   // see SciterRequestElementData

@@ -57,6 +57,8 @@
   #pp SCDOM_RESULT
 #@
 import xtypes
+type
+  BEHAVIOR_EVENT_PARAMS* = object
 @#
 #endif
 
