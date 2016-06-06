@@ -69,7 +69,7 @@ namespace html
 typedef html::request* HREQUEST;
 #else
 #@type
-  HREQUEST* = object
+  HREQUEST* = pointer
 @#
 #endif
 

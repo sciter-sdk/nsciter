@@ -14,7 +14,7 @@
 
 import xtypes
 type
-  HREQUEST* = object
+  HREQUEST* = pointer
 type
   REQUEST_RESULT* = enum
     REQUEST_PANIC = - 1,         ## # e.g. not enough memory

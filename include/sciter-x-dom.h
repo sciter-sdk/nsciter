@@ -16,27 +16,81 @@
 #ifndef __sciter_dom_h__
 #define __sciter_dom_h__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  #def LPUINT UINT*
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT RECT*
+  #def LPCRECT RECT*
+  #def PPOINT POINT*
+  #def LPPOINT POINT*
+  #def PSIZE SIZE*
+  #def LPSIZE SIZE*
+  
+  #pp SCDOM_RESULT
+#@
+import xtypes
+@#
+#endif
+
 #include <assert.h>
 #include <stdio.h> // for vsnprintf
 
-#if defined(__cplusplus) && !defined( PLAIN_API_ONLY )
-  namespace html
-  {
-    struct element;
-    struct node;
-  }
-  namespace tool {
-    class sar;
-  }
-  typedef html::element* HELEMENT;
-  /**DOM node handle.*/
-  typedef html::node* HNODE;
-  /**DOM range handle.*/
-  typedef void*  HRANGE;
-  typedef struct hposition { HNODE hn; INT pos; } HPOSITION;
-  typedef tool::sar* HSARCHIVE;
+#ifndef C2NIM
+  #if defined(__cplusplus) && !defined( PLAIN_API_ONLY )
+    namespace html
+    {
+      struct element;
+      struct node;
+    }
+    namespace tool {
+      class sar;
+    }
+    typedef html::element* HELEMENT;
+    /**DOM node handle.*/
+    typedef html::node* HNODE;
+    /**DOM range handle.*/
+    typedef void*  HRANGE;
+    typedef struct hposition { HNODE hn; INT pos; } HPOSITION;
+    typedef tool::sar* HSARCHIVE;
+  #else
+    /**DOM element handle.*/
+    typedef void*  HELEMENT;
+    /**DOM node handle.*/
+    typedef void*  HNODE;
+    /**DOM range handle.*/
+    typedef void*  HRANGE;
+    typedef void*  HSARCHIVE;
+    typedef struct hposition { HNODE hn; INT pos; } HPOSITION;
+  #endif
 #else
-  /**DOM element handle.*/
   typedef void*  HELEMENT;
   /**DOM node handle.*/
   typedef void*  HNODE;
