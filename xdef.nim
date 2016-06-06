@@ -8,7 +8,7 @@
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
 ## # 
 
-import xtypes
+import xtypes,xrequest
 ## #*Get name of Sciter window class.
 ## # 
 ## #  \return \b LPCWSTR, name of Sciter window class.

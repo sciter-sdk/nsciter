@@ -8,7 +8,7 @@
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
 ## # 
 
-import xdef
+import xtypes,xdef,xrequest
 type
   SciterGraphicsAPI* = object
   

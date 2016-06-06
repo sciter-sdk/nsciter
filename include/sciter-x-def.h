@@ -48,7 +48,7 @@
   #def PSIZE SIZE*
   #def LPSIZE SIZE*
 #@
-import xtypes
+import xtypes,xrequest
 @#
 #endif
 
