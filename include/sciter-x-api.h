@@ -55,7 +55,7 @@ typedef struct _ISciterAPI {
     LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
   #else
     #@SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT
-      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM, pbHandled ptr BOOL): LRESULT
+      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr BOOL): LRESULT
     @#
   #endif
 #endif
