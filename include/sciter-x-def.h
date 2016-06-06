@@ -11,6 +11,48 @@
 #ifndef __SCITER_X_DEF__
 #define __SCITER_X_DEF__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT RECT*
+  #def LPCRECT RECT*
+  #def PPOINT POINT*
+  #def LPPOINT POINT*
+  #def PSIZE SIZE*
+  #def LPSIZE SIZE*
+#@
+import xtypes
+@#
+#endif
+
+
 #include "sciter-x-types.h"
 #include "sciter-x-request.h"
 #include "value.h"
@@ -22,14 +64,15 @@
   #include <wchar.h>
 #endif
 
-
-#define HAS_TISCRIPT
+#ifndef C2NIM
+  #define HAS_TISCRIPT
 
 /** Resource data type.
  *  Used by SciterDataReadyAsync() function.
  **/
 
 #define  HAS_TISCRIPT // in sciter
+#endif
 
 #include "sciter-x-value.h"
 #include "sciter-x-dom.h"
