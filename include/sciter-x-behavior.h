@@ -54,9 +54,6 @@
   #def LPSIZE SIZE*
   
   #pp SCDOM_RESULT
-#@
-import xtypes,xdom
-@#
 #endif
 
 /*!\file

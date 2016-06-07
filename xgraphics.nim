@@ -13,7 +13,6 @@
 ## #  Essentially this mimics Graphics object as close as possible.
 ## # 
 
-import xtypes,xdom
 type
   HGFX* = pointer
   HIMG* = pointer

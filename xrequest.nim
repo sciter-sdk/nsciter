@@ -12,7 +12,6 @@
 ## #  
 ## # 
 
-import xtypes
 type
   HREQUEST* = pointer
 type

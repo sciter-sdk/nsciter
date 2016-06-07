@@ -1,4 +1,3 @@
-import xtypes
 type
   tiscript_VM* = object
   
@@ -104,14 +103,14 @@ const
   TISCRIPT_CONST_STRING* = 2
 
 type
-  INNER_C_UNION_8636835370559314551* = object {.union.}
+  INNER_C_UNION_8643584045684552388* = object {.union.}
     i*: cint
     f*: cdouble
     str*: ptr WideCString
 
   tiscript_const_def* = object
     name*: cstring
-    val*: INNER_C_UNION_8636835370559314551
+    val*: INNER_C_UNION_8643584045684552388
     `type`*: cuint
 
   tiscript_class_def* = object

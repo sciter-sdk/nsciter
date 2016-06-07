@@ -13,6 +13,7 @@
 #define __SCITER_API_X__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI
@@ -24,9 +25,8 @@
   #def INT64 cint
   #def BYTE byte
   #def LPCBYTE BYTE*
-  #def WCHAR WideCString
-  #def LPCWSTR  WCHAR*
-  #def LPWSTR  WCHAR*
+  #def LPCWSTR  WideCString
+  #def LPWSTR  WideCString
   #def CHAR char
   #def LPCSTR  CHAR*
   #def VOID void
@@ -51,7 +51,7 @@
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
 #@
-import xtypes,xdef,xrequest,xvalue,xdom,xtiscript,xgraphics
+include xtypes,xdom,xrequest,xdef,xvalue,xtiscript,xgraphics
 @#
 #endif
 
@@ -76,7 +76,9 @@ import xtypes,xdef,xrequest,xvalue,xdom,xtiscript,xgraphics
 #endif
 #endif
 
+#ifndef C2NIM
 struct SciterGraphicsAPI;
+#endif
 
 typedef struct _ISciterAPI {
 
@@ -334,9 +336,9 @@ typedef struct _ISciterAPI {
 
 } ISciterAPI;
 
-#ifndef C2NIM
 typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
 
+#ifndef C2NIM
 // getting ISciterAPI reference:
 
 #ifdef STATIC_LIB
@@ -513,19 +515,7 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
 
 #ifdef C2NIM
 #@
-import dynlib
-
-proc SAPI*():ptr ISciterAPI  {.inline.} =
-  var libhandle = loadLib(SCITER_DLL_NAME)
-  var procPtr = symAddr(libhandle, "SciterAPI")
-  return cast[ptr ISciterAPI](procPtr)
-  
-proc gapi*():LPSciterGraphicsAPI {.inline.} =
-  return SAPI().GetSciterGraphicsAPI()
-  
-proc rapi*():LPSciterRequestAPI {.inline.} =
-  return SAPI().GetSciterRequestAPI()
-
+include loader
 @#
 #endif
 

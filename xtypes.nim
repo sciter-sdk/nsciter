@@ -12,7 +12,7 @@
 ## # 
 
 when not defined(windows):
-  include "widestr"
+  include widestr
 
 type
   Rect* = object
@@ -47,7 +47,7 @@ when defined(windows):
       TARGET_32* = true
       SCITER_DLL_NAME* = "sciter32.dll" 
 
-when defined(linux):
+when defined(posix):
   const
     ghdr = "<gtk/gtk.h>"
   type

@@ -49,9 +49,6 @@
   #def LPSIZE SIZE*
   
   #def LPUINT UINT*
-#@
-import xtypes,xrequest,xdom,xvalue
-@#
 #endif
 
 

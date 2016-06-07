@@ -56,9 +56,6 @@
   #def LPSIZE Size*
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
-#@
-import xtypes,xdom
-@#
 #endif
 
 #include "sciter-x-types.h"

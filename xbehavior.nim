@@ -11,7 +11,6 @@
 ## #  Behaviors support (a.k.a windowless controls)
 ## # 
 
-import xtypes,xdom
 ## #!\file
 ## #\brief Behaiviors support (a.k.a windowless scriptable controls)
 ## #

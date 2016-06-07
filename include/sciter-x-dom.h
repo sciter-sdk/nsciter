@@ -56,7 +56,6 @@
   
   #def SCDOM_RESULT INT
 #@
-import xtypes,xvalue,xtiscript
 type
   BEHAVIOR_EVENT_PARAMS* = object
 @#

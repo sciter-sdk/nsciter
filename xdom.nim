@@ -11,7 +11,6 @@
 ## #  DOM access methods, plain C interface
 ## # 
 
-import xtypes,xvalue,xtiscript
 type
   BEHAVIOR_EVENT_PARAMS* = object
 type
@@ -47,6 +46,7 @@ type
 ## # 
 
 const
+  cint* = cint
   SCDOM_OK* = 0
   SCDOM_INVALID_HWND* = 1
   SCDOM_INVALID_HANDLE* = 2

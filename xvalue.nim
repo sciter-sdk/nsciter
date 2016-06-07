@@ -1,4 +1,3 @@
-import xtypes
 type
   VALUE_RESULT* = enum
     HV_OK_TRUE = - 1, HV_OK = 0, HV_BAD_PARAMETER = 1, HV_INCOMPATIBLE_TYPE = 2

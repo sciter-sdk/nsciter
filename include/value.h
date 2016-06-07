@@ -39,10 +39,6 @@
   #def LPSIZE SIZE*
   
   #pp SCDOM_RESULT
-
-#@
-import xtypes
-@#
 #endif
 
 #include "sciter-x-types.h"

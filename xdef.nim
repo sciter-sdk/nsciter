@@ -8,7 +8,6 @@
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
 ## # 
 
-import xtypes,xrequest,xdom,xvalue
 ## #* #SC_LOAD_DATA notification return codes 
 
 type

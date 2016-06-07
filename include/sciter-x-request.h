@@ -53,9 +53,6 @@
   #def LPPOINT POINT*
   #def PSIZE SIZE*
   #def LPSIZE SIZE*
-#@
-import xtypes
-@#
 #endif
 
 #include "sciter-x-types.h"
