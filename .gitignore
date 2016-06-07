@@ -1,3 +1,5 @@
 /nimcache/
 *.log
 *.so
+sciter
+sciter.html
