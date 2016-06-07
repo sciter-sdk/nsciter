@@ -47,8 +47,10 @@
   #def LPPOINT POINT*
   #def PSIZE SIZE*
   #def LPSIZE SIZE*
+  
+  #def LPUINT UINT*
 #@
-import xtypes,xrequest,xdom
+import xtypes,xrequest,xdom,xvalue
 @#
 #endif
 
@@ -76,22 +78,6 @@ import xtypes,xrequest,xdom
 
 #include "sciter-x-value.h"
 #include "sciter-x-dom.h"
-
-/**Get name of Sciter window class.
- *
- * \return \b LPCWSTR, name of Sciter window class.
- *         \b NULL if initialization of the engine failed, Direct2D or DirectWrite are not supported on the OS.
- *
- * Use this function if you wish to create unicode version of Sciter.
- * The returned name can be used in CreateWindow(Ex)W function.
- * You can use #SciterClassNameT macro.
- **/
-LPCWSTR SCAPI SciterClassName();
-
-/**Returns major and minor version of Sciter engine.
-  * \return UINT, hiword (16-bit) contains major number and loword contains minor number;
- **/
- UINT  SCAPI SciterVersion(BOOL major);
 
 /** #SC_LOAD_DATA notification return codes */
 enum SC_LOAD_DATA_RETURN_CODES
@@ -287,170 +273,6 @@ typedef SCN_GRAPHICS_CRITICAL_FAILURE* LPSCN_GRAPHICS_CRITICAL_FAILURE;
 
 #include "sciter-x-behavior.h"
 
-/**This function is used in response to SCN_LOAD_DATA request.
- *
- * \param[in] hwnd \b HWINDOW, Sciter window handle.
- * \param[in] uri \b LPCWSTR, URI of the data requested by Sciter.
- * \param[in] data \b LPBYTE, pointer to data buffer.
- * \param[in] dataLength \b UINT, length of the data in bytes.
- * \return \b BOOL, TRUE if Sciter accepts the data or \c FALSE if error occured
- * (for example this function was called outside of #SCN_LOAD_DATA request).
- *
- * \warning If used, call of this function MUST be done ONLY while handling
- * SCN_LOAD_DATA request and in the same thread. For asynchronous resource loading
- * use SciterDataReadyAsync
- **/
- BOOL SCAPI SciterDataReady(HWINDOW hwnd,LPCWSTR uri,LPCBYTE data, UINT dataLength);
-
-/**Use this function outside of SCN_LOAD_DATA request. This function is needed when you
- * you have your own http client implemented in your application.
- *
- * \param[in] hwnd \b HWINDOW, Sciter window handle.
- * \param[in] uri \b LPCWSTR, URI of the data requested by Sciter.
- * \param[in] data \b LPBYTE, pointer to data buffer.
- * \param[in] dataLength \b UINT, length of the data in bytes.
- * \param[in] requestId \b LPVOID, SCN_LOAD_DATA requestId, can ne NULL.
- * \return \b BOOL, TRUE if Sciter accepts the data or \c FALSE if error occured
- **/
-
- BOOL SCAPI SciterDataReadyAsync(HWINDOW hwnd,LPCWSTR uri, LPCBYTE data, UINT dataLength,
-                                         LPVOID requestId);
-
-#ifdef WINDOWS
-
-/**Sciter Window Proc.*/
- LRESULT SCAPI SciterProc(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-/**Sciter Window Proc without call of DefWindowProc.*/
- LRESULT SCAPI SciterProcND(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
-
-#endif
-
-
-/**Load HTML file.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] filename \b LPCWSTR, File name of an HTML file.
- * \return \b BOOL, \c TRUE if the text was parsed and loaded successfully, \c FALSE otherwise.
- **/
- BOOL SCAPI     SciterLoadFile(HWINDOW hWndSciter, LPCWSTR filename);
-
-/**Load HTML from in memory buffer with base.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] html \b LPCBYTE, Address of HTML to load.
- * \param[in] htmlSize \b UINT, Length of the array pointed by html parameter.
- * \param[in] baseUrl \b LPCWSTR, base URL. All relative links will be resolved against
- *                                this URL.
- * \return \b BOOL, \c TRUE if the text was parsed and loaded successfully, FALSE otherwise.
- **/
- BOOL SCAPI     SciterLoadHtml(HWINDOW hWndSciter, LPCBYTE html, UINT htmlSize, LPCWSTR baseUrl);
-
-/**Set \link #SCITER_NOTIFY() notification callback function \endlink.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] cb \b SCITER_NOTIFY*, \link #SCITER_NOTIFY() callback function \endlink.
- * \param[in] cbParam \b LPVOID, parameter that will be passed to \link #SCITER_NOTIFY() callback function \endlink as vParam paramter.
- **/
- VOID SCAPI     SciterSetCallback(HWINDOW hWndSciter, LPSciterHostCallback cb, LPVOID cbParam);
-
-/**Set Master style sheet.
- *
- * \param[in] utf8 \b LPCBYTE, start of CSS buffer.
- * \param[in] numBytes \b UINT, number of bytes in utf8.
- **/
-
- BOOL SCAPI     SciterSetMasterCSS(LPCBYTE utf8, UINT numBytes);
-
-/**Append Master style sheet.
- *
- * \param[in] utf8 \b LPCBYTE, start of CSS buffer.
- * \param[in] numBytes \b UINT, number of bytes in utf8.
- *
- **/
-
- BOOL SCAPI     SciterAppendMasterCSS(LPCBYTE utf8, UINT numBytes);
-
-/**Set (reset) style sheet of current document.
- Will reset styles for all elements according to given CSS (utf8)
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] utf8 \b LPCBYTE, start of CSS buffer.
- * \param[in] numBytes \b UINT, number of bytes in utf8.
- **/
-
- BOOL SCAPI     SciterSetCSS(HWINDOW hWndSciter, LPCBYTE utf8, UINT numBytes, LPCWSTR baseUrl, LPCWSTR mediaType);
-
-/**Set media type of this sciter instance.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] mediaType \b LPCWSTR, media type name.
- *
- * For example media type can be "handheld", "projection", "screen", "screen-hires", etc.
- * By default sciter window has "screen" media type.
- *
- * Media type name is used while loading and parsing style sheets in the engine so
- * you should call this function *before* loading document in it.
- *
- **/
-
- BOOL SCAPI     SciterSetMediaType(HWINDOW hWndSciter, LPCWSTR mediaType);
-
-/**Set media variables of this sciter instance.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] mediaVars \b SCITER_VALUE, map that contains name/value pairs - media variables to be set.
- *
- * For example media type can be "handheld:true", "projection:true", "screen:true", etc.
- * By default sciter window has "screen:true" and "desktop:true"/"handheld:true" media variables.
- *
- * Media variables can be changed in runtime. This will cause styles of the document to be reset.
- *
- **/
-
- BOOL SCAPI     SciterSetMediaVars(HWINDOW hWndSciter, const SCITER_VALUE *mediaVars);
-
- UINT SCAPI     SciterGetMinWidth(HWINDOW hWndSciter);
- UINT SCAPI     SciterGetMinHeight(HWINDOW hWndSciter, UINT width);
-
- BOOL SCAPI     SciterCall(HWINDOW hWnd, LPCSTR functionName, UINT argc, const SCITER_VALUE* argv, SCITER_VALUE* retval);
-// evalue script in context of current document
- BOOL SCAPI     SciterEval( HWINDOW hwnd, LPCWSTR script, UINT scriptLength, SCITER_VALUE* pretval);
-
-/**Update pending changes in Sciter window.
- *
- * \param[in] hwnd \b HWINDOW, Sciter window handle.
- *
- **/
- VOID SCAPI     SciterUpdateWindow(HWINDOW hwnd);
-
-/** Try to translate message that sciter window is interested in.
- *
- * \param[in,out] lpMsg \b MSG*, address of message structure that was passed before to ::DispatchMessage(), ::PeekMessage().
- *
- * SciterTranslateMessage has the same meaning as ::TranslateMessage() and should be called immediately before it.
- * Example:
- *
- *   if( !SciterTranslateMessage(&msg) )
- *      TranslateMessage(&msg);
- *
- * ATTENTION!: SciterTranslateMessage call is critical for popup elements in MoSciter.
- *             On Desktop versions of the Sciter this function does nothing so can be ommited.
- *
- **/
-
-#ifdef WINDOWS
- BOOL SCAPI SciterTranslateMessage(MSG* lpMsg);
-#endif
-
-/**Set various options.
- *
- * \param[in] hWnd \b HWINDOW, Sciter window handle.
- * \param[in] option \b UINT, id of the option, one of SCITER_RT_OPTIONS
- * \param[in] option \b UINT, value of the option.
- *
- **/
-
 enum SCRIPT_RUNTIME_FEATURES
 {
   ALLOW_FILE_IO = 0x00000001,
@@ -489,27 +311,6 @@ enum SCITER_RT_OPTIONS
    SCITER_ALPHA_WINDOW  = 12,     //  hWnd, value - TRUE/FALSE - window uses per pixel alpha (e.g. WS_EX_LAYERED/UpdateLayeredWindow() window)
 };
 
- BOOL SCAPI SciterSetOption(HWINDOW hWnd, UINT option, UINT_PTR value );
-
-/**Get current pixels-per-inch metrics of the Sciter window
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[out] px \b PUINT, get ppi in horizontal direction.
- * \param[out] py \b PUINT, get ppi in vertical direction.
- *
- **/
-
- VOID SCAPI SciterGetPPI(HWINDOW hWndSciter, UINT* px, UINT* py);
-
-/**Get "expando" of the view object
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[out] pval \b VALUE*, expando as sciter::value.
- *
- **/
-
- BOOL SCAPI SciterGetViewExpando( HWINDOW hwnd, VALUE* pval );
-
 typedef struct URL_DATA
 {
   LPCSTR             requestedUrl;   // requested URL
@@ -524,120 +325,7 @@ typedef struct URL_DATA
 
 typedef VOID SC_CALLBACK URL_DATA_RECEIVER( const URL_DATA* pUrlData, LPVOID param );
 
-
-/** Get url resource data received by the engine
- *  Note: this function really works only if the engine is set to debug mode.
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] receiver \b URL_DATA_RECEIVER, address of reciver callback.
- * \param[in] param \b LPVOID, param passed to callback as it is.
- * \param[in] url \b LPCSTR, optional, url of the data. If not provided the engine will list all loaded resources
- * \return \b BOOL, \c TRUE if receiver is called at least once, FALSE otherwise.
- *
- **/
-
- BOOL SCAPI SciterEnumUrlData(HWINDOW hWndSciter, URL_DATA_RECEIVER* receiver, LPVOID param, LPCSTR url);
-
-
-#ifdef WINDOWS
-
-/**Creates instance of Sciter Engine on window controlled by DirectX
-*
-* \param[in] hwnd \b HWINDOW, window handle to create Sciter on.
-* \param[in] IDXGISwapChain \b pSwapChain,  reference of IDXGISwapChain created on the window.
-* \return \b BOOL, \c TRUE if engine instance is created, FALSE otherwise.
-*
-**/
-
-BOOL SCAPI SciterCreateOnDirectXWindow(HWINDOW hwnd, IDXGISwapChain* pSwapChain);
-
-/**Renders content of the document loaded into the window
-* Optionally allows to render parts of document (separate DOM elements) as layers
-*
-* \param[in] hwnd \b HWINDOW, window handle to create Sciter on.
-* \param[in] HELEMENT \b elementToRenderOrNull,  html element to render. If NULL then the engine renders whole document.
-* \param[in] BOOL \b frontLayer,  TRUE if elementToRenderOrNull is not NULL and this is the topmost layer.
-* \return \b BOOL, \c TRUE if layer was rendered successfully.
-*
-**/
-BOOL SCAPI SciterRenderOnDirectXWindow(HWINDOW hwnd, HELEMENT elementToRenderOrNull = NULL, BOOL frontLayer = FALSE);
-
-/**Renders content of the document loaded to DXGI texture
-* Optionally allows to render parts of document (separate DOM elements) as layers
-*
-* \param[in] HWINDOW \b hwnd, window handle to create Sciter on.
-* \param[in] HELEMENT \b elementToRenderOrNull,  html element to render. If NULL then the engine renders whole document.
-* \param[in] IDXGISurface \b surface, DirectX 2D texture to render in.
-* \return \b BOOL, \c TRUE if layer was rendered successfully.
-*
-**/
-BOOL SCAPI SciterRenderOnDirectXTexture(HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
-
-
-/**Render document to ID2D1RenderTarget
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] ID2D1RenderTarget \b prt, Direct2D render target.
- * \return \b BOOL, \c TRUE if hBmp is 24bpp or 32bpp, FALSE otherwise.
- *
- **/
-
- BOOL SCAPI SciterRenderD2D(HWINDOW hWndSciter, ID2D1RenderTarget* prt);
-
-/** Obtain pointer to ID2D1Factory instance used by the engine:
- *
- * \param[in] ID2D1Factory \b **ppf, address of variable receiving pointer of ID2D1Factory.
- * \return \b BOOL, \c TRUE if parameters are valid and *ppf was set by valid pointer.
- *
- * NOTE 1: ID2D1Factory returned by the function is "add-refed" - it is your responsibility to call Release() on it.
- * NOTE 2: *ppf variable shall be initialized to NULL before calling the function.
- *
- **/
-
- BOOL SCAPI     SciterD2DFactory(ID2D1Factory ** ppf);
-
-/** Obtain pointer to IDWriteFactory instance used by the engine:
- *
- * \param[in] IDWriteFactory \b **ppf, address of variable receiving pointer of IDWriteFactory.
- * \return \b BOOL, \c TRUE if parameters are valid and *ppf was set by valid pointer.
- *
- * NOTE 1: IDWriteFactory returned by the function is "add-refed" - it is your responsibility to call Release() on it.
- * NOTE 2: *ppf variable shall be initialized to NULL before calling the function.
- *
- **/
-
- BOOL SCAPI     SciterDWFactory(IDWriteFactory ** ppf);
-
-#endif
-
-/** Get graphics capabilities of the system
- *
- * \pcaps[in] LPUINT \b pcaps, address of variable receiving:
- *                             0 - no compatible graphics found;
- *                             1 - compatible graphics found but Direct2D will use WARP driver (software emulation);
- *                             2 - Direct2D will use hardware backend (best performance);
- * \return \b BOOL, \c TRUE if pcaps is valid pointer.
- *
- **/
-
- BOOL SCAPI     SciterGraphicsCaps(LPUINT pcaps);
-
-
-/** Set sciter home url.
- *  home url is used for resolving sciter: urls
- *  If you will set it like SciterSetHomeURL(hwnd,"http://sciter.com/modules/")
- *  then <script src="sciter:lib/root-extender.tis"> will load
- *  root-extender.tis from http://sciter.com/modules/lib/root-extender.tis
- *
- * \param[in] hWndSciter \b HWINDOW, Sciter window handle.
- * \param[in] baseUrl \b LPCWSTR, URL of sciter home.
- *
- **/
-
- BOOL SCAPI     SciterSetHomeURL(HWINDOW hWndSciter, LPCWSTR baseUrl);
-
 #if defined(OSX)
-   HWINDOW SCAPI  SciterCreateNSView( LPRECT frame ); // returns NSView*
   typedef LPVOID SciterWindowDelegate; // Obj-C id, NSWindowDelegate and NSResponder
 #elif defined(WINDOWS)
   typedef LRESULT SC_CALLBACK SciterWindowDelegate(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LPVOID pParam, BOOL* handled);
@@ -658,23 +346,6 @@ enum SCITER_CREATE_WINDOW_FLAGS {
    SW_ENABLE_DEBUG = (1 << 9), // make this window inspector ready
    SW_OWNS_VM      = (1 << 10), // it has its own script VM
 };
-
-/** Create sciter window.
- *  On Windows returns HWND of either top-level or child window created.
- *  On OS X returns NSView* of either top-level window or child view .
- *
- * \param[in] creationFlags \b SCITER_CREATE_WINDOW_FLAGS, creation flags.
- * \param[in] frame \b LPRECT, window frame position and size.
- * \param[in] delegate \b SciterWindowDelegate, either partial WinProc implementation or thing implementing NSWindowDelegate protocol.
- * \param[in] delegateParam \b LPVOID, optional param passed to SciterWindowDelegate.
- * \param[in] parent \b HWINDOW, optional parent window.
- *
- **/
- HWINDOW SCAPI  SciterCreateWindow( UINT creationFlags,
-                                            LPRECT frame,
-                                            SciterWindowDelegate* delegate,
-                                            LPVOID delegateParam,
-                                            HWINDOW parent);
 
 
 /** SciterSetupDebugOutput - setup debug output function.
@@ -699,12 +370,6 @@ enum OUTPUT_SEVERITY
 };
 
 typedef VOID (SC_CALLBACK* DEBUG_OUTPUT_PROC)(LPVOID param, UINT subsystem /*OUTPUT_SUBSYTEMS*/, UINT severity, LPCWSTR text, UINT text_length);
-
- VOID SCAPI SciterSetupDebugOutput(
-                HWINDOW                  hwndOrNull,// HWINDOW or null if this is global output handler
-                LPVOID                param,     // param to be passed "as is" to the pfOutput
-                DEBUG_OUTPUT_PROC     pfOutput   // output function, output stream alike thing.
-                );
 
 #endif
 

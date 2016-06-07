@@ -10,6 +10,7 @@ type
     u*: cuint
     d*: culonglong
 
+  SCITER_VALUE* = Value
 
 type
     FLOAT_VALUE* = cdouble
@@ -72,8 +73,8 @@ type
 ## # Native functor
 
 type
-  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: cuint; argv: ptr VALUE;
-                              retval: ptr VALUE)
+  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: cuint; argv: ptr Value;
+                              retval: ptr Value)
 
 ## # retval may contain error definition
 
@@ -85,7 +86,7 @@ type
 ## # 
 
 type
-  KeyValueCallback* = proc (param: pointer; pkey: ptr VALUE; pval: ptr VALUE): bool
+  KeyValueCallback* = proc (param: pointer; pkey: ptr Value; pval: ptr Value): bool
   VALUE_STRING_CVT_TYPE* = enum
     CVT_SIMPLE,               ## #/< simple conversion of terminal values 
     CVT_JSON_LITERAL,         ## #/< json literal parsing/emission 

@@ -21,7 +21,6 @@
   #def VOID void
   #def UINT_PTR csize
   #def BOOL bool
-  #def LPUINT UINT*
   
   #def WINDOWS windows
   #def LINUX linux
@@ -62,6 +61,12 @@ typedef struct
   UINT     u;
   UINT64   d;
 } VALUE;
+
+#ifdef C2NIM
+    typedef Value SCITER_VALUE;
+    #def VALUE Value
+#endif
+
 
 #ifndef C2NIM
     #define FLOAT_VALUE   double
