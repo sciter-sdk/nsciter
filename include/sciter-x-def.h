@@ -12,6 +12,7 @@
 #define __SCITER_X_DEF__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI

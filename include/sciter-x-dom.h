@@ -17,6 +17,7 @@
 #define __sciter_dom_h__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI

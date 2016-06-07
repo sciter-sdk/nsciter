@@ -110,7 +110,7 @@ type
   
   LPSCITER_CALLBACK_NOTIFICATION* = ptr SCITER_CALLBACK_NOTIFICATION
   SciterHostCallback* = proc (pns: LPSCITER_CALLBACK_NOTIFICATION;
-                           callbackParam: pointer): cuint
+                           callbackParam: pointer): cuint {.cdecl.}
   LPSciterHostCallback* = ptr SciterHostCallback
 
 ## #*This structure is used by #SC_LOAD_DATA notification.
@@ -238,7 +238,7 @@ type
     data*: ptr byte
     dataLength*: cuint
 
-  URL_DATA_RECEIVER* = proc (pUrlData: ptr URL_DATA; param: pointer)
+  URL_DATA_RECEIVER* = proc (pUrlData: ptr URL_DATA; param: pointer) {.cdecl.}
 
 when defined(osx):
   type
@@ -247,7 +247,8 @@ when defined(osx):
 elif defined(windows):
   type
     SciterWindowDelegate* = proc (hwnd: HWINDOW; msg: cuint; wParam: WPARAM;
-                               lParam: LPARAM; pParam: pointer; handled: ptr bool): LRESULT
+                               lParam: LPARAM; pParam: pointer; handled: ptr bool): LRESULT {.
+        cdecl.}
 elif defined(linux):
   type
     SciterWindowDelegate* = pointer
@@ -288,4 +289,5 @@ type
 
 type
   DEBUG_OUTPUT_PROC* = proc (param: pointer; subsystem: cuint; ## #OUTPUT_SUBSYTEMS
-                          severity: cuint; text: ptr WideCString; text_length: cuint)
+                          severity: cuint; text: ptr WideCString; text_length: cuint) {.
+      cdecl.}

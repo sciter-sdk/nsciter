@@ -32,14 +32,13 @@ type
                        baseUrl: WideCString; mediaType: WideCString): bool {.cdecl.}
     SciterSetMediaType*: proc (hWndSciter: HWINDOW; mediaType: WideCString): bool {.
         cdecl.}
-    SciterSetMediaVars*: proc (hWndSciter: HWINDOW; mediaVars: ptr SCITER_VALUE): bool {.
-        cdecl.}
+    SciterSetMediaVars*: proc (hWndSciter: HWINDOW; mediaVars: ptr Value): bool {.cdecl.}
     SciterGetMinWidth*: proc (hWndSciter: HWINDOW): cuint {.cdecl.}
     SciterGetMinHeight*: proc (hWndSciter: HWINDOW; width: cuint): cuint {.cdecl.}
     SciterCall*: proc (hWnd: HWINDOW; functionName: cstring; argc: cuint;
-                     argv: ptr SCITER_VALUE; retval: ptr SCITER_VALUE): bool {.cdecl.}
+                     argv: ptr Value; retval: ptr Value): bool {.cdecl.}
     SciterEval*: proc (hwnd: HWINDOW; script: WideCString; scriptLength: cuint;
-                     pretval: ptr SCITER_VALUE): bool {.cdecl.}
+                     pretval: ptr Value): bool {.cdecl.}
     SciterUpdateWindow*: proc (hwnd: HWINDOW) {.cdecl.}
     when defined(windows):
       SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL
@@ -359,8 +358,8 @@ proc SciterSetMediaType*(hWndSciter: HWINDOW; mediaType: WideCString): bool {.in
     cdecl.} =
   return SAPI().SciterSetMediaType(hWndSciter, mediaType)
 
-proc SciterSetMediaVars*(hWndSciter: HWINDOW; mediaVars: ptr SCITER_VALUE): bool {.
-    inline, cdecl.} =
+proc SciterSetMediaVars*(hWndSciter: HWINDOW; mediaVars: ptr Value): bool {.inline,
+    cdecl.} =
   return SAPI().SciterSetMediaVars(hWndSciter, mediaVars)
 
 proc SciterGetMinWidth*(hWndSciter: HWINDOW): cuint {.inline, cdecl.} =
@@ -369,12 +368,12 @@ proc SciterGetMinWidth*(hWndSciter: HWINDOW): cuint {.inline, cdecl.} =
 proc SciterGetMinHeight*(hWndSciter: HWINDOW; width: cuint): cuint {.inline, cdecl.} =
   return SAPI().SciterGetMinHeight(hWndSciter, width)
 
-proc SciterCall*(hWnd: HWINDOW; functionName: cstring; argc: cuint;
-                argv: ptr SCITER_VALUE; retval: ptr SCITER_VALUE): bool {.inline, cdecl.} =
+proc SciterCall*(hWnd: HWINDOW; functionName: cstring; argc: cuint; argv: ptr Value;
+                retval: ptr Value): bool {.inline, cdecl.} =
   return SAPI().SciterCall(hWnd, functionName, argc, argv, retval)
 
 proc SciterEval*(hwnd: HWINDOW; script: WideCString; scriptLength: cuint;
-                pretval: ptr SCITER_VALUE): bool {.inline, cdecl.} =
+                pretval: ptr Value): bool {.inline, cdecl.} =
   return SAPI().SciterEval(hwnd, script, scriptLength, pretval)
 
 proc SciterUpdateWindow*(hwnd: HWINDOW) {.inline, cdecl.} =
@@ -800,8 +799,8 @@ proc ValueCopy*(pdst: ptr VALUE; psrc: ptr VALUE): cuint {.inline, cdecl.} =
 proc ValueIsolate*(pdst: ptr VALUE): cuint {.inline, cdecl.} =
   return SAPI().ValueIsolate(pdst)
 
-# proc ValueType*(pval: ptr VALUE; pType: ptr cuint; pUnits: ptr cuint): cuint {.inline, cdecl.} =
-#   return SAPI().ValueType(pval, pType, pUnits)
+proc ValueType*(pval: ptr VALUE; pType: ptr cuint; pUnits: ptr cuint): cuint {.inline, cdecl.} =
+  return SAPI().ValueType(pval, pType, pUnits)
 
 proc ValueStringData*(pval: ptr VALUE; pChars: ptr WideCString; pNumChars: ptr cuint): cuint {.
     inline, cdecl.} =

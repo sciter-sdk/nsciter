@@ -87,7 +87,7 @@ type
 ## #*Callback function used with #SciterVisitElement().
 
 type
-  SciterElementCallback* = proc (he: HELEMENT; param: pointer): bool
+  SciterElementCallback* = proc (he: HELEMENT; param: pointer): bool {.cdecl.}
   SET_ELEMENT_HTML* = enum
     SIH_REPLACE_CONTENT = 0, SIH_INSERT_AT_START = 1, SIH_APPEND_AFTER_LAST = 2,
     SOH_REPLACE = 3, SOH_INSERT_BEFORE = 4, SOH_INSERT_AFTER = 5
@@ -102,7 +102,8 @@ type
 ## # 
 
 type
-  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool
+  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool {.
+      cdecl.}
   LPELEMENT_EVENT_PROC* = ptr ElementEventProc
   ELEMENT_STATE_BITS* = enum
     STATE_LINK = 0x00000001, STATE_HOVER = 0x00000002, STATE_ACTIVE = 0x00000004,
@@ -151,7 +152,7 @@ type
 ## # 
 
 type
-  ELEMENT_COMPARATOR* = proc (he1: HELEMENT; he2: HELEMENT; param: pointer): cint
+  ELEMENT_COMPARATOR* = proc (he1: HELEMENT; he2: HELEMENT; param: pointer): cint {.cdecl.}
   CTL_TYPE* = enum
     CTL_NO,                   ## #/< This dom element has no behavior at all.
     CTL_EDIT,                 ## #/< Single line edit box.

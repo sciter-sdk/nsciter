@@ -3,7 +3,7 @@
 
 #ifdef C2NIM
   #prefix _
-  
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI

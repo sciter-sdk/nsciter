@@ -19,6 +19,7 @@
 #define __sciter_graphin_h__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI

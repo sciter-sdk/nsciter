@@ -37,6 +37,7 @@
   #def LINUX linux
   #def OSX osx
   
+  #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
   #def SIZE Size

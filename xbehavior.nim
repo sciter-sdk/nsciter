@@ -50,14 +50,15 @@ type
 ## # 
 
 type
-  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool
+  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool {.
+      cdecl.}
   LPElementEventProc* = ptr ElementEventProc
 
 ## # signature of the function exported from external behavior/dll.
 
 type
   SciterBehaviorFactory* = proc (a2: cstring; a3: HELEMENT; a4: ptr LPElementEventProc;
-                              a5: ptr pointer): bool
+                              a5: ptr pointer): bool {.cdecl.}
   PHASE_MASK* = enum
     BUBBLING = 0,               ## # bubbling (emersion) phase
     SINKING = 0x00008000,       ## # capture (immersion) phase, this flag is or'ed with EVENTS codes below
@@ -357,7 +358,7 @@ type
     reason*: csize ## # EVENT_REASON or EDIT_CHANGED_REASON - UI action causing change.
                  ## # In case of custom event notifications this may be any
                  ## # application specific value.
-    data*: SCITER_VALUE        ## # auxiliary data accompanied with the event. E.g. FORM_SUBMIT event is using this field to pass collection of values.
+    data*: Value               ## # auxiliary data accompanied with the event. E.g. FORM_SUBMIT event is using this field to pass collection of values.
   
   TIMER_PARAMS* = object
     timerId*: csize            ## # timerId that was used to create timer by using SciterSetTimer
@@ -391,9 +392,9 @@ type
 type
   SCRIPTING_METHOD_PARAMS* = object
     name*: cstring             ## #< method name
-    argv*: ptr SCITER_VALUE     ## #< vector of arguments
+    argv*: ptr Value            ## #< vector of arguments
     argc*: cuint               ## #< argument count
-    result*: SCITER_VALUE      ## #< return value
+    result*: Value             ## #< return value
   
   TISCRIPT_METHOD_PARAMS* = object
     vm*: ptr tiscript_VM
@@ -407,7 +408,7 @@ type
 type
   VALUE_PARAMS* = object
     methodID*: cuint
-    val*: SCITER_VALUE
+    val*: Value
     invalid_field_to_bypass_c2nim*: nil
 
 

@@ -2,6 +2,7 @@
 #define __value_h__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI
@@ -58,15 +59,10 @@ typedef struct
   UINT64   d;
 } VALUE;
 
-#ifdef C2NIM
-    typedef Value SCITER_VALUE;
-    #def VALUE Value
-#endif
-
-
 #ifndef C2NIM
     #define FLOAT_VALUE   double
 #else
+#def VALUE_TYPE VTYPE
 #@
 type
     FLOAT_VALUE* = cdouble

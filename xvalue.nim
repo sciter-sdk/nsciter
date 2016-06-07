@@ -9,12 +9,11 @@ type
     u*: cuint
     d*: culonglong
 
-  SCITER_VALUE* = Value
 
 type
     FLOAT_VALUE* = cdouble
 type
-  VALUE_TYPE* = enum
+  VTYPE* = enum
     T_UNDEFINED = 0, T_NULL = 1, T_BOOL, T_INT, T_FLOAT, T_STRING, T_DATE, ## # INT64 - contains a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (UTC), a.k.a. FILETIME on Windows
     T_CURRENCY,               ## # INT64 - 14.4 fixed number. E.g. dollars = int64 / 10000; 
     T_LENGTH,                 ## # length units, value is int or float, units are VALUE_UNIT_TYPE
@@ -72,20 +71,20 @@ type
 ## # Native functor
 
 type
-  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: cuint; argv: ptr Value;
-                              retval: ptr Value)
+  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: cuint; argv: ptr VALUE;
+                              retval: ptr VALUE) {.cdecl.}
 
 ## # retval may contain error definition
 
 type
-  NATIVE_FUNCTOR_RELEASE* = proc (tag: pointer)
+  NATIVE_FUNCTOR_RELEASE* = proc (tag: pointer) {.cdecl.}
 
 ## #*Callback function used with #ValueEnumElements().
 ## #  return TRUE to continue enumeration
 ## # 
 
 type
-  KeyValueCallback* = proc (param: pointer; pkey: ptr Value; pval: ptr Value): bool
+  KeyValueCallback* = proc (param: pointer; pkey: ptr VALUE; pval: ptr VALUE): bool {.cdecl.}
   VALUE_STRING_CVT_TYPE* = enum
     CVT_SIMPLE,               ## #/< simple conversion of terminal values 
     CVT_JSON_LITERAL,         ## #/< json literal parsing/emission 

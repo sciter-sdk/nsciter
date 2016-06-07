@@ -16,11 +16,13 @@
 #define __sciter_x_behavior_h__
 
 #ifdef C2NIM
+  #cdecl
   #skipinclude
   #def SCFN(name) (*name)
   #def SCAPI
   #def SC_CALLBACK
   
+  #def SCITER_VALUE Value
   #def UINT cuint
   #def INT cint
   #def UINT64 culonglong

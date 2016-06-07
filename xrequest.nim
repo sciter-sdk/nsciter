@@ -43,151 +43,80 @@ type
 
 type
   SciterRequestAPI* = object
-    RequestUse*: proc (rq: HREQUEST): REQUEST_RESULT ## # a.k.a AddRef()
+    RequestUse*: proc (rq: HREQUEST): REQUEST_RESULT {.cdecl.} ## # a.k.a AddRef()
     ## # a.k.a Release()
-    RequestUnUse*: proc (rq: HREQUEST): REQUEST_RESULT ## # get requested URL
-    RequestUrl*: proc (rq: HREQUEST; rcv: ptr LPCSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                         ## # 
-                                                                                         ## get 
-                                                                                         ## real, 
-                                                                                         ## content 
-                                                                                         ## URL 
-                                                                                         ## (after 
-                                                                                         ## possible 
-                                                                                         ## redirection)
+    RequestUnUse*: proc (rq: HREQUEST): REQUEST_RESULT {.cdecl.} ## # get requested URL
+    RequestUrl*: proc (rq: HREQUEST; rcv: ptr LPCSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get real, content URL (after possible redirection)
     RequestContentUrl*: proc (rq: HREQUEST; rcv: ptr LPCSTR_RECEIVER;
-                            rcv_param: pointer): REQUEST_RESULT ## # get requested data type
-    RequestGetRequestType*: proc (rq: HREQUEST; pType: ptr REQUEST_RQ_TYPE): REQUEST_RESULT ## 
-                                                                                    ## # 
-                                                                                    ## get 
-                                                                                    ## requested 
-                                                                                    ## data 
-                                                                                    ## type
-    RequestGetRequestedDataType*: proc (rq: HREQUEST; pData: ptr SciterResourceType): REQUEST_RESULT ## 
-                                                                                             ## # 
-                                                                                             ## get 
-                                                                                             ## received 
-                                                                                             ## data 
-                                                                                             ## type, 
-                                                                                             ## string, 
-                                                                                             ## mime 
-                                                                                             ## type
+                            rcv_param: pointer): REQUEST_RESULT {.cdecl.} ## # get requested data type
+    RequestGetRequestType*: proc (rq: HREQUEST; pType: ptr REQUEST_RQ_TYPE): REQUEST_RESULT {.
+        cdecl.}               ## # get requested data type
+    RequestGetRequestedDataType*: proc (rq: HREQUEST; pData: ptr SciterResourceType): REQUEST_RESULT {.
+        cdecl.}               ## # get received data type, string, mime type
     RequestGetReceivedDataType*: proc (rq: HREQUEST; rcv: ptr LPCSTR_RECEIVER;
-                                     rcv_param: pointer): REQUEST_RESULT ## # get number of request parameters passed
-    RequestGetNumberOfParameters*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT ## 
-                                                                                   ## # 
-                                                                                   ## get 
-                                                                                   ## nth 
-                                                                                   ## request 
-                                                                                   ## parameter 
-                                                                                   ## name
-    RequestGetNthParameterName*: proc (rq: HREQUEST; n: cuint;
-                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                              ## # 
-                                                                                              ## get 
-                                                                                              ## nth 
-                                                                                              ## request 
-                                                                                              ## parameter 
-                                                                                              ## value
-    RequestGetNthParameterValue*: proc (rq: HREQUEST; n: cuint;
-                                      rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                               ## # 
-                                                                                               ## get 
-                                                                                               ## request 
-                                                                                               ## times 
-                                                                                               ## , 
-                                                                                               ## ended 
-                                                                                               ## - 
-                                                                                               ## started 
-                                                                                               ## = 
-                                                                                               ## milliseconds 
-                                                                                               ## to 
-                                                                                               ## get 
-                                                                                               ## the 
-                                                                                               ## requst
-    RequestGetTimes*: proc (rq: HREQUEST; pStarted: ptr cuint; pEnded: ptr cuint): REQUEST_RESULT ## 
-                                                                                       ## # 
-                                                                                       ## get 
-                                                                                       ## number 
-                                                                                       ## of 
-                                                                                       ## request 
-                                                                                       ## headers
-    RequestGetNumberOfRqHeaders*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT ## 
-                                                                                  ## # 
-                                                                                  ## get 
-                                                                                  ## nth 
-                                                                                  ## request 
-                                                                                  ## header 
-                                                                                  ## name 
-    RequestGetNthRqHeaderName*: proc (rq: HREQUEST; n: cuint;
-                                    rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                             ## # 
-                                                                                             ## get 
-                                                                                             ## nth 
-                                                                                             ## request 
-                                                                                             ## header 
-                                                                                             ## value 
-    RequestGetNthRqHeaderValue*: proc (rq: HREQUEST; n: cuint;
-                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                              ## # 
-                                                                                              ## get 
-                                                                                              ## number 
-                                                                                              ## of 
-                                                                                              ## response 
-                                                                                              ## headers
-    RequestGetNumberOfRspHeaders*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT ## 
-                                                                                   ## # 
-                                                                                   ## get 
-                                                                                   ## nth 
-                                                                                   ## response 
-                                                                                   ## header 
-                                                                                   ## name 
-    RequestGetNthRspHeaderName*: proc (rq: HREQUEST; n: cuint;
-                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                              ## # 
-                                                                                              ## get 
-                                                                                              ## nth 
-                                                                                              ## response 
-                                                                                              ## header 
-                                                                                              ## value 
-    RequestGetNthRspHeaderValue*: proc (rq: HREQUEST; n: cuint;
-                                      rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT ## 
-                                                                                               ## # 
-                                                                                               ## get 
-                                                                                               ## completion 
-                                                                                               ## status 
-                                                                                               ## (CompletionStatus 
-                                                                                               ## - 
-                                                                                               ## http 
-                                                                                               ## response 
-                                                                                               ## code 
-                                                                                               ## : 
-                                                                                               ## 200, 
-                                                                                               ## 404, 
-                                                                                               ## etc.)
-    RequestGetCompletionStatus*: proc (rq: HREQUEST; pState: ptr REQUEST_STATE;
-                                     pCompletionStatus: ptr cuint): REQUEST_RESULT ## # 
+                                     rcv_param: pointer): REQUEST_RESULT {.cdecl.} ## # 
                                                                                ## get 
-                                                                               ## proxy 
-                                                                               ## host
+                                                                               ## number 
+                                                                               ## of 
+                                                                               ## request 
+                                                                               ## parameters 
+                                                                               ## passed
+    RequestGetNumberOfParameters*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT {.
+        cdecl.}               ## # get nth request parameter name
+    RequestGetNthParameterName*: proc (rq: HREQUEST; n: cuint;
+                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get nth request parameter value
+    RequestGetNthParameterValue*: proc (rq: HREQUEST; n: cuint;
+                                      rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get request times , ended - started = milliseconds to get the requst
+    RequestGetTimes*: proc (rq: HREQUEST; pStarted: ptr cuint; pEnded: ptr cuint): REQUEST_RESULT {.
+        cdecl.}               ## # get number of request headers
+    RequestGetNumberOfRqHeaders*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT {.
+        cdecl.}               ## # get nth request header name 
+    RequestGetNthRqHeaderName*: proc (rq: HREQUEST; n: cuint;
+                                    rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get nth request header value 
+    RequestGetNthRqHeaderValue*: proc (rq: HREQUEST; n: cuint;
+                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get number of response headers
+    RequestGetNumberOfRspHeaders*: proc (rq: HREQUEST; pNumber: ptr cuint): REQUEST_RESULT {.
+        cdecl.}               ## # get nth response header name 
+    RequestGetNthRspHeaderName*: proc (rq: HREQUEST; n: cuint;
+                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get nth response header value 
+    RequestGetNthRspHeaderValue*: proc (rq: HREQUEST; n: cuint;
+                                      rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}               ## # get completion status (CompletionStatus - http response code : 200, 404, etc.)
+    RequestGetCompletionStatus*: proc (rq: HREQUEST; pState: ptr REQUEST_STATE;
+                                     pCompletionStatus: ptr cuint): REQUEST_RESULT {.
+        cdecl.}               ## # get proxy host
     RequestGetProxyHost*: proc (rq: HREQUEST; rcv: ptr LPCSTR_RECEIVER;
-                              rcv_param: pointer): REQUEST_RESULT ## # get proxy port
-    RequestGetProxyPort*: proc (rq: HREQUEST; pPort: ptr cuint): REQUEST_RESULT ## # mark reequest as complete with status and data 
+                              rcv_param: pointer): REQUEST_RESULT {.cdecl.} ## # get proxy port
+    RequestGetProxyPort*: proc (rq: HREQUEST; pPort: ptr cuint): REQUEST_RESULT {.cdecl.} ## 
+                                                                                 ## # 
+                                                                                 ## mark 
+                                                                                 ## reequest 
+                                                                                 ## as 
+                                                                                 ## complete 
+                                                                                 ## with 
+                                                                                 ## status 
+                                                                                 ## and 
+                                                                                 ## data 
     RequestSetSucceeded*: proc (rq: HREQUEST; status: cuint; dataOrNull: ptr byte;
-                              dataLength: cuint): REQUEST_RESULT ## # mark reequest as complete with failure and optional data 
+                              dataLength: cuint): REQUEST_RESULT {.cdecl.} ## # mark reequest as complete with failure and optional data 
     RequestSetFailed*: proc (rq: HREQUEST; status: cuint; dataOrNull: ptr byte;
-                           dataLength: cuint): REQUEST_RESULT ## # append received data chunk 
-    RequestAppendDataChunk*: proc (rq: HREQUEST; data: ptr byte; dataLength: cuint): REQUEST_RESULT ## 
-                                                                                          ## # 
-                                                                                          ## set 
-                                                                                          ## request 
-                                                                                          ## header 
-                                                                                          ## (single 
-                                                                                          ## item)
+                           dataLength: cuint): REQUEST_RESULT {.cdecl.} ## # append received data chunk 
+    RequestAppendDataChunk*: proc (rq: HREQUEST; data: ptr byte; dataLength: cuint): REQUEST_RESULT {.
+        cdecl.}               ## # set request header (single item)
     RequestSetRqHeader*: proc (rq: HREQUEST; name: ptr WideCString;
-                             value: ptr WideCString): REQUEST_RESULT ## # set respone header (single item)
+                             value: ptr WideCString): REQUEST_RESULT {.cdecl.} ## # set 
+                                                                          ## respone header 
+                                                                          ## (single item)
     RequestSetRspHeader*: proc (rq: HREQUEST; name: ptr WideCString;
-                              value: ptr WideCString): REQUEST_RESULT ## # get received (so far) data
-    RequestGetData*: proc (rq: HREQUEST; rcv: ptr LPCBYTE_RECEIVER; rcv_param: pointer): REQUEST_RESULT
+                              value: ptr WideCString): REQUEST_RESULT {.cdecl.} ## # get 
+                                                                           ## received (so far) data
+    RequestGetData*: proc (rq: HREQUEST; rcv: ptr LPCBYTE_RECEIVER; rcv_param: pointer): REQUEST_RESULT {.
+        cdecl.}
 
   LPSciterRequestAPI* = ptr SciterRequestAPI
