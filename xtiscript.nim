@@ -10,7 +10,6 @@ type
 
 type
   tiscript_value* = culonglong
-  byte* = cuchar
   HVM* = ptr tiscript_VM
 
 ## # pinned tiscript_value, val here will survive GC.
@@ -105,14 +104,14 @@ const
   TISCRIPT_CONST_STRING* = 2
 
 type
-  INNER_C_UNION_8643584045684552388* = object {.union.}
+  INNER_C_UNION_8636835370559314551* = object {.union.}
     i*: cint
     f*: cdouble
     str*: ptr WideCString
 
   tiscript_const_def* = object
     name*: cstring
-    val*: INNER_C_UNION_8643584045684552388
+    val*: INNER_C_UNION_8636835370559314551
     `type`*: cuint
 
   tiscript_class_def* = object

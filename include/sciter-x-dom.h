@@ -54,7 +54,7 @@
   #def PSIZE SIZE*
   #def LPSIZE SIZE*
   
-  #pp SCDOM_RESULT
+  #def SCDOM_RESULT INT
 #@
 import xtypes,xvalue,xtiscript
 type

@@ -18,8 +18,52 @@
 #ifndef __sciter_graphin_h__
 #define __sciter_graphin_h__
 
+#ifdef C2NIM
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT Rect*
+  #def LPCRECT Rect*
+  #def PPOINT Point*
+  #def LPPOINT Point*
+  #def PSIZE Size*
+  #def LPSIZE Size*
+  #def LPUINT UINT*
+  #def SCDOM_RESULT INT
+#@
+import xtypes
+@#
+#endif
+
 #include "sciter-x-types.h"
 
+#ifndef C2NIM
 namespace gool
 {
   class graphics;
@@ -32,6 +76,7 @@ typedef gool::graphics* HGFX;
 typedef gool::image*    HIMG;
 typedef gool::path*     HPATH;
 typedef gool::text_layout* HTEXT;
+#endif
 
 typedef float REAL;
 

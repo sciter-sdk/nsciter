@@ -80,7 +80,10 @@ struct tiscript_VM; // TIScript virtual machine
 typedef struct tiscript_VM tiscript_VM;
 // tiscript_value
 typedef UINT64 tiscript_value;
+
+#ifndef C2NIM
 typedef unsigned char byte;
+#endif
 
 typedef tiscript_VM* HVM;
 

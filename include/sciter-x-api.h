@@ -42,14 +42,16 @@
   #def SIZE Size
   #def LPVOID pointer
   #def LPCVOID pointer
-  #def LPRECT RECT*
-  #def LPCRECT RECT*
-  #def PPOINT POINT*
-  #def LPPOINT POINT*
-  #def PSIZE SIZE*
-  #def LPSIZE SIZE*
+  #def LPRECT Rect*
+  #def LPCRECT Rect*
+  #def PPOINT Point*
+  #def LPPOINT Point*
+  #def PSIZE Size*
+  #def LPSIZE Size*
+  #def LPUINT UINT*
+  #def SCDOM_RESULT INT
 #@
-import xtypes,xdef,xrequest
+import xtypes,xdef,xrequest,xvalue,xdom,xtiscript,xgraphics
 @#
 #endif
 
@@ -144,7 +146,7 @@ typedef struct _ISciterAPI {
   #ifndef C2NIM
     HWINDOW SCFN( SciterCreateWidget )( LPRECT frame ); // returns GtkWidget
   #else
-    #@SciterCreateWidget*: proc (frame:LPRECT): HWINDOW
+    #@SciterCreateWidget*: proc (frame:ptr Rect): HWINDOW
     @#
   #endif
 #endif
@@ -300,8 +302,8 @@ typedef struct _ISciterAPI {
 
   HVM  SCFN( SciterGetVM )( HWINDOW hwnd );
 
-  BOOL SCFN( Sciter_v2V ) (HVM vm, tiscript_value script_value, VALUE* value, BOOL isolate);
-  BOOL SCFN( Sciter_V2v ) (HVM vm, const VALUE* valuev, tiscript_value* script_value);
+  BOOL SCFN( Sciter_tv2V ) (HVM vm, tiscript_value script_value, VALUE* value, BOOL isolate);
+  BOOL SCFN( Sciter_V2tv ) (HVM vm, const VALUE* valuev, tiscript_value* script_value);
 
   HSARCHIVE SCFN( SciterOpenArchive ) (LPCBYTE archiveData, UINT archiveDataLength);
   BOOL SCFN( SciterGetArchiveItem ) (HSARCHIVE harc, LPCWSTR path, LPCBYTE* pdata, UINT* pdataLength);
@@ -697,10 +699,15 @@ proc rapi*():LPSciterRequestAPI {.inline.} =
   inline UINT SCAPI ValueNativeFunctorSet (VALUE* pval, NATIVE_FUNCTOR_INVOKE*  pinvoke, NATIVE_FUNCTOR_RELEASE* prelease, VOID* tag ) { return SAPI()->ValueNativeFunctorSet ( pval, pinvoke,prelease,tag); }
   inline BOOL SCAPI ValueIsNativeFunctor ( const VALUE* pval) { return SAPI()->ValueIsNativeFunctor (pval); }
 
+#ifndef C2NIM
   // conversion between script (managed) value and the VALUE ( com::variant alike thing )
   inline BOOL SCAPI Sciter_v2V(HVM vm, const tiscript_value script_value, VALUE* out_value, BOOL isolate) { return SAPI()->Sciter_v2V(vm,script_value,out_value, isolate); }
   inline BOOL SCAPI Sciter_V2v(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2v(vm,value,out_script_value); }
-    
+#else
+  inline BOOL SCAPI Sciter_tv2V(HVM vm, const tiscript_value script_value, VALUE* out_value, BOOL isolate) { return SAPI()->Sciter_v2V(vm,script_value,out_value, isolate); }
+  inline BOOL SCAPI Sciter_V2tv(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2v(vm,value,out_script_value); }
+#endif
+
 #ifdef WINDOWS
   inline BOOL SCAPI SciterCreateOnDirectXWindow(HWINDOW hwnd, IDXGISwapChain* pSwapChain) { return SAPI()->SciterCreateOnDirectXWindow(hwnd,pSwapChain); }
   inline BOOL SCAPI SciterRenderOnDirectXWindow(HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer) { return SAPI()->SciterRenderOnDirectXWindow(hwnd,elementToRenderOrNull,frontLayer); }
