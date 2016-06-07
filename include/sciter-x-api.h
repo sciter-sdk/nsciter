@@ -30,7 +30,7 @@
   #def CHAR char
   #def LPCSTR  CHAR*
   #def VOID void
-  #def UINT_PTR csize
+  #def UINT_PTR UINT
   #def BOOL bool
   
   #def WINDOWS windows
@@ -699,14 +699,9 @@ proc rapi*():LPSciterRequestAPI {.inline.} =
   inline UINT SCAPI ValueNativeFunctorSet (VALUE* pval, NATIVE_FUNCTOR_INVOKE*  pinvoke, NATIVE_FUNCTOR_RELEASE* prelease, VOID* tag ) { return SAPI()->ValueNativeFunctorSet ( pval, pinvoke,prelease,tag); }
   inline BOOL SCAPI ValueIsNativeFunctor ( const VALUE* pval) { return SAPI()->ValueIsNativeFunctor (pval); }
 
-#ifndef C2NIM
   // conversion between script (managed) value and the VALUE ( com::variant alike thing )
-  inline BOOL SCAPI Sciter_v2V(HVM vm, const tiscript_value script_value, VALUE* out_value, BOOL isolate) { return SAPI()->Sciter_v2V(vm,script_value,out_value, isolate); }
-  inline BOOL SCAPI Sciter_V2v(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2v(vm,value,out_script_value); }
-#else
-  inline BOOL SCAPI Sciter_tv2V(HVM vm, const tiscript_value script_value, VALUE* out_value, BOOL isolate) { return SAPI()->Sciter_v2V(vm,script_value,out_value, isolate); }
-  inline BOOL SCAPI Sciter_V2tv(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2v(vm,value,out_script_value); }
-#endif
+  inline BOOL SCAPI Sciter_tv2V(HVM vm, const tiscript_value script_value, VALUE* out_value, BOOL isolate) { return SAPI()->Sciter_tv2V(vm,script_value,out_value, isolate); }
+  inline BOOL SCAPI Sciter_V2tv(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2tv(vm,value,out_script_value); }
 
 #ifdef WINDOWS
   inline BOOL SCAPI SciterCreateOnDirectXWindow(HWINDOW hwnd, IDXGISwapChain* pSwapChain) { return SAPI()->SciterCreateOnDirectXWindow(hwnd,pSwapChain); }

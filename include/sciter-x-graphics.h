@@ -57,7 +57,7 @@
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
 #@
-import xtypes
+import xtypes,xdom
 @#
 #endif
 
@@ -76,6 +76,11 @@ typedef gool::graphics* HGFX;
 typedef gool::image*    HIMG;
 typedef gool::path*     HPATH;
 typedef gool::text_layout* HTEXT;
+#else
+typedef void* HGFX;
+typedef void*    HIMG;
+typedef void*     HPATH;
+typedef void* HTEXT;
 #endif
 
 typedef float REAL;

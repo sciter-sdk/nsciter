@@ -13,8 +13,12 @@
 ## #  Essentially this mimics Graphics object as close as possible.
 ## # 
 
-import xtypes
+import xtypes,xdom
 type
+  HGFX* = pointer
+  HIMG* = pointer
+  HPATH* = pointer
+  HTEXT* = pointer
   REAL* = cfloat
   POS* = REAL
 

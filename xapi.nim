@@ -43,7 +43,7 @@ type
     SciterUpdateWindow*: proc (hwnd: HWINDOW)
     when defined(windows):
       SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL
-    SciterSetOption*: proc (hWnd: HWINDOW; option: cuint; value: csize): bool
+    SciterSetOption*: proc (hWnd: HWINDOW; option: cuint; value: cuint): bool
     SciterGetPPI*: proc (hWndSciter: HWINDOW; px: ptr cuint; py: ptr cuint)
     SciterGetViewExpando*: proc (hwnd: HWINDOW; pval: ptr VALUE): bool
     when defined(windows):
@@ -130,7 +130,7 @@ type
     SciterInsertElement*: proc (he: HELEMENT; hparent: HELEMENT; index: cuint): cint
     SciterDetachElement*: proc (he: HELEMENT): cint
     SciterDeleteElement*: proc (he: HELEMENT): cint
-    SciterSetTimer*: proc (he: HELEMENT; milliseconds: cuint; timer_id: csize): cint
+    SciterSetTimer*: proc (he: HELEMENT; milliseconds: cuint; timer_id: cuint): cint
     SciterDetachEventHandler*: proc (he: HELEMENT; pep: LPELEMENT_EVENT_PROC;
                                    tag: pointer): cint
     SciterAttachEventHandler*: proc (he: HELEMENT; pep: LPELEMENT_EVENT_PROC;
@@ -140,9 +140,9 @@ type
     SciterWindowDetachEventHandler*: proc (hwndLayout: HWINDOW;
         pep: LPELEMENT_EVENT_PROC; tag: pointer): cint
     SciterSendEvent*: proc (he: HELEMENT; appEventCode: cuint; heSource: HELEMENT;
-                          reason: csize; handled: ptr bool): cint ## #out
+                          reason: cuint; handled: ptr bool): cint ## #out
     SciterPostEvent*: proc (he: HELEMENT; appEventCode: cuint; heSource: HELEMENT;
-                          reason: csize): cint
+                          reason: cuint): cint
     SciterCallBehaviorMethod*: proc (he: HELEMENT; params: ptr METHOD_PARAMS): cint
     SciterRequestElementData*: proc (he: HELEMENT; url: ptr WideCString;
                                    dataType: cuint; initiator: HELEMENT): cint
@@ -276,15 +276,15 @@ type
     SciterFireEvent*: proc (evt: ptr BEHAVIOR_EVENT_PARAMS; post: bool;
                           handled: ptr bool): cint
     SciterGetCallbackParam*: proc (hwnd: HWINDOW): pointer
-    SciterPostCallback*: proc (hwnd: HWINDOW; wparam: csize; lparam: csize;
-                             timeoutms: cuint): csize
+    SciterPostCallback*: proc (hwnd: HWINDOW; wparam: cuint; lparam: cuint;
+                             timeoutms: cuint): cuint
     GetSciterGraphicsAPI*: proc (): LPSciterGraphicsAPI
     GetSciterRequestAPI*: proc (): LPSciterRequestAPI
     when defined(windows):
       SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): BOOL
       SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:BOOL): BOOL
       SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): BOOL
-    for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field*: nil ## # 
+    # for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field*: nil ## # 
                                                                             ## c2nim 
                                                                             ## needs this :(
   
@@ -377,7 +377,7 @@ when defined(windows):
   proc SciterTranslateMessage*(lpMsg: ptr MSG): bool {.inline.} =
     return SAPI().SciterTranslateMessage(lpMsg)
 
-proc SciterSetOption*(hWnd: HWINDOW; option: cuint; value: csize): bool {.inline.} =
+proc SciterSetOption*(hWnd: HWINDOW; option: cuint; value: cuint): bool {.inline.} =
   return SAPI().SciterSetOption(hWnd, option, value)
 
 proc SciterGetPPI*(hWndSciter: HWINDOW; px: ptr cuint; py: ptr cuint) {.inline.} =
@@ -582,7 +582,7 @@ proc SciterDetachElement*(he: HELEMENT): cint {.inline.} =
 proc SciterDeleteElement*(he: HELEMENT): cint {.inline.} =
   return SAPI().SciterDeleteElement(he)
 
-proc SciterSetTimer*(he: HELEMENT; milliseconds: cuint; timer_id: csize): cint {.inline.} =
+proc SciterSetTimer*(he: HELEMENT; milliseconds: cuint; timer_id: cuint): cint {.inline.} =
   return SAPI().SciterSetTimer(he, milliseconds, timer_id)
 
 proc SciterDetachEventHandler*(he: HELEMENT; pep: LPELEMENT_EVENT_PROC; tag: pointer): cint {.
@@ -865,13 +865,15 @@ proc ValueNativeFunctorSet*(pval: ptr VALUE; pinvoke: ptr NATIVE_FUNCTOR_INVOKE;
 proc ValueIsNativeFunctor*(pval: ptr VALUE): bool {.inline.} =
   return SAPI().ValueIsNativeFunctor(pval)
 
+## # conversion between script (managed) value and the VALUE ( com::variant alike thing )
+
 proc Sciter_tv2V*(vm: HVM; script_value: tiscript_value; out_value: ptr VALUE;
                  isolate: bool): bool {.inline.} =
-  return SAPI().Sciter_v2V(vm, script_value, out_value, isolate)
+  return SAPI().Sciter_tv2V(vm, script_value, out_value, isolate)
 
 proc Sciter_V2tv*(vm: HVM; value: ptr VALUE; out_script_value: ptr tiscript_value): bool {.
     inline.} =
-  return SAPI().Sciter_V2v(vm, value, out_script_value)
+  return SAPI().Sciter_V2tv(vm, value, out_script_value)
 
 when defined(windows):
   proc SciterCreateOnDirectXWindow*(hwnd: HWINDOW; pSwapChain: ptr IDXGISwapChain): bool {.
