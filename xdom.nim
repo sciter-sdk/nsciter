@@ -11,7 +11,7 @@
 ## #  DOM access methods, plain C interface
 ## # 
 
-import xtypes,xvalue
+import xtypes,xvalue,xtiscript
 type
   BEHAVIOR_EVENT_PARAMS* = object
 type

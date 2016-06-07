@@ -1,7 +1,58 @@
 #ifndef __tis_h__
 #define __tis_h__
 
+#ifdef C2NIM
+  #prefix _
+  
+  #skipinclude
+  #def SCFN(name) (*name)
+  #def SCAPI
+  #def SC_CALLBACK
+  #def TISAPI
+  #def EXTAPI
+  
+  #def UINT cuint
+  #def INT cint
+  #def UINT64 culonglong
+  #def INT64 cint
+  #def BYTE byte
+  #def LPCBYTE BYTE*
+  #def WCHAR WideCString
+  #def LPCWSTR  WCHAR*
+  #def LPWSTR  WCHAR*
+  #def CHAR char
+  #def LPCSTR  CHAR*
+  #def VOID void
+  #def UINT_PTR csize
+  #def BOOL bool
+  #def LPUINT UINT*
+  
+  #def WINDOWS windows
+  #def LINUX linux
+  #def OSX osx
+  
+  #def RECT Rect
+  #def POINT Point
+  #def SIZE Size
+  #def LPVOID pointer
+  #def LPCVOID pointer
+  #def LPRECT RECT*
+  #def LPCRECT RECT*
+  #def PPOINT POINT*
+  #def LPPOINT POINT*
+  #def PSIZE SIZE*
+  #def LPSIZE SIZE*
+  
+  #pp SCDOM_RESULT
+
+#@
+import xtypes
+@#
+#endif
+
 #include "sciter-x-types.h"
+
+#ifndef C2NIM
 
 #if defined(__GNUC__)
   #define __cdecl __attribute__((__cdecl__))
@@ -19,6 +70,8 @@
   #define EXTAPI __cdecl
 #else
   #define EXTAPI __stdcall
+#endif
+
 #endif
 
 #pragma pack(push,8)
@@ -39,7 +92,10 @@ typedef struct tiscript_pvalue
    void *d1,*d2;
 } tiscript_pvalue;
 
+#ifndef C2NIM
 struct tiscript_stream;
+#endif
+
 typedef bool TISAPI  tiscript_stream_input(struct tiscript_stream* tag, int* pv);
 typedef bool TISAPI  tiscript_stream_output(struct tiscript_stream* tag, int v);
 typedef const WCHAR* TISAPI tiscript_stream_name(struct tiscript_stream* tag);
@@ -110,7 +166,7 @@ typedef struct tiscript_prop_def
 typedef struct tiscript_const_def
 {
   const char *name;
-  union _val
+  union
   {
     int          i;
     double       f;
