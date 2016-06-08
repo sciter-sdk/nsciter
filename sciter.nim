@@ -41,7 +41,7 @@ when isMainModule:
     # echo repr SAPI()
     echo SciterClassName()
     var s = SAPI()
-    echo "s.version:", repr s.version
+    echo "s.version:", s.version
     echo repr s.SciterVersion(false)
     echo SciterVersion(false)
     # var wnd = SciterCreateWindow(0, nil, nil, nil, nil)
