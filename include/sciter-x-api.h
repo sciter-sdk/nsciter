@@ -24,7 +24,7 @@
   #def UINT64 culonglong
   #def INT64 cint
   #def BYTE byte
-  #def LPCBYTE BYTE*
+  #def LPCBYTE cstring
   #def LPCWSTR  WideCString
   #def LPWSTR  WideCString
   #def CHAR char
@@ -34,7 +34,7 @@
   #def BOOL bool
   
   #def WINDOWS windows
-  #def LINUX linux
+  #def LINUX posix
   #def OSX osx
   
   #def SCITER_VALUE Value
@@ -94,8 +94,8 @@ typedef struct _ISciterAPI {
     LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
   #else
-    #@SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT
-      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr BOOL): LRESULT
+    #@SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT  {.stdcall.}
+      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr BOOL): LRESULT  {.stdcall.}
     @#
   #endif
 #endif
@@ -117,39 +117,39 @@ typedef struct _ISciterAPI {
   #ifndef C2NIM
     BOOL    SCFN( SciterTranslateMessage )(MSG* lpMsg);
   #else
-    #@SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL
+    #@SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL  {.stdcall.}
     @#
   #endif
 #endif
   BOOL    SCFN( SciterSetOption )(HWINDOW hWnd, UINT option, UINT_PTR value );
   VOID    SCFN( SciterGetPPI )(HWINDOW hWndSciter, UINT* px, UINT* py);
   BOOL    SCFN( SciterGetViewExpando )( HWINDOW hwnd, VALUE* pval );
-#ifdef WINDOWS
+#ifdef windows
   #ifndef C2NIM
     BOOL    SCFN( SciterRenderD2D )(HWINDOW hWndSciter, ID2D1RenderTarget* prt);
     BOOL    SCFN( SciterD2DFactory )(ID2D1Factory ** ppf);
     BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
   #else
-    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): BOOL
-      SciterD2DFactory*: proc (ppf:ptr ID2D1FactoryPtr): BOOL
-      SciterDWFactory*: proc (ppf:ptr IDWriteFactoryPtr): BOOL
+    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): BOOL {.stdcall.}
+      SciterD2DFactory*: proc (ppf:ptr ID2D1FactoryPtr): BOOL {.stdcall.}
+      SciterDWFactory*: proc (ppf:ptr IDWriteFactoryPtr): BOOL {.stdcall.}
     @#
   #endif
 #endif
   BOOL    SCFN( SciterGraphicsCaps )(LPUINT pcaps);
   BOOL    SCFN( SciterSetHomeURL )(HWINDOW hWndSciter, LPCWSTR baseUrl);
-#if defined(OSX)
+#if defined(osx)
   #ifndef C2NIM
     HWINDOW SCFN( SciterCreateNSView )( LPRECT frame ); // returns NSView*
   #else
-    #@SciterCreateNSView*: proc (frame:LPRECT): HWINDOW
+    #@SciterCreateNSView*: proc (frame:LPRECT): HWINDOW {.cdecl.}
     @#
   #endif
-#elif defined(LINUX)
+#elif defined(posix)
   #ifndef C2NIM
     HWINDOW SCFN( SciterCreateWidget )( LPRECT frame ); // returns GtkWidget
   #else
-    #@SciterCreateWidget*: proc (frame:ptr Rect): HWINDOW
+    #@SciterCreateWidget*: proc (frame:ptr Rect): HWINDOW {.cdecl.}
     @#
   #endif
 #endif
