@@ -1,8 +1,8 @@
 
 include xapi
 
-when defined(linux):
-    {.passC: "-std=c++11".}
+when defined(posix):
+    # {.passC: "-std=c++11".}
     {.passC: gorge("pkg-config gtk+-3.0 --cflags").}
     {.passL: gorge("pkg-config gtk+-3.0 --libs").}
     const
@@ -36,17 +36,32 @@ when defined(linux):
         var w = gtk_widget_get_toplevel(cast[ptr GtkWidget](hwnd))
         gtk_window_present(gwindow(w))
         gtk_main()
+
+import os,strutils
         
 when isMainModule:
     # echo repr SAPI()
     echo SciterClassName()
     var s = SAPI()
+    echo "spi:", repr s
     echo "s.version:", s.version
-    echo repr s.SciterVersion(false)
-    echo SciterVersion(false)
+    echo "s.SciterClassName:", s.SciterClassName()
+    echo "s.SciterVersion:", toHex(int(s.SciterVersion(false)), 5)
+    echo "s.SciterVersion:", toHex(int(s.SciterVersion(true)), 5)
+    # echo SciterVersion(false)
+    echo "SciterCreateWindow:", repr SciterCreateWindow
+    echo "s.SciterCreateWindow:", repr s.SciterCreateWindow
+    var r = cast[ptr Rect](alloc0(sizeof(Rect)))
+    r.top = 0
+    r.left = 0
+    r.bottom = 300
+    r.right = 300
+    var wnd = SciterCreateWindow(cuint(SW_CONTROLS or SW_MAIN or SW_TITLEBAR), r, nil, nil, nil)
     # var wnd = SciterCreateWindow(0, nil, nil, nil, nil)
-    # var html = "hello"
-    # echo "wnd:", repr wnd
-    # wnd.setTitle("test")
-    # discard wnd.SciterLoadHtml(addr html[0], 5, newWideCString("."))
-    # wnd.run
+    if wnd == nil:
+        quit("wnd is nil")
+    var html = "hello"
+    echo "wnd:", repr wnd
+    wnd.setTitle("test")
+    discard wnd.SciterLoadHtml(html, 5, newWideCString("."))
+    wnd.run
