@@ -12,7 +12,8 @@ proc SAPI*():ptr ISciterAPI {.cdecl.} =
     return nil
   var procPtr = symAddr(libhandle, "SciterAPI")
   let p = cast[SciterAPI_ptr](procPtr)
-  return p()
+  api = p()
+  return api
   
 proc gapi*():LPSciterGraphicsAPI {.cdecl.} =
   return SAPI().GetSciterGraphicsAPI()
