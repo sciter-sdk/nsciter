@@ -1,4 +1,5 @@
-NSRC = xapi.nim xdef.nim xbehavior.nim xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim
+NSRC = sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
+	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim
 
 sciter:${NSRC}
 	nim c sciter
@@ -26,3 +27,6 @@ xvalue.nim:include/value.h
 
 xtiscript.nim:include/tiscript.h
 	c2nim -o:$@ $^
+
+clean:
+	rm -rf sciter nimcache
