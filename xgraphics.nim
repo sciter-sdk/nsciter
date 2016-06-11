@@ -79,53 +79,53 @@ type
 
 type
   SCITER_TEXT_FORMAT* = object
-    fontFamily*: ptr WideCString
-    fontWeight*: cuint         ## # 100...900, 400 - normal, 700 - bold
+    fontFamily*: WideCString
+    fontWeight*: uint32        ## # 100...900, 400 - normal, 700 - bold
     fontItalic*: bool
     fontSize*: cfloat          ## # dips
     lineHeight*: cfloat        ## # dips
     textDirection*: SCITER_TEXT_DIRECTION
     textAlignment*: SCITER_TEXT_ALIGNMENT ## # horizontal alignment
     lineAlignment*: SCITER_TEXT_ALIGNMENT ## # a.k.a. vertical alignment for roman writing systems
-    localeName*: ptr WideCString
+    localeName*: WideCString
 
-  image_write_function* = proc (prm: pointer; data: ptr byte; data_length: cuint): bool {.
+  image_write_function* = proc (prm: pointer; data: ptr byte; data_length: uint32): bool {.
       cdecl.}
   SciterGraphicsAPI* = object
-    imageCreate*: proc (poutImg: ptr HIMG; width: cuint; height: cuint; withAlpha: bool): GRAPHIN_RESULT {.
+    imageCreate*: proc (poutImg: ptr HIMG; width: uint32; height: uint32; withAlpha: bool): GRAPHIN_RESULT {.
         cdecl.}               ## # image primitives
     ## # construct image from B[n+0],G[n+1],R[n+2],A[n+3] data.
     ## # Size of pixmap data is pixmapWidth*pixmapHeight*4
-    imageCreateFromPixmap*: proc (poutImg: ptr HIMG; pixmapWidth: cuint;
-                                pixmapHeight: cuint; withAlpha: bool;
+    imageCreateFromPixmap*: proc (poutImg: ptr HIMG; pixmapWidth: uint32;
+                                pixmapHeight: uint32; withAlpha: bool;
                                 pixmap: ptr byte): GRAPHIN_RESULT {.cdecl.}
     imageAddRef*: proc (himg: HIMG): GRAPHIN_RESULT {.cdecl.}
     imageRelease*: proc (himg: HIMG): GRAPHIN_RESULT {.cdecl.}
-    imageGetInfo*: proc (himg: HIMG; width: ptr cuint; height: ptr cuint;
+    imageGetInfo*: proc (himg: HIMG; width: ptr uint32; height: ptr uint32;
                        usesAlpha: ptr bool): GRAPHIN_RESULT {.cdecl.} ## #GRAPHIN_RESULT
                                                                  ## #      SCFN(imageGetPixels)( HIMG himg,
                                                                  ## #           image_write_function* dataReceiver );
     imageClear*: proc (himg: HIMG; byColor: COLOR): GRAPHIN_RESULT {.cdecl.}
-    imageLoad*: proc (bytes: ptr byte; num_bytes: cuint; pout_img: ptr HIMG): GRAPHIN_RESULT {.
+    imageLoad*: proc (bytes: ptr byte; num_bytes: uint32; pout_img: ptr HIMG): GRAPHIN_RESULT {.
         cdecl.}               ## # load png/jpeg/etc. image from stream of bytes
-    imageSave*: proc (himg: HIMG; pfn: ptr image_write_function; prm: pointer; bpp: cuint; ## 
-                                                                                ## # 
-                                                                                ## SECTION: 
-                                                                                ## graphics 
-                                                                                ## primitives 
-                                                                                ## and 
-                                                                                ## drawing 
-                                                                                ## operations
-                                                                                ## 
-                                                                                ## # 
-                                                                                ## create 
-                                                                                ## COLOR 
-                                                                                ## value
+    imageSave*: proc (himg: HIMG; pfn: ptr image_write_function; prm: pointer; bpp: uint32; ## 
+                                                                                 ## # 
+                                                                                 ## SECTION: 
+                                                                                 ## graphics 
+                                                                                 ## primitives 
+                                                                                 ## and 
+                                                                                 ## drawing 
+                                                                                 ## operations
+                                                                                 ## 
+                                                                                 ## # 
+                                                                                 ## create 
+                                                                                 ## COLOR 
+                                                                                 ## value
     ## # save png/jpeg/etc. image to stream of bytes
     ## # function and its param passed "as is" 
     ## #24,32 if alpha needed
-                    quality: cuint): GRAPHIN_RESULT {.cdecl.} ## # png: 0, jpeg:, 10 - 100 
-    RGBA*: proc (red: cuint; green: cuint; blue: cuint; alpha: cuint): COLOR {.cdecl.} ## #= 255
+                    quality: uint32): GRAPHIN_RESULT {.cdecl.} ## # png: 0, jpeg:, 10 - 100 
+    RGBA*: proc (red: uint32; green: uint32; blue: uint32; alpha: uint32): COLOR {.cdecl.} ## #= 255
     gCreate*: proc (img: HIMG; pout_gfx: ptr HGFX): GRAPHIN_RESULT {.cdecl.}
     gAddRef*: proc (gfx: HGFX): GRAPHIN_RESULT {.cdecl.}
     gRelease*: proc (gfx: HGFX): GRAPHIN_RESULT {.cdecl.} ## # Draws line from x1,y1 to x2,y2 using current lineColor and lineGradient.
@@ -157,16 +157,16 @@ type
                                                                                ## fillColor/fillGradient.
     gArc*: proc (hgfx: HGFX; x: POS; y: POS; rx: POS; ry: POS; start: ANGLE; sweep: ANGLE): GRAPHIN_RESULT {.
         cdecl.}               ## # Draws star.
-    gStar*: proc (hgfx: HGFX; x: POS; y: POS; r1: DIM; r2: DIM; start: ANGLE; rays: cuint): GRAPHIN_RESULT {.
+    gStar*: proc (hgfx: HGFX; x: POS; y: POS; r1: DIM; r2: DIM; start: ANGLE; rays: uint32): GRAPHIN_RESULT {.
         cdecl.}               ## # Closed polygon.
-    gPolygon*: proc (hgfx: HGFX; xy: ptr POS; num_points: cuint): GRAPHIN_RESULT {.cdecl.} ## 
-                                                                                ## # 
-                                                                                ## Polyline.
-    gPolyline*: proc (hgfx: HGFX; xy: ptr POS; num_points: cuint): GRAPHIN_RESULT {.cdecl.} ## 
+    gPolygon*: proc (hgfx: HGFX; xy: ptr POS; num_points: uint32): GRAPHIN_RESULT {.cdecl.} ## 
                                                                                  ## # 
-                                                                                 ## SECTION: 
-                                                                                 ## Path 
-                                                                                 ## operations
+                                                                                 ## Polyline.
+    gPolyline*: proc (hgfx: HGFX; xy: ptr POS; num_points: uint32): GRAPHIN_RESULT {.cdecl.} ## 
+                                                                                  ## # 
+                                                                                  ## SECTION: 
+                                                                                  ## Path 
+                                                                                  ## operations
     pathCreate*: proc (path: ptr HPATH): GRAPHIN_RESULT {.cdecl.}
     pathAddRef*: proc (path: HPATH): GRAPHIN_RESULT {.cdecl.}
     pathRelease*: proc (path: HPATH): GRAPHIN_RESULT {.cdecl.}
@@ -206,28 +206,28 @@ type
                                                                    ## #      graphics_no_fill ( HGFX hgfx ) { graphics_fill_color(hgfx, graphics_rgbt(0,0,0,0xFF)); }
                                                                    ## # setup parameters of linear gradient of lines.
     gLineGradientLinear*: proc (hgfx: HGFX; x1: POS; y1: POS; x2: POS; y2: POS;
-                              stops: ptr COLOR_STOP; nstops: cuint): GRAPHIN_RESULT {.
+                              stops: ptr COLOR_STOP; nstops: uint32): GRAPHIN_RESULT {.
         cdecl.}               ## # setup parameters of linear gradient of fills.
     gFillGradientLinear*: proc (hgfx: HGFX; x1: POS; y1: POS; x2: POS; y2: POS;
-                              stops: ptr COLOR_STOP; nstops: cuint): GRAPHIN_RESULT {.
+                              stops: ptr COLOR_STOP; nstops: uint32): GRAPHIN_RESULT {.
         cdecl.}               ## # setup parameters of line gradient radial fills.
     gLineGradientRadial*: proc (hgfx: HGFX; x: POS; y: POS; rx: DIM; ry: DIM;
-                              stops: ptr COLOR_STOP; nstops: cuint): GRAPHIN_RESULT {.
+                              stops: ptr COLOR_STOP; nstops: uint32): GRAPHIN_RESULT {.
         cdecl.}               ## # setup parameters of gradient radial fills.
     gFillGradientRadial*: proc (hgfx: HGFX; x: POS; y: POS; rx: DIM; ry: DIM;
-                              stops: ptr COLOR_STOP; nstops: cuint): GRAPHIN_RESULT {.
+                              stops: ptr COLOR_STOP; nstops: uint32): GRAPHIN_RESULT {.
         cdecl.}
     gFillMode*: proc (hgfx: HGFX; even_odd: bool): GRAPHIN_RESULT {.cdecl.} ## # SECTION: text
                                                                     ## # create text layout using element's styles
     ## # false - fill_non_zero 
-    textCreateForElement*: proc (ptext: ptr HTEXT; text: ptr WideCString;
-                               textLength: cuint; he: HELEMENT): GRAPHIN_RESULT {.
+    textCreateForElement*: proc (ptext: ptr HTEXT; text: WideCString;
+                               textLength: uint32; he: HELEMENT): GRAPHIN_RESULT {.
         cdecl.}               ## # create text layout using explicit format declaration
-    textCreate*: proc (ptext: ptr HTEXT; text: ptr WideCString; textLength: cuint;
+    textCreate*: proc (ptext: ptr HTEXT; text: WideCString; textLength: uint32;
                      format: ptr SCITER_TEXT_FORMAT): GRAPHIN_RESULT {.cdecl.}
     textGetMetrics*: proc (text: HTEXT; minWidth: ptr DIM; maxWidth: ptr DIM;
                          height: ptr DIM; ascent: ptr DIM; descent: ptr DIM;
-                         nLines: ptr cuint): GRAPHIN_RESULT {.cdecl.}
+                         nLines: ptr uint32): GRAPHIN_RESULT {.cdecl.}
     textSetBox*: proc (text: HTEXT; width: DIM; height: DIM): GRAPHIN_RESULT {.cdecl.} ## # 
                                                                              ## draw 
                                                                              ## text 
@@ -245,17 +245,17 @@ type
                                                                              ## with its 
                                                                              ## center at 
                                                                              ## 100,100 px
-    gDrawText*: proc (hgfx: HGFX; text: HTEXT; px: POS; py: POS; position: cuint): GRAPHIN_RESULT {.
+    gDrawText*: proc (hgfx: HGFX; text: HTEXT; px: POS; py: POS; position: uint32): GRAPHIN_RESULT {.
         cdecl.}               ## # SECTION: image rendering
                ## # draws img onto the graphics surface with current transformation applied (scale, rotation).
     gDrawImage*: proc (hgfx: HGFX; himg: HIMG; x: POS; y: POS; w: ptr DIM; ## # SECTION: coordinate space
     ## #= 0
     ## #= 0
                      h: ptr DIM; ## #= 0
-                     ix: ptr cuint; ## #= 0
-                     iy: ptr cuint; ## #= 0
-                     iw: ptr cuint; ## #= 0
-                     ih: ptr cuint; opacity: ptr cfloat): GRAPHIN_RESULT {.cdecl.} ## #= 0, if provided is in 0.0 .. 1.0
+                     ix: ptr uint32; ## #= 0
+                     iy: ptr uint32; ## #= 0
+                     iw: ptr uint32; ## #= 0
+                     ih: ptr uint32; opacity: ptr cfloat): GRAPHIN_RESULT {.cdecl.} ## #= 0, if provided is in 0.0 .. 1.0
     gWorldToScreen*: proc (hgfx: HGFX; inout_x: ptr POS; inout_y: ptr POS): GRAPHIN_RESULT {.
         cdecl.} ## #inline GRAPHIN_RESULT
                ## #      graphics_world_to_screen ( HGFX hgfx, POS* length)

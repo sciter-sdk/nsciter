@@ -8,7 +8,7 @@ type
 ## # tiscript_value
 
 type
-  tiscript_value* = culonglong
+  tiscript_value* = uint64
   HVM* = ptr tiscript_VM
 
 ## # pinned tiscript_value, val here will survive GC.
@@ -22,7 +22,7 @@ type
 
   tiscript_stream_input* = proc (tag: ptr tiscript_stream; pv: ptr cint): bool {.cdecl.}
   tiscript_stream_output* = proc (tag: ptr tiscript_stream; v: cint): bool {.cdecl.}
-  tiscript_stream_name* = proc (tag: ptr tiscript_stream): ptr WideCString {.cdecl.}
+  tiscript_stream_name* = proc (tag: ptr tiscript_stream): ptr Utf16Char {.cdecl.}
   tiscript_stream_close* = proc (tag: ptr tiscript_stream) {.cdecl.}
   tiscript_stream_vtbl* = object
     input*: ptr tiscript_stream_input
@@ -108,14 +108,14 @@ const
   TISCRIPT_CONST_STRING* = 2
 
 type
-  INNER_C_UNION_8643584045684552388* = object {.union.}
+  INNER_C_UNION_8622303318766889538* = object {.union.}
     i*: cint
-    f*: cdouble
-    str*: ptr WideCString
+    f*: float64
+    str*: ptr Utf16Char
 
   tiscript_const_def* = object
     name*: cstring
-    val*: INNER_C_UNION_8643584045684552388
+    val*: INNER_C_UNION_8622303318766889538
     `type`*: cuint
 
   tiscript_class_def* = object
@@ -164,10 +164,10 @@ type
     is_bytes*: proc (v: tiscript_value): bool {.cdecl.}
     is_datetime*: proc (a2: ptr tiscript_VM; v: tiscript_value): bool {.cdecl.}
     get_int_value*: proc (v: tiscript_value; pi: ptr cint): bool {.cdecl.}
-    get_float_value*: proc (v: tiscript_value; pd: ptr cdouble): bool {.cdecl.}
+    get_float_value*: proc (v: tiscript_value; pd: ptr float64): bool {.cdecl.}
     get_bool_value*: proc (v: tiscript_value; pb: ptr bool): bool {.cdecl.}
-    get_symbol_value*: proc (v: tiscript_value; psz: ptr ptr WideCString): bool {.cdecl.}
-    get_string_value*: proc (v: tiscript_value; pdata: ptr ptr WideCString;
+    get_symbol_value*: proc (v: tiscript_value; psz: ptr ptr Utf16Char): bool {.cdecl.}
+    get_string_value*: proc (v: tiscript_value; pdata: ptr ptr Utf16Char;
                            plength: ptr cuint): bool {.cdecl.}
     get_bytes*: proc (v: tiscript_value; pb: ptr ptr cuchar; pblen: ptr cuint): bool {.cdecl.}
     get_datetime*: proc (a2: ptr tiscript_VM; v: tiscript_value; dt: ptr culonglong): bool {.
@@ -178,8 +178,8 @@ type
     null_value*: proc (): tiscript_value {.cdecl.}
     bool_value*: proc (v: bool): tiscript_value {.cdecl.}
     int_value*: proc (v: cint): tiscript_value {.cdecl.}
-    float_value*: proc (v: cdouble): tiscript_value {.cdecl.}
-    string_value*: proc (a2: ptr tiscript_VM; text: ptr WideCString; text_length: cuint): tiscript_value {.
+    float_value*: proc (v: float64): tiscript_value {.cdecl.}
+    string_value*: proc (a2: ptr tiscript_VM; text: ptr Utf16Char; text_length: cuint): tiscript_value {.
         cdecl.}
     symbol_value*: proc (zstr: cstring): tiscript_value {.cdecl.}
     bytes_value*: proc (a2: ptr tiscript_VM; data: ptr byte; data_length: cuint): tiscript_value {.
@@ -215,9 +215,12 @@ type
                                                                              ## eval
     eval*: proc (a2: ptr tiscript_VM; ns: tiscript_value; input: ptr tiscript_stream;
                template_mode: bool; pretval: ptr tiscript_value): bool {.cdecl.}
-    eval_string*: proc (a2: ptr tiscript_VM; ns: tiscript_value;
-                      script: ptr WideCString; script_length: cuint;
-                      pretval: ptr tiscript_value): bool {.cdecl.} ## # call function (method)
+    eval_string*: proc (a2: ptr tiscript_VM; ns: tiscript_value; script: ptr Utf16Char;
+                      script_length: cuint; pretval: ptr tiscript_value): bool {.cdecl.} ## 
+                                                                                  ## # 
+                                                                                  ## call 
+                                                                                  ## function 
+                                                                                  ## (method)
     call*: proc (a2: ptr tiscript_VM; obj: tiscript_value; function: tiscript_value;
                argv: ptr tiscript_value; argn: cuint; pretval: ptr tiscript_value): bool {.
         cdecl.}               ## # compiled bytecodes
@@ -226,7 +229,7 @@ type
         cdecl.}
     loadbc*: proc (pvm: ptr tiscript_VM; input_bytecodes: ptr tiscript_stream): bool {.
         cdecl.}               ## # throw error
-    throw_error*: proc (a2: ptr tiscript_VM; error: ptr WideCString) {.cdecl.} ## # arguments access
+    throw_error*: proc (a2: ptr tiscript_VM; error: ptr Utf16Char) {.cdecl.} ## # arguments access
     get_arg_count*: proc (pvm: ptr tiscript_VM): cuint {.cdecl.}
     get_arg_n*: proc (pvm: ptr tiscript_VM; n: cuint): tiscript_value {.cdecl.} ## # path here is global "path" of the object, something like
                                                                        ## # "one"

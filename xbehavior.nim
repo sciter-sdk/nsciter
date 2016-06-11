@@ -50,7 +50,7 @@ type
 ## # 
 
 type
-  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool {.
+  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.
       cdecl.}
   LPElementEventProc* = ptr ElementEventProc
 
@@ -87,7 +87,7 @@ type
 
 type
   INITIALIZATION_PARAMS* = object
-    cmd*: cuint                ## # INITIALIZATION_EVENTS
+    cmd*: uint32               ## # INITIALIZATION_EVENTS
   
   DRAGGING_TYPE* = enum
     NO_DRAGGING, DRAGGING_MOVE, DRAGGING_COPY
@@ -111,16 +111,16 @@ type
 
 type
   MOUSE_PARAMS* = object
-    cmd*: cuint                ## # MOUSE_EVENTS
+    cmd*: uint32               ## # MOUSE_EVENTS
     target*: HELEMENT          ## # target element
     pos*: Point                ## # position of cursor, element relative
     pos_view*: Point           ## # position of cursor, view relative
-    button_state*: cuint       ## # MOUSE_BUTTONS
-    alt_state*: cuint          ## # KEYBOARD_STATES
-    cursor_type*: cuint        ## # CURSOR_TYPE to set, see CURSOR_TYPE
+    button_state*: uint32      ## # MOUSE_BUTTONS
+    alt_state*: uint32         ## # KEYBOARD_STATES
+    cursor_type*: uint32       ## # CURSOR_TYPE to set, see CURSOR_TYPE
     is_on_icon*: bool          ## # mouse is over icon (foreground-image, foreground-repeat:no-repeat)
     dragging*: HELEMENT        ## # element that is being dragged over, this field is not NULL if (cmd & DRAGGING) != 0
-    dragging_mode*: cuint      ## # see DRAGGING_TYPE. 
+    dragging_mode*: uint32     ## # see DRAGGING_TYPE. 
   
   CURSOR_TYPE* = enum
     CURSOR_ARROW,             ## #0
@@ -150,10 +150,10 @@ type
 
 type
   KEY_PARAMS* = object
-    cmd*: cuint                ## # KEY_EVENTS
+    cmd*: uint32               ## # KEY_EVENTS
     target*: HELEMENT          ## # target element
-    key_code*: cuint           ## # key scan code, or character unicode for KEY_CHAR
-    alt_state*: cuint          ## # KEYBOARD_STATES
+    key_code*: uint32          ## # key scan code, or character unicode for KEY_CHAR
+    alt_state*: uint32         ## # KEYBOARD_STATES
   
 
 ## # parameters of evtg == HANDLE_FOCUS
@@ -168,7 +168,7 @@ type
 
 type
   FOCUS_PARAMS* = object
-    cmd*: cuint                ## # FOCUS_EVENTS
+    cmd*: uint32               ## # FOCUS_EVENTS
     target*: HELEMENT ## # target element, for FOCUS_LOST it is a handle of new focus element
                     ## #    and for FOCUS_GOT it is a handle of old focus element, can be NULL
     by_mouse_click*: bool      ## # true if focus is being set by mouse click
@@ -186,9 +186,9 @@ type
 
 type
   SCROLL_PARAMS* = object
-    cmd*: cuint                ## # SCROLL_EVENTS
+    cmd*: uint32               ## # SCROLL_EVENTS
     target*: HELEMENT          ## # target element
-    pos*: cint                 ## # scroll position if SCROLL_POS
+    pos*: int32                ## # scroll position if SCROLL_POS
     vertical*: bool            ## # true if from vertical scrollbar
   
   GESTURE_CMD* = enum
@@ -220,15 +220,15 @@ type
 
 type
   GESTURE_PARAMS* = object
-    cmd*: cuint                ## # GESTURE_EVENTS
+    cmd*: uint32               ## # GESTURE_EVENTS
     target*: HELEMENT          ## # target element
     pos*: Point                ## # position of cursor, element relative
     pos_view*: Point           ## # position of cursor, view relative
-    flags*: cuint ## # for GESTURE_REQUEST combination of GESTURE_FLAGs. 
-                ## # for others it is a combination of GESTURE_STATe's
-    delta_time*: cuint         ## # period of time from previous event.
+    flags*: uint32 ## # for GESTURE_REQUEST combination of GESTURE_FLAGs. 
+                 ## # for others it is a combination of GESTURE_STATe's
+    delta_time*: uint32        ## # period of time from previous event.
     delta_xy*: Size            ## # for GESTURE_PAN it is a direction vector 
-    delta_v*: cdouble          ## # for GESTURE_ROTATE - delta angle (radians) 
+    delta_v*: float64          ## # for GESTURE_ROTATE - delta angle (radians) 
                     ## # for GESTURE_ZOOM - zoom value, is less or greater than 1.0    
   
   DRAW_EVENTS* = enum
@@ -237,11 +237,11 @@ type
 
 type
   DRAW_PARAMS* = object
-    cmd*: cuint                ## # DRAW_EVENTS
+    cmd*: uint32               ## # DRAW_EVENTS
     gfx*: HGFX                 ## # hdc to paint on
     area*: Rect                ## # element area, to get invalid area to paint use GetClipBox,
-    reserved*: cuint ## # for DRAW_BACKGROUND/DRAW_FOREGROUND - it is a border box
-                   ## # for DRAW_CONTENT - it is a content box
+    reserved*: uint32 ## # for DRAW_BACKGROUND/DRAW_FOREGROUND - it is a border box
+                    ## # for DRAW_CONTENT - it is a content box
   
   CONTENT_CHANGE_BITS* = enum   ## # for CONTENT_CHANGED reason
     CONTENT_ADDED = 0x00000001, CONTENT_REMOVED = 0x00000002
@@ -351,17 +351,17 @@ type
 
 type
   BEHAVIOR_EVENT_PARAMS* = object
-    cmd*: cuint                ## # BEHAVIOR_EVENTS
+    cmd*: uint32               ## # BEHAVIOR_EVENTS
     heTarget*: HELEMENT ## # target element handler, in MENU_ITEM_CLICK this is owner element that caused this menu - e.g. context menu owner
                       ## # In scripting this field named as Event.owner
     he*: HELEMENT              ## # source element e.g. in SELECTION_CHANGED it is new selected <option>, in MENU_ITEM_CLICK it is menu item (LI) element
-    reason*: csize ## # EVENT_REASON or EDIT_CHANGED_REASON - UI action causing change.
-                 ## # In case of custom event notifications this may be any
-                 ## # application specific value.
+    reason*: uint32 ## # EVENT_REASON or EDIT_CHANGED_REASON - UI action causing change.
+                  ## # In case of custom event notifications this may be any
+                  ## # application specific value.
     data*: Value               ## # auxiliary data accompanied with the event. E.g. FORM_SUBMIT event is using this field to pass collection of values.
   
   TIMER_PARAMS* = object
-    timerId*: csize            ## # timerId that was used to create timer by using SciterSetTimer
+    timerId*: uint32           ## # timerId that was used to create timer by using SciterSetTimer
   
 
 ## # identifiers of methods currently supported by intrinsic behaviors,
@@ -393,7 +393,7 @@ type
   SCRIPTING_METHOD_PARAMS* = object
     name*: cstring             ## #< method name
     argv*: ptr Value            ## #< vector of arguments
-    argc*: cuint               ## #< argument count
+    argc*: uint32              ## #< argument count
     result*: Value             ## #< return value
   
   TISCRIPT_METHOD_PARAMS* = object
@@ -407,7 +407,7 @@ type
 
 type
   VALUE_PARAMS* = object
-    methodID*: cuint
+    methodID*: uint32
     val*: Value
     invalid_field_to_bypass_c2nim*: nil
 
@@ -416,8 +416,8 @@ type
 
 type
   IS_EMPTY_PARAMS* = object
-    methodID*: cuint
-    is_empty*: cuint           ## # !0 - is empty
+    methodID*: uint32
+    is_empty*: uint32          ## # !0 - is empty
     invalid_field_to_bypass_c2nim*: nil
 
 
@@ -426,11 +426,11 @@ type
 type
   DATA_ARRIVED_PARAMS* = object
     initiator*: HELEMENT       ## # element intiator of SciterRequestElementData request,
-    data*: ptr byte             ## # data buffer
-    dataSize*: cuint           ## # size of data
-    dataType*: cuint           ## # data type passed "as is" from SciterRequestElementData
-    status*: cuint ## # status = 0 (dataSize == 0) - unknown error. 
-                 ## # status = 100..505 - http response status, Note: 200 - OK! 
-                 ## # status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
-    uri*: ptr WideCString       ## # requested url 
+    data*: pointer             ## # data buffer
+    dataSize*: uint32          ## # size of data
+    dataType*: uint32          ## # data type passed "as is" from SciterRequestElementData
+    status*: uint32 ## # status = 0 (dataSize == 0) - unknown error. 
+                  ## # status = 100..505 - http response status, Note: 200 - OK! 
+                  ## # status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
+    uri*: WideCString          ## # requested url 
   

@@ -28,7 +28,7 @@ type
   HSARCHIVE* = pointer
   HPOSITION* = object
     hn*: HNODE
-    pos*: cint
+    pos*: int32
 
 
 ## ##include <string>
@@ -46,7 +46,7 @@ type
 ## # 
 
 const
-  cint* = cint
+  int32* = int32
   SCDOM_OK* = 0
   SCDOM_INVALID_HWND* = 1
   SCDOM_INVALID_HANDLE* = 2
@@ -57,11 +57,11 @@ const
 
 type
   METHOD_PARAMS* = object
-    methodID*: cuint
+    methodID*: uint32
 
   REQUEST_PARAM* = object
-    name*: ptr WideCString
-    value*: ptr WideCString
+    name*: WideCString
+    value*: WideCString
 
   ELEMENT_AREAS* = enum
     CONTENT_BOX = 0x00000000,   ## # content (inner)  box
@@ -102,7 +102,7 @@ type
 ## # 
 
 type
-  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: cuint; prms: pointer): bool {.
+  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.
       cdecl.}
   LPELEMENT_EVENT_PROC* = ptr ElementEventProc
   ELEMENT_STATE_BITS* = enum
@@ -152,7 +152,7 @@ type
 ## # 
 
 type
-  ELEMENT_COMPARATOR* = proc (he1: HELEMENT; he2: HELEMENT; param: pointer): cint {.cdecl.}
+  ELEMENT_COMPARATOR* = proc (he1: HELEMENT; he2: HELEMENT; param: pointer): int32 {.cdecl.}
   CTL_TYPE* = enum
     CTL_NO,                   ## #/< This dom element has no behavior at all.
     CTL_EDIT,                 ## #/< Single line edit box.

@@ -105,12 +105,12 @@ const
 
 type
   SCITER_CALLBACK_NOTIFICATION* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
   
   LPSCITER_CALLBACK_NOTIFICATION* = ptr SCITER_CALLBACK_NOTIFICATION
   SciterHostCallback* = proc (pns: LPSCITER_CALLBACK_NOTIFICATION;
-                           callbackParam: pointer): cuint {.cdecl.}
+                           callbackParam: pointer): uint32 {.cdecl.}
   LPSciterHostCallback* = ptr SciterHostCallback
 
 ## #*This structure is used by #SC_LOAD_DATA notification.
@@ -119,12 +119,12 @@ type
 
 type
   SCN_LOAD_DATA* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-    uri*: ptr WideCString       ## #*< [in] Zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
-    outData*: ptr byte          ## #*< [in,out] pointer to loaded data to return. if data exists in the cache then this field contain pointer to it
-    outDataSize*: cuint        ## #*< [in,out] loaded data size to return.
-    dataType*: cuint           ## #*< [in] SciterResourceType 
+    uri*: WideCString          ## #*< [in] Zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
+    outData*: pointer          ## #*< [in,out] pointer to loaded data to return. if data exists in the cache then this field contain pointer to it
+    outDataSize*: uint32       ## #*< [in,out] loaded data size to return.
+    dataType*: uint32          ## #*< [in] SciterResourceType 
     requestId*: HREQUEST       ## #*< [in] request handle that can be used with sciter-x-request API 
     principal*: HELEMENT
     initiator*: HELEMENT
@@ -137,17 +137,17 @@ type
 
 type
   SCN_DATA_LOADED* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-    uri*: ptr WideCString       ## #*< [in] zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
-    data*: ptr byte             ## #*< [in] pointer to loaded data.
-    dataSize*: cuint           ## #*< [in] loaded data size (in bytes).
-    dataType*: cuint           ## #*< [in] SciterResourceType 
-    status*: cuint ## #*< [in]
-                 ## #                                         status = 0 (dataSize == 0) - unknown error.
-                 ## #                                         status = 100..505 - http response status, Note: 200 - OK!
-                 ## #                                         status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
-                 ## #                                 
+    uri*: WideCString          ## #*< [in] zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
+    data*: pointer             ## #*< [in] pointer to loaded data.
+    dataSize*: uint32          ## #*< [in] loaded data size (in bytes).
+    dataType*: uint32          ## #*< [in] SciterResourceType 
+    status*: uint32 ## #*< [in]
+                  ## #                                         status = 0 (dataSize == 0) - unknown error.
+                  ## #                                         status = 100..505 - http response status, Note: 200 - OK!
+                  ## #                                         status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
+                  ## #                                 
   
   LPSCN_DATA_LOADED* = ptr SCN_DATA_LOADED
 
@@ -156,7 +156,7 @@ type
 
 type
   SCN_ATTACH_BEHAVIOR* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
     element*: HELEMENT         ## #*< [in] target DOM element handle
     behaviorName*: cstring     ## #*< [in] zero terminated string, string appears as value of CSS behavior:"???" attribute.
@@ -170,7 +170,7 @@ type
 
 type
   SCN_ENGINE_DESTROYED* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
   
   LPSCN_ENGINE_DESTROYED* = ptr SCN_ENGINE_DESTROYED
@@ -180,11 +180,11 @@ type
 
 type
   SCN_POSTED_NOTIFICATION* = object
-    code*: cuint               ## #*< [in] one of the codes above.
+    code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-    wparam*: csize
-    lparam*: csize
-    lreturn*: csize
+    wparam*: uint32
+    lparam*: uint32
+    lreturn*: uint32
 
   LPSCN_POSTED_NOTIFICATION* = ptr SCN_POSTED_NOTIFICATION
 
@@ -193,7 +193,7 @@ type
 
 type
   SCN_GRAPHICS_CRITICAL_FAILURE* = object
-    code*: cuint               ## #*< [in] = SC_GRAPHICS_CRITICAL_FAILURE 
+    code*: uint32              ## #*< [in] = SC_GRAPHICS_CRITICAL_FAILURE 
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
   
   LPSCN_GRAPHICS_CRITICAL_FAILURE* = ptr SCN_GRAPHICS_CRITICAL_FAILURE
@@ -235,8 +235,8 @@ type
     httpHeaders*: cstring      ## # if any
     mimeType*: cstring         ## # mime type reported by server (if any)
     encoding*: cstring         ## # data encoding (if any)
-    data*: ptr byte
-    dataLength*: cuint
+    data*: pointer
+    dataLength*: uint32
 
   URL_DATA_RECEIVER* = proc (pUrlData: ptr URL_DATA; param: pointer) {.cdecl.}
 
@@ -246,10 +246,10 @@ when defined(osx):
   ## # Obj-C id, NSWindowDelegate and NSResponder
 elif defined(windows):
   type
-    SciterWindowDelegate* = proc (hwnd: HWINDOW; msg: cuint; wParam: WPARAM;
+    SciterWindowDelegate* = proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM;
                                lParam: LPARAM; pParam: pointer; handled: ptr bool): LRESULT {.
         cdecl.}
-elif defined(linux):
+elif defined(posix):
   type
     SciterWindowDelegate* = pointer
 type
@@ -288,6 +288,6 @@ type
 
 
 type
-  DEBUG_OUTPUT_PROC* = proc (param: pointer; subsystem: cuint; ## #OUTPUT_SUBSYTEMS
-                          severity: cuint; text: ptr WideCString; text_length: cuint) {.
+  DEBUG_OUTPUT_PROC* = proc (param: pointer; subsystem: uint32; ## #OUTPUT_SUBSYTEMS
+                          severity: uint32; text: WideCString; text_length: uint32) {.
       cdecl.}

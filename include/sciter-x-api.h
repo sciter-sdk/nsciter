@@ -18,6 +18,10 @@
   #def SCFN(name) (*name)
   #def SCAPI
   #def SC_CALLBACK
+  #def TISAPI
+  #def EXTAPI
+  
+  #prefix _
   
   #discardableprefix Sciter
   #discardableprefix Value
@@ -28,6 +32,7 @@
   #def INT64 int64
   #def BYTE byte
   #def LPCBYTE pointer
+  #def WCHAR Utf16Char
   #def LPCWSTR  WideCString
   #def LPWSTR  WideCString
   #def CHAR char
@@ -35,6 +40,7 @@
   #def VOID void
   #def UINT_PTR UINT
   #def BOOL bool
+  #def double float64
   
   #def WINDOWS windows
   #def LINUX posix

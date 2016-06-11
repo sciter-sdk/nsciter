@@ -5,9 +5,9 @@ type
 
 type
   VALUE* = object
-    t*: cuint
-    u*: cuint
-    d*: culonglong
+    t*: uint32
+    u*: uint32
+    d*: uint64
 
 
 type
@@ -71,7 +71,7 @@ type
 ## # Native functor
 
 type
-  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: cuint; argv: ptr VALUE;
+  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: uint32; argv: ptr VALUE;
                               retval: ptr VALUE) {.cdecl.}
 
 ## # retval may contain error definition

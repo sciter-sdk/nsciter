@@ -24,26 +24,35 @@
   #def SCFN(name) (*name)
   #def SCAPI
   #def SC_CALLBACK
+  #def TISAPI
+  #def EXTAPI
   
-  #def UINT cuint
-  #def INT cint
-  #def UINT64 culonglong
-  #def INT64 cint
+  #prefix _
+  
+  #discardableprefix Sciter
+  #discardableprefix Value
+  
+  #def UINT uint32
+  #def INT int32
+  #def UINT64 uint64
+  #def INT64 int64
   #def BYTE byte
-  #def LPCBYTE BYTE*
-  #def WCHAR WideCString
-  #def LPCWSTR  WCHAR*
-  #def LPWSTR  WCHAR*
+  #def LPCBYTE pointer
+  #def WCHAR Utf16Char
+  #def LPCWSTR  WideCString
+  #def LPWSTR  WideCString
   #def CHAR char
-  #def LPCSTR  CHAR*
+  #def LPCSTR cstring
   #def VOID void
-  #def UINT_PTR csize
+  #def UINT_PTR UINT
   #def BOOL bool
+  #def double float64
   
   #def WINDOWS windows
-  #def LINUX linux
+  #def LINUX posix
   #def OSX osx
   
+  #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
   #def SIZE Size
