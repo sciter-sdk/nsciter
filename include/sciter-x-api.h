@@ -19,16 +19,19 @@
   #def SCAPI
   #def SC_CALLBACK
   
-  #def UINT cuint
-  #def INT cint
-  #def UINT64 culonglong
-  #def INT64 cint
+  #discardableprefix Sciter
+  #discardableprefix Value
+  
+  #def UINT uint32
+  #def INT int32
+  #def UINT64 uint64
+  #def INT64 int64
   #def BYTE byte
-  #def LPCBYTE cstring
+  #def LPCBYTE pointer
   #def LPCWSTR  WideCString
   #def LPWSTR  WideCString
   #def CHAR char
-  #def LPCSTR  CHAR*
+  #def LPCSTR cstring
   #def VOID void
   #def UINT_PTR UINT
   #def BOOL bool
@@ -52,7 +55,7 @@
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
 #@
-include xtypes,xdom,xrequest,xdef,xvalue,xtiscript,xgraphics
+include xtypes,xdom,xrequest,xdef,xvalue,xtiscript,xgraphics,converters
 @#
 #endif
 
@@ -333,7 +336,7 @@ typedef struct _ISciterAPI {
   #endif
 #endif
 
-  void for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field; // c2nim needs this :(
+  bool for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field; // c2nim needs this :(
 
 } ISciterAPI;
 

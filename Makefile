@@ -29,4 +29,4 @@ xtiscript.nim:include/tiscript.h
 	c2nim -o:$@ $^
 
 clean:
-	rm -rf sciter nimcache
+	rm -rf sciter nimcache xapi.nim xdef.nim xdom.nim xgraphics.nim xrequest.nim xtiscript.nim xvalue.nim

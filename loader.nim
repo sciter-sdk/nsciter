@@ -2,7 +2,7 @@ import dynlib,os
 
 var api:ptr ISciterAPI = nil
 
-proc SAPI*():ptr ISciterAPI {.cdecl.} =
+proc SAPI*():ptr ISciterAPI {.inline, cdecl.} =
   if api != nil:
     return api
   var libhandle = loadLib(SCITER_DLL_NAME)
@@ -15,8 +15,8 @@ proc SAPI*():ptr ISciterAPI {.cdecl.} =
   api = p()
   return api
   
-proc gapi*():LPSciterGraphicsAPI {.cdecl.} =
+proc gapi*():LPSciterGraphicsAPI {.inline, cdecl.} =
   return SAPI().GetSciterGraphicsAPI()
   
-proc rapi*():LPSciterRequestAPI {.cdecl.} =
+proc rapi*():LPSciterRequestAPI {.inline, cdecl.} =
   return SAPI().GetSciterRequestAPI()

@@ -266,8 +266,6 @@ type
     SW_ENABLE_DEBUG = (1 shl 9),  ## # make this window inspector ready
     SW_OWNS_VM = (1 shl 10)       ## # it has its own script VM
 
-converter toInt*(x: SCITER_CREATE_WINDOW_FLAGS): int =
-  result = int(x)
 
 ## #* SciterSetupDebugOutput - setup debug output function.
 ## # 

@@ -40,6 +40,7 @@ when defined(posix):
 import os,strutils
         
 when isMainModule:
+    SciterSetOption(nil, uint32(SCITER_SET_DEBUG_MODE), 1)
     # echo repr SAPI()
     echo SciterClassName()
     var s = SAPI()
@@ -56,12 +57,13 @@ when isMainModule:
     r.left = 0
     r.bottom = 300
     r.right = 300
-    var wnd = SciterCreateWindow(cuint(SW_CONTROLS or SW_MAIN or SW_TITLEBAR), r, nil, nil, nil)
+    var wnd = SciterCreateWindow((SW_CONTROLS or SW_MAIN or SW_TITLEBAR), r, nil, nil, nil)
     # var wnd = SciterCreateWindow(0, nil, nil, nil, nil)
     if wnd == nil:
         quit("wnd is nil")
-    var html = "hello"
+    var html = "hello世界"
     echo "wnd:", repr wnd
     wnd.setTitle("test")
-    discard wnd.SciterLoadHtml(html, 5, newWideCString("."))
+    wnd.SciterLoadFile("./test.html")
+    # discard wnd.SciterLoadHtml(html[0].addr, uint32(html.len), newWideCString("."))
     wnd.run
