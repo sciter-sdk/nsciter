@@ -8,7 +8,7 @@
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
 ## # 
 
-include xtypes,xdom,xrequest,xdef,xvalue,xtiscript,xgraphics,converters
+include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters
 type
   ISciterAPI* = object
     version*: uint32           ## # is zero for now
@@ -251,8 +251,8 @@ type
     ValueInt64Data*: proc (pval: ptr VALUE; pData: ptr int64): uint32 {.cdecl.}
     ValueInt64DataSet*: proc (pval: ptr VALUE; data: int64; `type`: uint32; units: uint32): uint32 {.
         cdecl.}
-    ValueFloatData*: proc (pval: ptr VALUE; pData: ptr FLOAT_VALUE): uint32 {.cdecl.}
-    ValueFloatDataSet*: proc (pval: ptr VALUE; data: FLOAT_VALUE; `type`: uint32;
+    ValueFloatData*: proc (pval: ptr VALUE; pData: ptr float64): uint32 {.cdecl.}
+    ValueFloatDataSet*: proc (pval: ptr VALUE; data: float64; `type`: uint32;
                             units: uint32): uint32 {.cdecl.}
     ValueBinaryData*: proc (pval: ptr VALUE; pBytes: ptr pointer; pnBytes: ptr uint32): uint32 {.
         cdecl.}
@@ -879,12 +879,12 @@ proc ValueInt64DataSet*(pval: ptr VALUE; data: int64; `type`: uint32; units: uin
     inline, discardable, cdecl.} =
   return SAPI().ValueInt64DataSet(pval, data, `type`, units)
 
-proc ValueFloatData*(pval: ptr VALUE; pData: ptr FLOAT_VALUE): uint32 {.inline,
-    discardable, cdecl.} =
+proc ValueFloatData*(pval: ptr VALUE; pData: ptr float64): uint32 {.inline, discardable,
+    cdecl.} =
   return SAPI().ValueFloatData(pval, pData)
 
-proc ValueFloatDataSet*(pval: ptr VALUE; data: FLOAT_VALUE; `type`: uint32;
-                       units: uint32): uint32 {.inline, discardable, cdecl.} =
+proc ValueFloatDataSet*(pval: ptr VALUE; data: float64; `type`: uint32; units: uint32): uint32 {.
+    inline, discardable, cdecl.} =
   return SAPI().ValueFloatDataSet(pval, data, `type`, units)
 
 proc ValueBinaryData*(pval: ptr VALUE; pBytes: ptr pointer; pnBytes: ptr uint32): uint32 {.

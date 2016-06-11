@@ -9,10 +9,6 @@ type
     u*: uint32
     d*: uint64
 
-
-type
-    FLOAT_VALUE* = cdouble
-type
   VTYPE* = enum
     T_UNDEFINED = 0, T_NULL = 1, T_BOOL, T_INT, T_FLOAT, T_STRING, T_DATE, ## # INT64 - contains a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (UTC), a.k.a. FILETIME on Windows
     T_CURRENCY,               ## # INT64 - 14.4 fixed number. E.g. dollars = int64 / 10000; 

@@ -44,6 +44,7 @@
   #def UINT_PTR UINT
   #def BOOL bool
   #def double float64
+  #def FLOAT_VALUE float64
   
   #def WINDOWS windows
   #def LINUX posix
@@ -111,9 +112,10 @@
  * \param prms \b LPVOID, pointer to group specific parameters structure.
  * \return true if event was handled, false otherwise.
  **/
-
+#ifndef C2NIM
 typedef  BOOL SC_CALLBACK ElementEventProc(LPVOID tag, HELEMENT he, UINT evtg, LPVOID prms );
 typedef  ElementEventProc * LPElementEventProc;
+#endif
 // signature of the function exported from external behavior/dll.
 typedef BOOL SC_CALLBACK SciterBehaviorFactory( LPCSTR, HELEMENT, LPElementEventProc*, LPVOID* );
 
@@ -570,7 +572,7 @@ typedef BOOL SC_CALLBACK SciterBehaviorFactory( LPCSTR, HELEMENT, LPElementEvent
     VALUE_PARAMS(bool do_set) { methodID = do_set? SET_VALUE : GET_VALUE; }
 #endif
 #endif
-    VOID invalid_field_to_bypass_c2nim;
+    byte invalid_field_to_bypass_c2nim;
   };
 
   // IS_EMPTY method params
@@ -583,7 +585,7 @@ typedef BOOL SC_CALLBACK SciterBehaviorFactory( LPCSTR, HELEMENT, LPElementEvent
     IS_EMPTY_PARAMS():is_empty(0) { methodID = IS_EMPTY; }
 #endif
 #endif
-    VOID invalid_field_to_bypass_c2nim;
+    byte invalid_field_to_bypass_c2nim;
   };
 
   // see SciterRequestElementData

@@ -72,10 +72,7 @@ typedef struct
     #define FLOAT_VALUE   double
 #else
 #def VALUE_TYPE VTYPE
-#@
-type
-    FLOAT_VALUE* = cdouble
-@#
+#def FLOAT_VALUE float64
 #endif
 
 enum VALUE_TYPE

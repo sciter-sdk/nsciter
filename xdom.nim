@@ -12,8 +12,6 @@
 ## # 
 
 type
-  BEHAVIOR_EVENT_PARAMS* = object
-type
   HELEMENT* = pointer
 
 ## #*DOM node handle.

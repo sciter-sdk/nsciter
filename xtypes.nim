@@ -16,18 +16,18 @@ when not defined(windows):
 
 type
   Rect* = object
-    left*: cint
-    top*: cint
-    right*: cint
-    bottom*: cint
+    left*: int32
+    top*: int32
+    right*: int32
+    bottom*: int32
 
   Point* = object
-    x*: cint
-    y*: cint
+    x*: int32
+    y*: int32
 
   Size* = object
-    cx*: cint
-    cy*: cint
+    cx*: int32
+    cy*: int32
 
   LPCWSTR_RECEIVER* = proc (str: ptr WideCString; str_length: cuint; param: pointer)
   LPCSTR_RECEIVER* = proc (str: cstring; str_length: cuint; param: pointer)

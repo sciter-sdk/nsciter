@@ -45,6 +45,7 @@
   #def UINT_PTR UINT
   #def BOOL bool
   #def double float64
+  #def FLOAT_VALUE float64
   
   #def WINDOWS windows
   #def LINUX posix
@@ -64,10 +65,6 @@
   #def LPSIZE Size*
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
-#@
-type
-  BEHAVIOR_EVENT_PARAMS* = object
-@#
 #endif
 
 #include <assert.h>

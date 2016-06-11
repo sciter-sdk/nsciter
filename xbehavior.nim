@@ -49,11 +49,6 @@ type
 ## #  \return true if event was handled, false otherwise.
 ## # 
 
-type
-  ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.
-      cdecl.}
-  LPElementEventProc* = ptr ElementEventProc
-
 ## # signature of the function exported from external behavior/dll.
 
 type
@@ -409,7 +404,7 @@ type
   VALUE_PARAMS* = object
     methodID*: uint32
     val*: Value
-    invalid_field_to_bypass_c2nim*: nil
+    invalid_field_to_bypass_c2nim*: byte
 
 
 ## # IS_EMPTY method params
@@ -418,7 +413,7 @@ type
   IS_EMPTY_PARAMS* = object
     methodID*: uint32
     is_empty*: uint32          ## # !0 - is empty
-    invalid_field_to_bypass_c2nim*: nil
+    invalid_field_to_bypass_c2nim*: byte
 
 
 ## # see SciterRequestElementData

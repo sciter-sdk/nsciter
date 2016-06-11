@@ -40,6 +40,7 @@
   #def UINT_PTR UINT
   #def BOOL bool
   #def double float64
+  #def FLOAT_VALUE float64
   
   #def WINDOWS windows
   #def LINUX posix
