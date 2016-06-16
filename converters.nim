@@ -1,12 +1,9 @@
 converter toWideCString*(s: string):WideCString =
   return newWideCString(s)
 
-# converter toInt*(x: EVENT_GROUPS): int =
-#   return int(x)
-
 template enumToInt*(typ: expr): stmt =
-  converter toInt*(x: typ): int =
-    return int(x)
+  converter toUint32*(x: typ): uint32 =
+    return uint32(x)
 
 enumToInt(SCITER_CREATE_WINDOW_FLAGS)
 enumToInt(EVENT_GROUPS)
