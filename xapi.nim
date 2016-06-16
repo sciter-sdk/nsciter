@@ -8,7 +8,7 @@
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
 ## # 
 
-include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters
+include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters,evt
 type
   ISciterAPI* = object
     version*: uint32           ## # is zero for now
