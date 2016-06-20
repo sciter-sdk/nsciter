@@ -1,5 +1,5 @@
 
-include xapi
+include xapi, evt
 
 when defined(posix):
     # {.passC: "-std=c++11".}
