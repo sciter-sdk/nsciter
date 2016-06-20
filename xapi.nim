@@ -148,14 +148,14 @@ type
     SciterDeleteElement*: proc (he: HELEMENT): int32 {.cdecl.}
     SciterSetTimer*: proc (he: HELEMENT; milliseconds: uint32; timer_id: uint32): int32 {.
         cdecl.}
-    SciterDetachEventHandler*: proc (he: HELEMENT; pep: LPELEMENT_EVENT_PROC;
+    SciterDetachEventHandler*: proc (he: HELEMENT; pep: ElementEventProc;
                                    tag: pointer): int32 {.cdecl.}
-    SciterAttachEventHandler*: proc (he: HELEMENT; pep: LPELEMENT_EVENT_PROC;
+    SciterAttachEventHandler*: proc (he: HELEMENT; pep: ElementEventProc;
                                    tag: pointer): int32 {.cdecl.}
     SciterWindowAttachEventHandler*: proc (hwndLayout: HWINDOW;
-        pep: LPELEMENT_EVENT_PROC; tag: pointer; subscription: uint32): int32 {.cdecl.}
+        pep: ElementEventProc; tag: pointer; subscription: uint32): int32 {.cdecl.}
     SciterWindowDetachEventHandler*: proc (hwndLayout: HWINDOW;
-        pep: LPELEMENT_EVENT_PROC; tag: pointer): int32 {.cdecl.}
+        pep: ElementEventProc; tag: pointer): int32 {.cdecl.}
     SciterSendEvent*: proc (he: HELEMENT; appEventCode: uint32; heSource: HELEMENT;
                           reason: uint32; handled: ptr bool): int32 {.cdecl.} ## #out
     SciterPostEvent*: proc (he: HELEMENT; appEventCode: uint32; heSource: HELEMENT;
@@ -627,22 +627,22 @@ proc SciterSetTimer*(he: HELEMENT; milliseconds: uint32; timer_id: uint32): int3
     inline, discardable, cdecl.} =
   return SAPI().SciterSetTimer(he, milliseconds, timer_id)
 
-proc SciterDetachEventHandler*(he: HELEMENT; pep: LPELEMENT_EVENT_PROC; tag: pointer): int32 {.
+proc SciterDetachEventHandler*(he: HELEMENT; pep: ElementEventProc; tag: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterDetachEventHandler(he, pep, tag)
 
-proc SciterAttachEventHandler*(he: HELEMENT; pep: LPELEMENT_EVENT_PROC; tag: pointer): int32 {.
+proc SciterAttachEventHandler*(he: HELEMENT; pep: ElementEventProc; tag: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterAttachEventHandler(he, pep, tag)
 
 proc SciterWindowAttachEventHandler*(hwndLayout: HWINDOW;
-                                    pep: LPELEMENT_EVENT_PROC; tag: pointer;
+                                    pep: ElementEventProc; tag: pointer;
                                     subscription: uint32): int32 {.inline,
     discardable, cdecl.} =
   return SAPI().SciterWindowAttachEventHandler(hwndLayout, pep, tag, subscription)
 
 proc SciterWindowDetachEventHandler*(hwndLayout: HWINDOW;
-                                    pep: LPELEMENT_EVENT_PROC; tag: pointer): int32 {.
+                                    pep: ElementEventProc; tag: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterWindowDetachEventHandler(hwndLayout, pep, tag)
 

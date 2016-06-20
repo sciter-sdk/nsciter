@@ -62,7 +62,7 @@
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
 #@
-include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters,evt
+include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters
 @#
 #endif
 
