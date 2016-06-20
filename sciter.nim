@@ -1,5 +1,5 @@
 
-include xapi, evt
+include xapi, event
 
 when defined(posix):
     # {.passC: "-std=c++11".}
