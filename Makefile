@@ -26,6 +26,7 @@ xbehavior.nim:include/sciter-x-behavior.h
 	
 xdom.nim:include/sciter-x-dom.h
 	c2nim -o:$@ $^
+	sed -i '/HELEMENT\* \=/c\  HELEMENT* = distinct pointer' $@
 	
 xgraphics.nim:include/sciter-x-graphics.h
 	c2nim -o:$@ $^
