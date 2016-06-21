@@ -70,5 +70,8 @@ when isMainModule:
     eh.handle_event = proc(he:HELEMENT, p:ptr BEHAVIOR_EVENT_PARAMS):bool =
         if p.cmd == BUTTON_CLICK:
             echo "clicked"
-    discard wnd.Attach(eh)
+    var eg = newEventHandlerGroup()
+    # eg.onClick(proc()=echo "from group")
+    eg.add(eh)
+    wnd.Attach(eg)
     wnd.run
