@@ -105,6 +105,14 @@ proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool
       return false
     return false
 
-proc AttachEventHandler*(hwnd: HWINDOW; h: ptr EventHandler): int32 =
-    echo "element_proc:", repr element_proc
+proc Attach*(hwnd: HWINDOW; h: ptr EventHandler): int32 =
     SciterWindowAttachEventHandler(hwnd, element_proc, h, HANDLE_ALL)
+
+proc Detach*(hwnd: HWINDOW; h: ptr EventHandler): int32 = 
+    SciterWindowDetachEventHandler(hwnd, element_proc, h)
+
+proc Attach*(he: HELEMENT; h: ptr EventHandler): int32 =
+    SciterAttachEventHandler(he, element_proc, h)
+
+proc Detach*(he: HELEMENT; h: ptr EventHandler): int32 =
+    SciterDetachEventHandler(he, element_proc, h)
