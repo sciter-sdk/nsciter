@@ -29,9 +29,9 @@ type
     cx*: int32
     cy*: int32
 
-  LPCWSTR_RECEIVER* = proc (str: ptr WideCString; str_length: cuint; param: pointer)
-  LPCSTR_RECEIVER* = proc (str: cstring; str_length: cuint; param: pointer)
-  LPCBYTE_RECEIVER* = proc (str: ptr byte; num_bytes: cuint; param: pointer)
+  LPCWSTR_RECEIVER* = proc (str: ptr WideCString; str_length: cuint; param: pointer) {.cdecl.}
+  LPCSTR_RECEIVER* = proc (str: cstring; str_length: cuint; param: pointer) {.cdecl.}
+  LPCBYTE_RECEIVER* = proc (str: ptr byte; num_bytes: cuint; param: pointer) {.cdecl.}
 
 when defined(windows):
   import winlean

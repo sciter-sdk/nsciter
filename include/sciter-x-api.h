@@ -61,6 +61,9 @@
   #def LPSIZE Size*
   #def LPUINT UINT*
   #def SCDOM_RESULT INT
+
+  #def LPELEMENT_EVENT_PROC ElementEventProc
+  #def LPSciterHostCallback SciterHostCallback
 #@
 include xtypes,xdom,xgraphics,xvalue,xtiscript,xbehavior,xrequest,xdef,converters
 @#

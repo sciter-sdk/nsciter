@@ -1,11 +1,22 @@
 NSRC = sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
-	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim
+	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim \
+	   event.nim
 
 sciter:${NSRC}
 	nim c sciter
 
 xapi.nim:include/sciter-x-api.h
 	c2nim -o:$@ $^
+	# callbacks
+	sed -i 's/ptr SciterElementCallback/SciterElementCallback/g' $@
+	sed -i 's/ptr SciterWindowDelegate/SciterWindowDelegate/g' $@
+	sed -i 's/ptr KeyValueCallback/KeyValueCallback/g' $@
+	sed -i 's/ptr NATIVE_FUNCTOR_INVOKE/NATIVE_FUNCTOR_INVOKE/g' $@
+	sed -i 's/ptr NATIVE_FUNCTOR_RELEASE/NATIVE_FUNCTOR_RELEASE/g' $@
+	# receivers
+	sed -i 's/ptr LPCSTR_RECEIVER/LPCSTR_RECEIVER/g' $@
+	sed -i 's/ptr LPCWSTR_RECEIVER/LPCWSTR_RECEIVER/g' $@
+	sed -i 's/ptr LPCBYTE_RECEIVER/LPCBYTE_RECEIVER/g' $@
 	
 xdef.nim:include/sciter-x-def.h
 	c2nim -o:$@ $^
