@@ -65,13 +65,6 @@ when isMainModule:
     echo "wnd:", repr wnd
     wnd.setTitle("test")
     wnd.SciterLoadFile("./test.html")
-    # discard wnd.SciterLoadHtml(html[0].addr, uint32(html.len), newWideCString("."))
-    var eh = newEventHandler()
-    eh.handle_event = proc(he:HELEMENT, p:ptr BEHAVIOR_EVENT_PARAMS):bool =
-        if p.cmd == BUTTON_CLICK:
-            echo "clicked"
-    var eg = newEventHandlerGroup()
-    # eg.onClick(proc()=echo "from group")
-    eg.add(eh)
-    wnd.Attach(eg)
+    wnd.onClick(proc()=echo "generic click")
+    wnd.onClick(proc()=echo "generic click 2")
     wnd.run

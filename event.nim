@@ -1,50 +1,57 @@
 type
-    EventHandler* {.pure.} = ptr object
-        handle_mouse*: proc(he:HELEMENT, params: ptr MOUSE_PARAMS ):bool         
-        handle_key*: proc(he:HELEMENT, params: ptr KEY_PARAMS ):bool            
-        handle_focus*: proc(he:HELEMENT, params: ptr FOCUS_PARAMS ):bool            
-        handle_timer*: proc(he:HELEMENT, params: ptr TIMER_PARAMS ):bool                               
-        handle_size*: proc(he:HELEMENT ):bool 
-        handle_scroll*: proc(he:HELEMENT, params: ptr SCROLL_PARAMS):bool 
-        handle_gesture*: proc(he:HELEMENT, params: ptr GESTURE_PARAMS):bool                      
-        handle_draw*: proc(he:HELEMENT, params: ptr DRAW_PARAMS ):bool          
-        handle_method_call*: proc(he:HELEMENT, params: ptr METHOD_PARAMS ):bool   
-        handle_tiscript_call*: proc(he:HELEMENT, params: ptr TISCRIPT_METHOD_PARAMS ):bool    
-        handle_event*: proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool  
-        handle_data_arrived*: proc(he:HELEMENT, params: ptr DATA_ARRIVED_PARAMS ):bool 
-        handle_scripting_call*: proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool 
+    EventHandlerObj* = object
+        handle_mouse*: proc(he:HELEMENT, params: ptr MOUSE_PARAMS ):bool
+        handle_key*: proc(he:HELEMENT, params: ptr KEY_PARAMS ):bool
+        handle_focus*: proc(he:HELEMENT, params: ptr FOCUS_PARAMS ):bool
+        handle_timer*: proc(he:HELEMENT, params: ptr TIMER_PARAMS ):bool
+        handle_size*: proc(he:HELEMENT ):bool
+        handle_scroll*: proc(he:HELEMENT, params: ptr SCROLL_PARAMS):bool
+        handle_gesture*: proc(he:HELEMENT, params: ptr GESTURE_PARAMS):bool
+        handle_draw*: proc(he:HELEMENT, params: ptr DRAW_PARAMS ):bool
+        handle_method_call*: proc(he:HELEMENT, params: ptr METHOD_PARAMS ):bool
+        handle_tiscript_call*: proc(he:HELEMENT, params: ptr TISCRIPT_METHOD_PARAMS ):bool
+        handle_event*: proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool
+        handle_data_arrived*: proc(he:HELEMENT, params: ptr DATA_ARRIVED_PARAMS ):bool
+        handle_scripting_call*: proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool
 
         detached*: proc(he:HELEMENT) 
         attached*: proc(he:HELEMENT)
 
-    EventHandlerGroup* = ptr object
-        lst: seq[EventHandler]
+    EventHandler* = ptr EventHandlerObj
+
+var fn_handle_mouse = proc(he:HELEMENT, params: ptr MOUSE_PARAMS ):bool = return false
+var fn_handle_key = proc(he:HELEMENT, params: ptr KEY_PARAMS ):bool = return false
+var fn_handle_focus = proc(he:HELEMENT, params: ptr FOCUS_PARAMS ):bool = return false
+var fn_handle_timer = proc(he:HELEMENT, params: ptr TIMER_PARAMS ):bool = return false
+var fn_handle_size = proc(he:HELEMENT ):bool = return false
+var fn_handle_scroll = proc(he:HELEMENT, params: ptr SCROLL_PARAMS):bool = return false
+var fn_handle_gesture = proc(he:HELEMENT, params: ptr GESTURE_PARAMS):bool = return false
+var fn_handle_draw = proc(he:HELEMENT, params: ptr DRAW_PARAMS ):bool = return false
+var fn_handle_method_call = proc(he:HELEMENT, params: ptr METHOD_PARAMS ):bool = return false
+var fn_handle_tiscript_call = proc(he:HELEMENT, params: ptr TISCRIPT_METHOD_PARAMS ):bool = return false
+var fn_handle_event = proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool = return false
+var fn_handle_data_arrived = proc(he:HELEMENT, params: ptr DATA_ARRIVED_PARAMS ):bool = return false
+var fn_handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool = return false
+var fn_ttach = proc(he:HELEMENT) = discard
 
 proc newEventHandler*(): EventHandler = 
-    var eh:EventHandler = cast[EventHandler](alloc(sizeof(EventHandler)))
-    eh.handle_mouse = proc(he:HELEMENT, params: ptr MOUSE_PARAMS ):bool = return false        
-    eh.handle_key = proc(he:HELEMENT, params: ptr KEY_PARAMS ):bool = return false            
-    eh.handle_focus = proc(he:HELEMENT, params: ptr FOCUS_PARAMS ):bool = return false            
-    eh.handle_timer = proc(he:HELEMENT, params: ptr TIMER_PARAMS ):bool = return false                              
-    eh.handle_size = proc(he:HELEMENT ):bool = return false
-    eh.handle_scroll = proc(he:HELEMENT, params: ptr SCROLL_PARAMS):bool = return false
-    eh.handle_gesture = proc(he:HELEMENT, params: ptr GESTURE_PARAMS):bool = return false
-    eh.handle_draw = proc(he:HELEMENT, params: ptr DRAW_PARAMS ):bool = return false
-    eh.handle_method_call = proc(he:HELEMENT, params: ptr METHOD_PARAMS ):bool = return false  
-    eh.handle_tiscript_call = proc(he:HELEMENT, params: ptr TISCRIPT_METHOD_PARAMS ):bool = return false   
-    eh.handle_event = proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool = return false 
-    eh.handle_data_arrived = proc(he:HELEMENT, params: ptr DATA_ARRIVED_PARAMS ):bool = return false
-    eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool = return false
-    
-    eh.detached = proc(he:HELEMENT) = discard
-    eh.attached = proc(he:HELEMENT) = discard
+    var eh:EventHandler = cast[EventHandler](alloc(sizeof(EventHandlerObj)))
+    eh.handle_mouse = fn_handle_mouse        
+    eh.handle_key = fn_handle_key            
+    eh.handle_focus = fn_handle_focus            
+    eh.handle_timer = fn_handle_timer                              
+    eh.handle_size = fn_handle_size
+    eh.handle_scroll = fn_handle_scroll
+    eh.handle_gesture = fn_handle_gesture
+    eh.handle_draw = fn_handle_draw
+    eh.handle_method_call =  fn_handle_method_call 
+    eh.handle_tiscript_call = fn_handle_tiscript_call   
+    eh.handle_event = fn_handle_event 
+    eh.handle_data_arrived = fn_handle_data_arrived
+    eh.handle_scripting_call = fn_handle_scripting_call
+    eh.detached = fn_ttach
+    eh.attached = fn_ttach
     return eh
-
-proc newEventHandlerGroup*(): EventHandlerGroup =
-    var g:EventHandlerGroup = cast[EventHandlerGroup](alloc(sizeof(EventHandlerGroup)))
-    g.lst = @[]
-    return g
-
 
 import tables
 var evct = newCountTable[EventHandler]()
@@ -113,50 +120,29 @@ proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool
       return false
     return false
 
-proc element_group_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.cdecl.} =
-    var g:EventHandlerGroup = cast[EventHandlerGroup](tag)
-    if g == nil:
-        return false
-    var ret = false
-    for eh in items(g.lst):
-        ret = element_proc(eh, he, evtg, prms)
-    return ret
+proc Attach*[EventTarget](target:EventTarget, eh:EventHandler): EventTarget {.discardable.} =
+    when EventTarget is HWINDOW:
+        SciterWindowAttachEventHandler(target, element_proc, eh, HANDLE_ALL)
+        return target
+    when EventTarget is HELEMENT:
+        SciterAttachEventHandler(target, element_proc, eh)
+        return target
+    echo "error: EventTarget must be HWINDOW or HWINDOW"
 
-proc Attach*(hwnd: HWINDOW; h: EventHandler): int32 {.discardable.} =
-    SciterWindowAttachEventHandler(hwnd, element_proc, h, HANDLE_ALL)
+proc Detach*[EventTarget](target:EventTarget, eh:EventHandler): EventTarget {.discardable.} =
+    when EventTarget is HWINDOW:
+        SciterWindowDetachEventHandler(target, element_proc, eh, HANDLE_ALL)
+        return target
+    when EventTarget is HELEMENT:
+        SciterDetachEventHandler(target, element_proc, eh)
+        return target
+    echo "error: EventTarget must be HWINDOW or HWINDOW"
 
-proc Detach*(hwnd: HWINDOW; h: EventHandler): int32 {.discardable.} = 
-    SciterWindowDetachEventHandler(hwnd, element_proc, h)
-    
-proc Attach*(hwnd: HWINDOW; h: EventHandlerGroup): int32 {.discardable.} =
-    SciterWindowAttachEventHandler(hwnd, element_group_proc, h, HANDLE_ALL)
-
-proc Detach*(hwnd: HWINDOW; h: EventHandlerGroup) = 
-    SciterWindowDetachEventHandler(hwnd, element_group_proc, h)
-    dealloc(h)
-
-proc Attach*(he: HELEMENT; h: EventHandler): int32 {.discardable.} =
-    SciterAttachEventHandler(he, element_proc, h)
-
-proc Detach*(he: HELEMENT; h: EventHandler) =
-    SciterDetachEventHandler(he, element_proc, h)
-
-proc Attach*(he: HELEMENT; h: EventHandlerGroup): int32 {.discardable.} =
-    SciterAttachEventHandler(he, element_group_proc, h)
-
-proc Detach*(he: HELEMENT; h: EventHandlerGroup) =
-    SciterDetachEventHandler(he, element_group_proc, h)
-    dealloc(h)
-
-proc add*(g:EventHandlerGroup, eh:EventHandler): EventHandlerGroup {.discardable.} = 
-    g.lst.add(eh)
-    return g
-
-proc onClick*(g:EventHandlerGroup, handler:proc()): EventHandlerGroup {.discardable.} =
+proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.discardable.} =
     var eh = newEventHandler()
     eh.handle_event = proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool =
         if params.cmd == BUTTON_CLICK:
             handler()
-            return true
         return false
-    g.add(eh)
+    target.Attach(eh)
+    return target
