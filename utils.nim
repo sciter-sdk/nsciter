@@ -1,77 +1,77 @@
 
 ######## for value operations ##########
 
-proc vptr[VT](v:VT): ptr Value =
+proc vptr[VT: Value | ptr Value](v:VT): ptr Value =
     when v is Value:
         return addr v
     when v is ptr Value:
         return v
 
-proc isUndefined*[VT](v:VT):bool =
+proc isUndefined*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_UNDEFINED
 
-proc isBool*[VT](v:VT):bool =
+proc isBool*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_BOOL
 
-proc isInt*[VT](v:VT):bool =
+proc isInt*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_INT
 
-proc isFloat*[VT](v:VT):bool =
+proc isFloat*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_FLOAT
 
-proc isString*[VT](v:VT):bool =
+proc isString*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_STRING
 
-proc isSymbol*[VT](v:VT):bool =
+proc isSymbol*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_STRING and v.u == UT_STRING_SYMBOL
 
-proc isDate*[VT](v:VT):bool =
+proc isDate*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_DATE
 
-proc isCurrency*[VT](v:VT):bool =
+proc isCurrency*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_CURRENCY
 
-proc isMap*[VT](v:VT):bool =
+proc isMap*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_MAP
 
-proc isArray*[VT](v:VT):bool =
+proc isArray*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_ARRAY
 
-proc isFunction*[VT](v:VT):bool =
+proc isFunction*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_FUNCTION
 
-proc isNativeFunctor*[VT](v:VT):bool =
+proc isNativeFunctor*[VT: Value | ptr Value](v:VT):bool =
     var p = vptr(v)
     return p.ValueIsNativeFunctor()
 
-proc isByte*[VT](v:VT):bool =
+proc isByte*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_BYTES
 
-proc isObject*[VT](v:VT):bool =
+proc isObject*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT
 
-proc isObjectNative*[VT](v:VT):bool =
+proc isObjectNative*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_NATIVE
 
-proc isObjectArray*[VT](v:VT):bool =
+proc isObjectArray*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_ARRAY
 
-proc isObjectFunction*[VT](v:VT):bool =
+proc isObjectFunction*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_FUNCTION
 
-proc isObjectObject*[VT](v:VT):bool =
+proc isObjectObject*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_OBJECT
 
-proc isObjectClass*[VT](v:VT):bool =
+proc isObjectClass*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_CLASS
 
-proc isObjectError*[VT](v:VT):bool =
+proc isObjectError*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_OBJECT and v.u == UT_OBJECT_ERROR
 
-proc isDomElement*[VT](v:VT):bool =
+proc isDomElement*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_DOM_OBJECT
 
-proc isNull*[VT](v:VT):bool =
+proc isNull*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_NULL
 
 proc nullValue*(): ptr Value =
@@ -80,7 +80,7 @@ proc nullValue*(): ptr Value =
     discard v.ValueInit()
     return v
 
-proc clone*[VT](v:VT):ptr Value =
+proc clone*[VT: Value | ptr Value](v:VT):ptr Value =
     var src = vptr(v)
     var dst = nullValue()
     dst.ValueCopy(src)
@@ -121,7 +121,8 @@ proc getString*(v:ptr Value):string =
     v.ValueStringData(addr ws, addr n)
     return $(ws)
 
-proc `$`*(v: ptr Value):string =
+proc `$`*[VT: Value | ptr Value](x: VT):string =
+    var v = vptr(x)
     if v.isString():
         return v.getString()
     if v.isFunction() or v.isNativeFunctor():
@@ -130,8 +131,8 @@ proc `$`*(v: ptr Value):string =
     discard nv.convertToString(CVT_SIMPLE)
     return nv.getString()
 
-proc getInt32*[VT](v:VT): int32 =
+proc getInt32*[VT: Value | ptr Value](v:VT): int32 =
     discard ValueIntData(vptr(v), addr result)
 
-proc getInt*[VT](v:VT): int =
+proc getInt*[VT: Value | ptr Value](v:VT): int =
     result = cast[int](getInt32(v))
