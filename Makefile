@@ -1,6 +1,6 @@
 NSRC = sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
 	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim \
-	   event.nim
+	   event.nim utils.nim
 
 sciter:${NSRC}
 	nim c sciter

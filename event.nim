@@ -146,3 +146,17 @@ proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.di
         return false
     target.Attach(eh)
     return target
+
+type
+    ScriptingMethod* = proc(name:string, argc:int, argv:openArray[ptr Value]):Value
+
+proc defineScriptingMethod*[EventTarget](target:EventTarget, name:string, fn:ScriptingMethod): EventTarget {.discardable.} =
+    var eh = newEventHandler()
+    eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool =
+        if string(params.name) != name:
+            return false
+        var argv = cast[array[0..0, ptr Value]](params.argv)
+        params.result = fn(name, params.argc, argv)
+        return true
+    target.Attach(eh)
+    return target

@@ -1,5 +1,5 @@
 
-include xapi, event
+include xapi, event, utils
 
 when defined(posix):
     # {.passC: "-std=c++11".}
@@ -67,4 +67,15 @@ when isMainModule:
     wnd.SciterLoadFile("./test.html")
     wnd.onClick(proc()=echo "generic click")
     wnd.onClick(proc()=echo "generic click 2")
+    var testFn = proc() =
+        var i:int8 = 100
+        var p = newValue(i)
+        echo p, p.getInt()
+        var s = "a test string"
+        var sv = newValue(s)
+        var s2 = sv.getString()
+        echo s, "->", s2
+        echo s.len, s2.len
+        echo "value:", p, "\t", sv
+    testFn()
     wnd.run
