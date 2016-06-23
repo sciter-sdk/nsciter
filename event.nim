@@ -18,6 +18,7 @@ type
         attached*: proc(he:HELEMENT)
 
     EventHandler* = ptr EventHandlerObj
+    EventTarget = HWINDOW or HELEMENT
 
 var fn_handle_mouse = proc(he:HELEMENT, params: ptr MOUSE_PARAMS ):bool = return false
 var fn_handle_key = proc(he:HELEMENT, params: ptr KEY_PARAMS ):bool = return false
@@ -148,15 +149,21 @@ proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.di
     return target
 
 type
-    ScriptingMethod* = proc(name:string, argc:int, argv:openArray[ptr Value]):Value
+    ScriptingMethod* = proc(args:seq[ptr Value]):ptr Value
 
 proc defineScriptingMethod*[EventTarget](target:EventTarget, name:string, fn:ScriptingMethod): EventTarget {.discardable.} =
     var eh = newEventHandler()
     eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool =
-        if string(params.name) != name:
+        if params.name != name:
             return false
-        var argv = cast[array[0..0, ptr Value]](params.argv)
-        params.result = fn(name, params.argc, argv)
+        var args = newSeq[ptr Value](params.argc)
+        var base = cast[uint](params.argv)
+        var step = cast[uint](sizeof(Value))
+        for idx in 0..params.argc-1:
+            args[int(idx)] = cast[ptr Value](base + step*uint(idx)) 
+        var ret = fn(args)
+        if ret != nil:
+            params.result = ret[]
         return true
     target.Attach(eh)
     return target

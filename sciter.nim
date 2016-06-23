@@ -89,4 +89,8 @@ when isMainModule:
         o["key"] = newValue(i)
         echo "o:", o
     testFn()
+    wnd.defineScriptingMethod("hello", proc(args: seq[ptr Value]):ptr Value =
+        echo "hello from script method"
+        echo "args:", args
+    )
     wnd.run
