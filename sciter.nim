@@ -77,5 +77,13 @@ when isMainModule:
         echo s, "->", s2
         echo s.len, s2.len
         echo "value:", p, "\t", sv
+        var f = 6.341
+        var fv = newValue(f)
+        echo "float value:", f, "\t", fv, "\t", fv.getFloat()
+        var b:seq[byte] = @[byte(1),byte(2),byte(3),byte(4)]
+        echo b
+        var bv = nullValue()
+        bv.setBytes(b)
+        echo "bv:", bv.getBytes()
     testFn()
     wnd.run

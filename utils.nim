@@ -104,6 +104,18 @@ proc newValue*[T](x:var T): ptr Value =
     of akString:
         var ws = newWideCString(a.getString())
         result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
+    of akBool:
+        if a.getBool():
+            result.ValueIntDataSet(1, T_INT, 0)
+        else:
+            result.ValueIntDataSet(0, T_INT, 0)
+    of akUInt, akUInt8, akUInt16, akUInt32:
+        result.ValueIntDataSet(toInt32(a), T_INT, 0)
+    of akUInt64: # for date and currency
+        result = nullValue()
+    of akFloat, akFloat32, akFloat64:
+        var f = cast[float64](a.getBiggestFloat())   
+        result.ValueFloatDataSet(f, T_FLOAT, 0)
     else:
         result = nullValue()
 
@@ -137,5 +149,32 @@ proc `$`*[VT: Value | ptr Value](x: VT):string =
 proc getInt32*[VT: Value | ptr Value](v:VT): int32 =
     discard ValueIntData(vptr(v), addr result)
 
-proc getInt*[VT: Value | ptr Value](v:VT): int =
-    result = cast[int](getInt32(v))
+proc getInt*[VT: Value | ptr Value](x:VT): int =
+    result = cast[int](getInt32(x))
+
+proc getBool*[VT: Value | ptr Value](x:VT): float =
+    var i = getInt(x)
+    if i == 0:
+        return false
+    return true
+
+proc getFloat*[VT: Value | ptr Value](x:VT): float =
+    var v = vptr(x)
+    var f:float64
+    v.ValueFloatData(addr f)
+    return float(f)
+
+proc getBytes*[VT: Value | ptr Value](x:VT): seq[byte] =
+    var v = vptr(x)
+    var p:pointer
+    var size:uint32
+    v.ValueBinaryData(addr p, addr size)
+    result = newSeq[byte](size)
+    copyMem(result[0].addr, p, int(size)*sizeof(byte))
+
+proc setBytes*[VT: Value | ptr Value](x:VT, dat: var openArray[byte]) =
+    var v = vptr(x)
+    var p = dat[0].addr
+    var size = dat.len()*sizeof(byte)
+    v.ValueBinaryDataSet(p, uint32(size), T_BYTES, 0)
+    
