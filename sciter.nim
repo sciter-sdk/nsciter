@@ -85,5 +85,8 @@ when isMainModule:
         var bv = nullValue()
         bv.setBytes(b)
         echo "bv:", bv.getBytes()
+        var o = nullValue()
+        o["key"] = newValue(i)
+        echo "o:", o
     testFn()
     wnd.run

@@ -86,38 +86,28 @@ proc clone*[VT: Value | ptr Value](v:VT):ptr Value =
     dst.ValueCopy(src)
     return dst
 
-import typeinfo
+proc newValue*():ptr Value =
+    result = nullValue()
 
-proc toInt32(x: Any):int32 =
-    return cast[int32](x.getBiggestInt())
+proc newValue*(dat:string):ptr Value =
+    var ws = newWideCString(dat)
+    result = nullValue()
+    result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
+    
+proc newValue*[V:int|int8|int16|int32|uint|uint8|uint16|uint32](dat:V):ptr Value =
+    result = nullValue()
+    result.ValueIntDataSet(dat, T_INT, 0)
 
-proc newValue*[T](x:var T): ptr Value =
-    result = cast[ptr Value](alloc(sizeof(Value)))
-    result.ValueInit()
-    var a = toAny(x)
-    var typekind = kind(a)
-    case typekind
-    of akInt, akInt8, akInt16, akInt32:
-        result.ValueIntDataSet(toInt32(a), T_INT, 0)
-    of akInt64: # for date and currency
-        result = nullValue()
-    of akString:
-        var ws = newWideCString(a.getString())
-        result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
-    of akBool:
-        if a.getBool():
-            result.ValueIntDataSet(1, T_INT, 0)
-        else:
-            result.ValueIntDataSet(0, T_INT, 0)
-    of akUInt, akUInt8, akUInt16, akUInt32:
-        result.ValueIntDataSet(toInt32(a), T_INT, 0)
-    of akUInt64: # for date and currency
-        result = nullValue()
-    of akFloat, akFloat32, akFloat64:
-        var f = cast[float64](a.getBiggestFloat())   
-        result.ValueFloatDataSet(f, T_FLOAT, 0)
+proc newValue*[V:float|float32|float64](dat:V):ptr Value =
+    result = nullValue()
+    result.ValueFloatDataSet(float64(dat), T_INT, 0)
+
+proc newValue*(dat:bool):ptr Value =
+    result = nullValue()
+    if dat:
+        result.ValueIntDataSet(1, T_INT, 0)
     else:
-        result = nullValue()
+        result.ValueIntDataSet(0, T_INT, 0)
 
 proc convertFromString*[VT: Value | ptr Value](x:VT, s:string, how:VALUE_STRING_CVT_TYPE) =
     var v = vptr(x)
@@ -178,3 +168,32 @@ proc setBytes*[VT: Value | ptr Value](x:VT, dat: var openArray[byte]) =
     var size = dat.len()*sizeof(byte)
     v.ValueBinaryDataSet(p, uint32(size), T_BYTES, 0)
     
+# for array and object types
+
+proc len*[VT: Value | ptr Value](x:VT): int =
+    var v = vptr(x)
+    var n:int32 = 0
+    v.ValueElementsCount(addr n)
+    return int(n)
+
+proc enumerate*[VT: Value | ptr Value](x:VT, cb:KeyValueCallback): uint32 =
+    var v = vptr(x)
+    v.ValueEnumElements(cb, nil)
+
+proc `[]`*[I: Ordinal, VT: Value | ptr Value](x: VT; i: I): ptr Value =
+    var v = vptr(x)
+    result = nullValue()
+    v.ValueNthElementValue(i, result)
+
+proc `[]=`*[I: Ordinal, VT: Value | ptr Value](x: VT; i: I; y: VT) =
+    ValueNthElementValueSet(vptr(x), i, vptr(y))
+
+proc `[]`*[VT: Value | ptr Value](x: VT; name:string): ptr Value =
+    var v = vptr(x)
+    var key = newValue(name)
+    result = nullValue()
+    v.ValueGetValueOfKey(key, result)
+
+proc `[]=`*[VT: Value | ptr Value](x: VT; name:string; y: VT) =
+    var key = newValue(name)
+    ValueSetValueToKey(vptr(x), key, vptr(y))
