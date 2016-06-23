@@ -107,15 +107,18 @@ proc newValue*[T](x:var T): ptr Value =
     else:
         result = nullValue()
 
-proc convertFromString*(v: ptr Value, s:string, how:VALUE_STRING_CVT_TYPE) =
+proc convertFromString*[VT: Value | ptr Value](x:VT, s:string, how:VALUE_STRING_CVT_TYPE) =
+    var v = vptr(x)
     var ws = newWideCString(s)
     v.ValueFromString(ws, uint32(ws.len()), how)
 
-proc convertToString*(v: ptr Value, how:VALUE_STRING_CVT_TYPE):uint32 =
+proc convertToString*[VT: Value | ptr Value](x:VT, how:VALUE_STRING_CVT_TYPE):uint32 =
     # converts value to T_STRING inplace
+    var v = vptr(x)
     v.ValueToString(how)
 
-proc getString*(v:ptr Value):string =
+proc getString*[VT: Value | ptr Value](x:VT):string =
+    var v = vptr(x)
     var ws: WideCString
     var n:uint32
     v.ValueStringData(addr ws, addr n)
