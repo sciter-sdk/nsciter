@@ -70,7 +70,6 @@ proc isNativeFunctor*(v:ptr Value):bool =
 proc nullValue*(): ptr Value =
     var v = cast[ptr Value](alloc(sizeof(Value))) 
     v.t = T_NULL
-    discard v.ValueInit()
     return v
 
 proc clone*(v:ptr Value):ptr Value =
@@ -79,23 +78,25 @@ proc clone*(v:ptr Value):ptr Value =
     return dst
 
 proc newValue*():ptr Value =
-    result = nullValue()
+    var v = cast[ptr Value](alloc(sizeof(Value))) 
+    v.ValueInit()
+    return v
 
 proc newValue*(dat:string):ptr Value =
     var ws = newWideCString(dat)
-    result = nullValue()
+    result = newValue()
     result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
     
 proc newValue*[V:int|int8|int16|int32|uint|uint8|uint16|uint32](dat:V):ptr Value =
-    result = nullValue()
+    result = newValue()
     result.ValueIntDataSet(dat, T_INT, 0)
 
 proc newValue*[V:float|float32|float64](dat:V):ptr Value =
-    result = nullValue()
+    result = newValue()
     result.ValueFloatDataSet(float64(dat), T_INT, 0)
 
 proc newValue*(dat:bool):ptr Value =
-    result = nullValue()
+    result = newValue()
     if dat:
         result.ValueIntDataSet(1, T_INT, 0)
     else:
