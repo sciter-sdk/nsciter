@@ -1,3 +1,5 @@
+import sciter, os, strutils
+        
 SciterSetOption(nil, uint32(SCITER_SET_DEBUG_MODE), 1)
 # echo repr SAPI()
 echo SciterClassName()
@@ -11,10 +13,10 @@ echo "s.SciterVersion:", toHex(int(s.SciterVersion(true)), 5)
 echo "SciterCreateWindow:", repr SciterCreateWindow
 echo "s.SciterCreateWindow:", repr s.SciterCreateWindow
 var r = cast[ptr Rect](alloc0(sizeof(Rect)))
-r.top = 0
-r.left = 0
-r.bottom = 300
-r.right = 300
+r.top = 200
+r.left = 500
+r.bottom = 500
+r.right = 800
 var wnd = SciterCreateWindow((SW_CONTROLS or SW_MAIN or SW_TITLEBAR), r, nil, nil, nil)
 # var wnd = SciterCreateWindow(0, nil, nil, nil, nil)
 if wnd == nil:
@@ -52,7 +54,7 @@ var testVptr = proc()=
     var v = newValue(i)
     echo v[]
 testVptr()
-wnd.defineScriptingMethod("hello", proc(args: seq[ptr Value]):ptr Value =
+wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
     echo "hello from script method"
     echo "args:", args
 )

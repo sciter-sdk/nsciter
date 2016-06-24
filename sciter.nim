@@ -36,8 +36,3 @@ when defined(posix):
         var w = gtk_widget_get_toplevel(cast[ptr GtkWidget](hwnd))
         gtk_window_present(gwindow(w))
         gtk_main()
-
-import os,strutils
-        
-when isMainModule:
-    include test

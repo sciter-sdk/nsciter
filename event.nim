@@ -151,7 +151,7 @@ proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.di
 type
     ScriptingMethod* = proc(args:seq[ptr Value]):ptr Value
 
-proc defineScriptingMethod*[EventTarget](target:EventTarget, name:string, fn:ScriptingMethod): EventTarget {.discardable.} =
+proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:ScriptingMethod): EventTarget {.discardable.} =
     var eh = newEventHandler()
     eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool =
         if params.name != name:

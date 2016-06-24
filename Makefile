@@ -1,9 +1,9 @@
-NSRC = sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
+NSRC = test.nim sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
 	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim \
 	   event.nim utils.nim
 
 sciter:${NSRC}
-	nim c sciter
+	nim c test
 
 xapi.nim:include/sciter-x-api.h
 	c2nim -o:$@ $^
