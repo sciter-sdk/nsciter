@@ -64,7 +64,16 @@ proc isNull*[VT: Value | ptr Value](v:VT):bool =
 proc isFunction*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_FUNCTION
 
-proc isNativeFunctor*(v:ptr Value):bool =
+template xDefPtr(v:untyped) {.immediate.} =
+    var v:ptr Value = nil
+    when x is Value:
+        var nx = x
+        v = addr nx
+    else:
+        v = x
+
+proc isNativeFunctor*[VT:Value|ptr Value](x:VT):bool =
+    xDefPtr(v)
     return v.ValueIsNativeFunctor()
 
 proc nullValue*(): ptr Value =

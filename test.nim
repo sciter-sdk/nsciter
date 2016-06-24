@@ -52,7 +52,11 @@ testFn()
 var testVptr = proc()=
     var i:int16 = 100
     var v = newValue(i)
-    echo v[]
+    var vv = v[]
+    echo vv, "\tvv.isNativeFunctor():", vv.isNativeFunctor()
+    echo v, "\tv.isNativeFunctor():", v.isNativeFunctor()
+    var vvv = Value()
+    echo vvv, "\tvvv.isNativeFunctor():", vvv.isNativeFunctor()
 testVptr()
 wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
     echo "hello from script method"
