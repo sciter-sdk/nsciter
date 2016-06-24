@@ -132,7 +132,7 @@ proc getString*[VT:Value|ptr Value](x:VT):string =
 proc `$`*(v: ptr Value):string =
     if v.isString():
         return v.getString()
-    if v.isFunction() or v.isNativeFunctor():
+    if v.isFunction() or v.isNativeFunctor() or v.isObjectFunction():
         return "<functor>"
     var nv = v.clone()
     discard nv.convertToString(CVT_SIMPLE)
@@ -212,7 +212,7 @@ proc `[]=`*[VT:Value|ptr Value](x:VT; name:string; y: ptr Value) =
 
 ## value functions calls
 
-proc invoke*[VT:Value|ptr Value](x:VT, self:ptr Value, args:varargs[ptr Value]):Value =
+proc invokeWithSelf*[VT:Value|ptr Value](x:VT, self:ptr Value, args:varargs[ptr Value]):Value =
     xDefPtr(v)
     result = Value()
     var clen = len(args)
@@ -221,3 +221,6 @@ proc invoke*[VT:Value|ptr Value](x:VT, self:ptr Value, args:varargs[ptr Value]):
         cargs[i] = args[i][]
     v.ValueInvoke(self, uint32(len(args)), cargs[0].addr, result.addr, nil)
     
+proc invoke*[VT:Value|ptr Value](x:VT, args:varargs[ptr Value]):Value =
+    var self = newValue()
+    invokeWithSelf(x, self, args)

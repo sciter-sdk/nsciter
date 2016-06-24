@@ -7,8 +7,13 @@
     <button id="hello">Hello</button>
     <script type="text/tiscript">
         var btn = $(button#hello)
+        function cb(a,b) {
+            view.hello(this, a, b)
+            return 101010
+        }
         btn.onClick = function(){
             view.hello(1,2,"asdf", true, false)
+            view.cbCall(cb)
         }
     </script>
 </html>

@@ -62,4 +62,13 @@ wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
     echo "hello from script method"
     echo "args:", args
 )
+
+proc testCallback() =
+    wnd.defineScriptingFunction("cbCall", proc(args:seq[ptr Value]):ptr Value=
+        echo "cbCall args:", args
+        var fn = args[0]
+        var ret = fn.invoke(newValue(100), newValue("arg2"))
+        echo "cb ret:", ret
+    )
+testCallback()
 wnd.run
