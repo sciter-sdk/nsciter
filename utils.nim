@@ -1,12 +1,6 @@
 
 ######## for value operations ##########
 
-proc vptr[VT: Value | ptr Value](v:VT): ptr Value =
-    when v is Value:
-        return addr v
-    when v is ptr Value:
-        return v
-
 proc isUndefined*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_UNDEFINED
 
@@ -36,13 +30,6 @@ proc isMap*[VT: Value | ptr Value](v:VT):bool =
 
 proc isArray*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_ARRAY
-
-proc isFunction*[VT: Value | ptr Value](v:VT):bool =
-    return v.t == T_FUNCTION
-
-proc isNativeFunctor*[VT: Value | ptr Value](v:VT):bool =
-    var p = vptr(v)
-    return p.ValueIsNativeFunctor()
 
 proc isByte*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_BYTES
@@ -74,16 +61,21 @@ proc isDomElement*[VT: Value | ptr Value](v:VT):bool =
 proc isNull*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_NULL
 
+proc isFunction*[VT: Value | ptr Value](v:VT):bool =
+    return v.t == T_FUNCTION
+
+proc isNativeFunctor*(v:ptr Value):bool =
+    return v.ValueIsNativeFunctor()
+
 proc nullValue*(): ptr Value =
     var v = cast[ptr Value](alloc(sizeof(Value))) 
     v.t = T_NULL
     discard v.ValueInit()
     return v
 
-proc clone*[VT: Value | ptr Value](v:VT):ptr Value =
-    var src = vptr(v)
+proc clone*(v:ptr Value):ptr Value =
     var dst = nullValue()
-    dst.ValueCopy(src)
+    dst.ValueCopy(v)
     return dst
 
 proc newValue*():ptr Value =
@@ -109,25 +101,21 @@ proc newValue*(dat:bool):ptr Value =
     else:
         result.ValueIntDataSet(0, T_INT, 0)
 
-proc convertFromString*[VT: Value | ptr Value](x:VT, s:string, how:VALUE_STRING_CVT_TYPE) =
-    var v = vptr(x)
+proc convertFromString*(v:ptr Value, s:string, how:VALUE_STRING_CVT_TYPE) =
     var ws = newWideCString(s)
     v.ValueFromString(ws, uint32(ws.len()), how)
 
-proc convertToString*[VT: Value | ptr Value](x:VT, how:VALUE_STRING_CVT_TYPE):uint32 =
+proc convertToString*(v:ptr Value, how:VALUE_STRING_CVT_TYPE):uint32 =
     # converts value to T_STRING inplace
-    var v = vptr(x)
     v.ValueToString(how)
 
-proc getString*[VT: Value | ptr Value](x:VT):string =
-    var v = vptr(x)
+proc getString*(v:ptr Value):string =
     var ws: WideCString
     var n:uint32
     v.ValueStringData(addr ws, addr n)
     return $(ws)
 
-proc `$`*[VT: Value | ptr Value](x: VT):string =
-    var v = vptr(x)
+proc `$`*(v: ptr Value):string =
     if v.isString():
         return v.getString()
     if v.isFunction() or v.isNativeFunctor():
@@ -136,64 +124,62 @@ proc `$`*[VT: Value | ptr Value](x: VT):string =
     discard nv.convertToString(CVT_SIMPLE)
     return nv.getString()
 
-proc getInt32*[VT: Value | ptr Value](v:VT): int32 =
-    discard ValueIntData(vptr(v), addr result)
+proc `$`*(x: Value):string =
+    var xv = x
+    var v = addr xv
+    return $v
 
-proc getInt*[VT: Value | ptr Value](x:VT): int =
-    result = cast[int](getInt32(x))
+proc getInt32*(v: ptr Value): int32 =
+    discard ValueIntData(v, addr result)
 
-proc getBool*[VT: Value | ptr Value](x:VT): float =
-    var i = getInt(x)
+proc getInt*(v: ptr Value): int =
+    result = cast[int](getInt32(v))
+
+proc getBool*(v: ptr Value): bool =
+    var i = getInt(v)
     if i == 0:
         return false
     return true
 
-proc getFloat*[VT: Value | ptr Value](x:VT): float =
-    var v = vptr(x)
+proc getFloat*(v: ptr Value): float =
     var f:float64
     v.ValueFloatData(addr f)
     return float(f)
 
-proc getBytes*[VT: Value | ptr Value](x:VT): seq[byte] =
-    var v = vptr(x)
+proc getBytes*(v: ptr Value): seq[byte] =
     var p:pointer
     var size:uint32
     v.ValueBinaryData(addr p, addr size)
     result = newSeq[byte](size)
     copyMem(result[0].addr, p, int(size)*sizeof(byte))
 
-proc setBytes*[VT: Value | ptr Value](x:VT, dat: var openArray[byte]) =
-    var v = vptr(x)
+proc setBytes*(v: ptr Value, dat: var openArray[byte]) =
     var p = dat[0].addr
     var size = dat.len()*sizeof(byte)
     v.ValueBinaryDataSet(p, uint32(size), T_BYTES, 0)
     
 # for array and object types
 
-proc len*[VT: Value | ptr Value](x:VT): int =
-    var v = vptr(x)
+proc len*(v: ptr Value): int =
     var n:int32 = 0
     v.ValueElementsCount(addr n)
     return int(n)
 
-proc enumerate*[VT: Value | ptr Value](x:VT, cb:KeyValueCallback): uint32 =
-    var v = vptr(x)
+proc enumerate*(v: ptr Value, cb:KeyValueCallback): uint32 =
     v.ValueEnumElements(cb, nil)
 
-proc `[]`*[I: Ordinal, VT: Value | ptr Value](x: VT; i: I): ptr Value =
-    var v = vptr(x)
+proc `[]`*[I: Ordinal](v: ptr Value; i: I): ptr Value =
     result = nullValue()
     v.ValueNthElementValue(i, result)
 
-proc `[]=`*[I: Ordinal, VT: Value | ptr Value](x: VT; i: I; y: VT) =
-    ValueNthElementValueSet(vptr(x), i, vptr(y))
+proc `[]=`*[I: Ordinal](v: ptr Value; i: I; y: ptr Value) =
+    ValueNthElementValueSet(v, i, y)
 
-proc `[]`*[VT: Value | ptr Value](x: VT; name:string): ptr Value =
-    var v = vptr(x)
+proc `[]`*(v: ptr Value; name:string): ptr Value =
     var key = newValue(name)
     result = nullValue()
     v.ValueGetValueOfKey(key, result)
 
-proc `[]=`*[VT: Value | ptr Value](x: VT; name:string; y: VT) =
+proc `[]=`*(v: ptr Value; name:string; y: ptr Value) =
     var key = newValue(name)
-    ValueSetValueToKey(vptr(x), key, vptr(y))
+    ValueSetValueToKey(v, key, y)
