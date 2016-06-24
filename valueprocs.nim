@@ -96,14 +96,14 @@ proc newValue*(dat:string):ptr Value =
     var ws = newWideCString(dat)
     result = newValue()
     result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
-    
-proc newValue*[V:int|int8|int16|int32|uint|uint8|uint16|uint32](dat:V):ptr Value =
+
+proc newValue*(dat:int32):ptr Value=
     result = newValue()
     result.ValueIntDataSet(dat, T_INT, 0)
 
-proc newValue*[V:float|float32|float64](dat:V):ptr Value =
+proc newValue*(dat:float64):ptr Value =
     result = newValue()
-    result.ValueFloatDataSet(float64(dat), T_INT, 0)
+    result.ValueFloatDataSet(dat, T_FLOAT, 0)
 
 proc newValue*(dat:bool):ptr Value =
     result = newValue()
@@ -209,3 +209,15 @@ proc `[]=`*[VT:Value|ptr Value](x:VT; name:string; y: ptr Value) =
     xDefPtr(v)
     var key = newValue(name)
     ValueSetValueToKey(v, key, y)
+
+## value functions calls
+
+proc invoke*[VT:Value|ptr Value](x:VT, self:ptr Value, args:varargs[ptr Value]):Value =
+    xDefPtr(v)
+    result = Value()
+    var clen = len(args)
+    var cargs = newSeq[Value](clen)
+    for i in 0..clen-1:
+        cargs[i] = args[i][]
+    v.ValueInvoke(self, uint32(len(args)), cargs[0].addr, result.addr, nil)
+    
