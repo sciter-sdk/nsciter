@@ -2,7 +2,7 @@ NSRC = test.nim sciter.nim xapi.nim xdef.nim xbehavior.nim loader.nim \
 	   xdom.nim xgraphics.nim xrequest.nim xvalue.nim xtiscript.nim \
 	   event.nim valueprocs.nim
 
-sciter:${NSRC}
+test:${NSRC}
 	nim c test
 
 xapi.nim:include/sciter-x-api.h
@@ -41,4 +41,5 @@ xtiscript.nim:include/tiscript.h
 	c2nim -o:$@ $^
 
 clean:
-	rm -rf sciter nimcache xapi.nim xdef.nim xdom.nim xgraphics.nim xrequest.nim xtiscript.nim xvalue.nim xbehavior.nim
+	rm -rf sciter nimcache xapi.nim xdef.nim xdom.nim xgraphics.nim xrequest.nim xtiscript.nim xvalue.nim xbehavior.nim \
+		   test

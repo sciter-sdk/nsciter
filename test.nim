@@ -69,6 +69,7 @@ proc testCallback() =
         var fn = args[0]
         var ret = fn.invoke(newValue(100), newValue("arg2"))
         echo "cb ret:", ret
+        ret = fn.invokeWithSelf(newValue("string as this"), newValue(100), newValue("arg2"))
     )
 testCallback()
 wnd.run
