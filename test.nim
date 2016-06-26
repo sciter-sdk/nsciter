@@ -52,8 +52,6 @@ testFn()
 var testVptr = proc()=
     var i:int16 = 100
     var v = newValue(i)
-    var vv = v[]
-    echo vv, "\tvv.isNativeFunctor():", vv.isNativeFunctor()
     echo v, "\tv.isNativeFunctor():", v.isNativeFunctor()
     var vvv = Value()
     echo vvv, "\tvvv.isNativeFunctor():", vvv.isNativeFunctor()
@@ -72,4 +70,17 @@ proc testCallback() =
         ret = fn.invokeWithSelf(newValue("string as this"), newValue(100), newValue("arg2"))
     )
 testCallback()
+
+proc nf(args: seq[ptr Value]):ptr Value=
+    return newValue("nf ok")
+
+proc testNativeFunctor() =
+    wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
+        result = newValue()
+        result["i"] = newValue(1000)
+        result["str"] = newValue("a string")
+        var fn = newValue()
+        fn.setNativeFunctor(nf)
+        result["fn"] = fn
+    )
 wnd.run

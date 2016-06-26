@@ -5,6 +5,7 @@
     asdfadfa
     <button>Click</button>
     <button id="hello">Hello</button>
+    <button id="nf">NativeFunctor</button>
     <script type="text/tiscript">
         var btn = $(button#hello)
         function cb(a,b) {
@@ -14,6 +15,11 @@
         btn.onClick = function(){
             view.hello(1,2,"asdf", true, false)
             view.cbCall(cb)
+        }
+        var nf = $(button#hello)
+        nf.onClick = function(){
+            var api = view.api()
+            println(api)
         }
     </script>
 </html>

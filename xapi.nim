@@ -278,7 +278,7 @@ type
                       pretval: ptr VALUE; url: WideCString): uint32 {.cdecl.}
     ValueNativeFunctorSet*: proc (pval: ptr VALUE;
                                 pinvoke: NATIVE_FUNCTOR_INVOKE;
-                                prelease: NATIVE_FUNCTOR_RELEASE; tag: pointer): uint32 {.
+                                prelease: NATIVE_FUNCTOR_RELEASE; tag: NativeFunctor): uint32 {.
         cdecl.}
     ValueIsNativeFunctor*: proc (pval: ptr VALUE): bool {.cdecl.} ## # tiscript VM API
     TIScriptAPI*: proc (): ptr tiscript_native_interface {.cdecl.}
@@ -935,7 +935,7 @@ proc ValueInvoke*(pval: ptr VALUE; pthis: ptr VALUE; argc: uint32; argv: ptr VAL
   return SAPI().ValueInvoke(pval, pthis, argc, argv, pretval, url)
 
 proc ValueNativeFunctorSet*(pval: ptr VALUE; pinvoke: NATIVE_FUNCTOR_INVOKE;
-                           prelease: NATIVE_FUNCTOR_RELEASE; tag: pointer): uint32 {.
+                           prelease: NATIVE_FUNCTOR_RELEASE; tag: NativeFunctor): uint32 {.
     inline, discardable, cdecl.} =
   return SAPI().ValueNativeFunctorSet(pval, pinvoke, prelease, tag)
 
