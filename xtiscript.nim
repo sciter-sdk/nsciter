@@ -108,14 +108,14 @@ const
   TISCRIPT_CONST_STRING* = 2
 
 type
-  INNER_C_UNION_8621981376997354449* = object {.union.}
+  INNER_C_UNION_375812332* = object {.union.}
     i*: cint
     f*: float64
     str*: ptr Utf16Char
 
   tiscript_const_def* = object
     name*: cstring
-    val*: INNER_C_UNION_8621981376997354449
+    val*: INNER_C_UNION_375812332
     `type`*: cuint
 
   tiscript_class_def* = object

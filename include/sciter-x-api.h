@@ -107,8 +107,8 @@ typedef struct _ISciterAPI {
     LRESULT SCFN( SciterProc )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
     LRESULT SCFN( SciterProcND )(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL* pbHandled);
   #else
-    #@SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT  {.stdcall.}
-      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr BOOL): LRESULT  {.stdcall.}
+    #@SciterProc*: proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM; lParam: LPARAM): LRESULT  {.stdcall.}
+      SciterProcND*: proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr bool): LRESULT  {.stdcall.}
     @#
   #endif
 #endif
@@ -130,7 +130,7 @@ typedef struct _ISciterAPI {
   #ifndef C2NIM
     BOOL    SCFN( SciterTranslateMessage )(MSG* lpMsg);
   #else
-    #@SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL  {.stdcall.}
+    #@SciterTranslateMessage*: proc (lpMsg: ptr MSG): bool  {.stdcall.}
     @#
   #endif
 #endif
@@ -143,9 +143,9 @@ typedef struct _ISciterAPI {
     BOOL    SCFN( SciterD2DFactory )(ID2D1Factory ** ppf);
     BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
   #else
-    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): BOOL {.stdcall.}
-      SciterD2DFactory*: proc (ppf:ptr ID2D1FactoryPtr): BOOL {.stdcall.}
-      SciterDWFactory*: proc (ppf:ptr IDWriteFactoryPtr): BOOL {.stdcall.}
+    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): bool {.stdcall.}
+      SciterD2DFactory*: proc (ppf: pointer): bool {.stdcall.}
+      SciterDWFactory*: proc (ppf: pointer): bool {.stdcall.}
     @#
   #endif
 #endif
@@ -339,9 +339,9 @@ typedef struct _ISciterAPI {
     BOOL SCFN( SciterRenderOnDirectXWindow ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer);
     BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
   #else
-    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): BOOL
-      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:BOOL): BOOL
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): BOOL
+    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): bool
+      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): bool
     @#
   #endif
 #endif

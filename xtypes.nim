@@ -36,7 +36,16 @@ type
 when defined(windows):
   import winlean
   type
-    HWINDOW* = Handle
+    HWINDOW* = pointer 
+    WPARAM* = ByteAddress
+    LPARAM* = ByteAddress
+    LRESULT* = ByteAddress
+    MSG* {.importc.} = object
+    ID2D1RenderTarget* {.importc.} = object
+    IDXGISwapChain* {.importc.} = object
+    IDXGISurface* {.importc.} = object
+    ID2D1Factory* {.importc.} = object
+    IDWriteFactory* {.importc.} = object
 
   when hostCPU == "amd64":
     const
