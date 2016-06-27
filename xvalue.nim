@@ -19,7 +19,7 @@ type
 
 
 type
-    NativeFunctor* = proc(args:seq[ptr Value]):ptr Value
+  NativeFunctor* = proc(args:seq[ptr Value]):ptr Value
 
 type
   VALUE_UNIT_TYPE* = enum

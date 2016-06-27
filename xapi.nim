@@ -19,8 +19,8 @@ type
     SciterDataReadyAsync*: proc (hwnd: HWINDOW; uri: WideCString; data: pointer;
                                dataLength: uint32; requestId: pointer): bool {.cdecl.}
     when defined(windows):
-      SciterProc*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM): LRESULT  {.stdcall.}
-      SciterProcND*: proc (hwnd: HWINDOW; msg: UINT; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr BOOL): LRESULT  {.stdcall.}
+      SciterProc*: proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM; lParam: LPARAM): LRESULT  {.stdcall.}
+      SciterProcND*: proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM; lParam: LPARAM; pbHandled: ptr bool): LRESULT  {.stdcall.}
     SciterLoadFile*: proc (hWndSciter: HWINDOW; filename: WideCString): bool {.cdecl.}
     SciterLoadHtml*: proc (hWndSciter: HWINDOW; html: pointer; htmlSize: uint32;
                          baseUrl: WideCString): bool {.cdecl.}
@@ -41,14 +41,14 @@ type
                      pretval: ptr Value): bool {.cdecl.}
     SciterUpdateWindow*: proc (hwnd: HWINDOW) {.cdecl.}
     when defined(windows):
-      SciterTranslateMessage*: proc (lpMsg: ptr MSG): BOOL  {.stdcall.}
+      SciterTranslateMessage*: proc (lpMsg: ptr MSG): bool  {.stdcall.}
     SciterSetOption*: proc (hWnd: HWINDOW; option: uint32; value: uint32): bool {.cdecl.}
     SciterGetPPI*: proc (hWndSciter: HWINDOW; px: ptr uint32; py: ptr uint32) {.cdecl.}
     SciterGetViewExpando*: proc (hwnd: HWINDOW; pval: ptr VALUE): bool {.cdecl.}
     when defined(windows):
-      SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): BOOL {.stdcall.}
-      SciterD2DFactory*: proc (ppf:ptr ID2D1FactoryPtr): BOOL {.stdcall.}
-      SciterDWFactory*: proc (ppf:ptr IDWriteFactoryPtr): BOOL {.stdcall.}
+      SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): bool {.stdcall.}
+      SciterD2DFactory*: proc (ppf: pointer): bool {.stdcall.}
+      SciterDWFactory*: proc (ppf: pointer): bool {.stdcall.}
     SciterGraphicsCaps*: proc (pcaps: ptr uint32): bool {.cdecl.}
     SciterSetHomeURL*: proc (hWndSciter: HWINDOW; baseUrl: WideCString): bool {.cdecl.}
     when defined(osx):
@@ -56,7 +56,7 @@ type
     elif defined(posix):
       SciterCreateWidget*: proc (frame:ptr Rect): HWINDOW {.cdecl.}
     SciterCreateWindow*: proc (creationFlags: uint32; frame: ptr Rect;
-                             delegate: SciterWindowDelegate;
+                             delegate: ptr SciterWindowDelegate;
                              delegateParam: pointer; parent: HWINDOW): HWINDOW {.
         cdecl.}
     SciterSetupDebugOutput*: proc (hwndOrNull: HWINDOW; param: pointer; pfOutput: DEBUG_OUTPUT_PROC) {.
@@ -76,31 +76,31 @@ type
     SciterGetParentElement*: proc (he: HELEMENT; p_parent_he: ptr HELEMENT): int32 {.
         cdecl.}
     SciterGetElementHtmlCB*: proc (he: HELEMENT; outer: bool;
-                                 rcv: LPCBYTE_RECEIVER; rcv_param: pointer): int32 {.
+                                 rcv: ptr LPCBYTE_RECEIVER; rcv_param: pointer): int32 {.
         cdecl.}
-    SciterGetElementTextCB*: proc (he: HELEMENT; rcv: LPCWSTR_RECEIVER;
+    SciterGetElementTextCB*: proc (he: HELEMENT; rcv: ptr LPCWSTR_RECEIVER;
                                  rcv_param: pointer): int32 {.cdecl.}
     SciterSetElementText*: proc (he: HELEMENT; utf16: WideCString; length: uint32): int32 {.
         cdecl.}
     SciterGetAttributeCount*: proc (he: HELEMENT; p_count: ptr uint32): int32 {.cdecl.}
     SciterGetNthAttributeNameCB*: proc (he: HELEMENT; n: uint32;
-                                      rcv: LPCSTR_RECEIVER; rcv_param: pointer): int32 {.
+                                      rcv: ptr LPCSTR_RECEIVER; rcv_param: pointer): int32 {.
         cdecl.}
     SciterGetNthAttributeValueCB*: proc (he: HELEMENT; n: uint32;
-                                       rcv: LPCWSTR_RECEIVER;
+                                       rcv: ptr LPCWSTR_RECEIVER;
                                        rcv_param: pointer): int32 {.cdecl.}
     SciterGetAttributeByNameCB*: proc (he: HELEMENT; name: cstring;
-                                     rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+                                     rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
         cdecl.}
     SciterSetAttributeByName*: proc (he: HELEMENT; name: cstring; value: WideCString): int32 {.
         cdecl.}
     SciterClearAttributes*: proc (he: HELEMENT): int32 {.cdecl.}
     SciterGetElementIndex*: proc (he: HELEMENT; p_index: ptr uint32): int32 {.cdecl.}
     SciterGetElementType*: proc (he: HELEMENT; p_type: ptr cstring): int32 {.cdecl.}
-    SciterGetElementTypeCB*: proc (he: HELEMENT; rcv: LPCSTR_RECEIVER;
+    SciterGetElementTypeCB*: proc (he: HELEMENT; rcv: ptr LPCSTR_RECEIVER;
                                  rcv_param: pointer): int32 {.cdecl.}
     SciterGetStyleAttributeCB*: proc (he: HELEMENT; name: cstring;
-                                    rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+                                    rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
         cdecl.}
     SciterSetStyleAttribute*: proc (he: HELEMENT; name: cstring; value: WideCString): int32 {.
         cdecl.}
@@ -221,7 +221,7 @@ type
     SciterNodeNthChild*: proc (hnode: HNODE; n: uint32; phn: ptr HNODE): int32 {.cdecl.}
     SciterNodeChildrenCount*: proc (hnode: HNODE; pn: ptr uint32): int32 {.cdecl.}
     SciterNodeType*: proc (hnode: HNODE; pNodeType: ptr uint32): int32 {.cdecl.} ## #NODE_TYPE
-    SciterNodeGetText*: proc (hnode: HNODE; rcv: LPCWSTR_RECEIVER;
+    SciterNodeGetText*: proc (hnode: HNODE; rcv: ptr LPCWSTR_RECEIVER;
                             rcv_param: pointer): int32 {.cdecl.}
     SciterNodeSetText*: proc (hnode: HNODE; text: WideCString; textLength: uint32): int32 {.
         cdecl.}
@@ -265,7 +265,7 @@ type
         cdecl.}
     ValueNthElementKey*: proc (pval: ptr VALUE; n: int32; pretval: ptr VALUE): uint32 {.
         cdecl.}
-    ValueEnumElements*: proc (pval: ptr VALUE; penum: KeyValueCallback;
+    ValueEnumElements*: proc (pval: ptr VALUE; penum: ptr KeyValueCallback;
                             param: pointer): uint32 {.cdecl.}
     ValueSetValueToKey*: proc (pval: ptr VALUE; pkey: ptr VALUE; pval_to_set: ptr VALUE): uint32 {.
         cdecl.}
@@ -301,9 +301,9 @@ type
     GetSciterGraphicsAPI*: proc (): LPSciterGraphicsAPI {.cdecl.}
     GetSciterRequestAPI*: proc (): LPSciterRequestAPI {.cdecl.}
     when defined(windows):
-      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): BOOL
-      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:BOOL): BOOL
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): BOOL
+      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): bool
+      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): bool
     for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field*: bool ## # 
                                                                              ## c2nim 
                                                                              ## needs 
@@ -427,7 +427,7 @@ when defined(osx):
     return SAPI().SciterCreateNSView(frame)
 
 proc SciterCreateWindow*(creationFlags: uint32; frame: ptr Rect;
-                        delegate: SciterWindowDelegate; delegateParam: pointer;
+                        delegate: ptr SciterWindowDelegate; delegateParam: pointer;
                         parent: HWINDOW): HWINDOW {.inline, discardable, cdecl.} =
   return SAPI().SciterCreateWindow(creationFlags, frame, delegate, delegateParam,
                                   parent)
@@ -462,11 +462,11 @@ proc SciterGetParentElement*(he: HELEMENT; p_parent_he: ptr HELEMENT): int32 {.i
     discardable, cdecl.} =
   return SAPI().SciterGetParentElement(he, p_parent_he)
 
-proc SciterGetElementHtmlCB*(he: HELEMENT; outer: bool; rcv: LPCBYTE_RECEIVER;
+proc SciterGetElementHtmlCB*(he: HELEMENT; outer: bool; rcv: ptr LPCBYTE_RECEIVER;
                             rcv_param: pointer): int32 {.inline, discardable, cdecl.} =
   return SAPI().SciterGetElementHtmlCB(he, outer, rcv, rcv_param)
 
-proc SciterGetElementTextCB*(he: HELEMENT; rcv: LPCWSTR_RECEIVER;
+proc SciterGetElementTextCB*(he: HELEMENT; rcv: ptr LPCWSTR_RECEIVER;
                             rcv_param: pointer): int32 {.inline, discardable, cdecl.} =
   return SAPI().SciterGetElementTextCB(he, rcv, rcv_param)
 
@@ -478,18 +478,18 @@ proc SciterGetAttributeCount*(he: HELEMENT; p_count: ptr uint32): int32 {.inline
     discardable, cdecl.} =
   return SAPI().SciterGetAttributeCount(he, p_count)
 
-proc SciterGetNthAttributeNameCB*(he: HELEMENT; n: uint32; rcv: LPCSTR_RECEIVER;
+proc SciterGetNthAttributeNameCB*(he: HELEMENT; n: uint32; rcv: ptr LPCSTR_RECEIVER;
                                  rcv_param: pointer): int32 {.inline, discardable,
     cdecl.} =
   return SAPI().SciterGetNthAttributeNameCB(he, n, rcv, rcv_param)
 
 proc SciterGetNthAttributeValueCB*(he: HELEMENT; n: uint32;
-                                  rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+                                  rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterGetNthAttributeValueCB(he, n, rcv, rcv_param)
 
 proc SciterGetAttributeByNameCB*(he: HELEMENT; name: cstring;
-                                rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+                                rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterGetAttributeByNameCB(he, name, rcv, rcv_param)
 
@@ -508,12 +508,12 @@ proc SciterGetElementType*(he: HELEMENT; p_type: ptr cstring): int32 {.inline,
     discardable, cdecl.} =
   return SAPI().SciterGetElementType(he, p_type)
 
-proc SciterGetElementTypeCB*(he: HELEMENT; rcv: LPCSTR_RECEIVER;
+proc SciterGetElementTypeCB*(he: HELEMENT; rcv: ptr LPCSTR_RECEIVER;
                             rcv_param: pointer): int32 {.inline, discardable, cdecl.} =
   return SAPI().SciterGetElementTypeCB(he, rcv, rcv_param)
 
 proc SciterGetStyleAttributeCB*(he: HELEMENT; name: cstring;
-                               rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+                               rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterGetStyleAttributeCB(he, name, rcv, rcv_param)
 
@@ -808,7 +808,7 @@ proc SciterNodeType*(hnode: HNODE; pNodeType: ptr uint32): int32 {.inline, disca
   ## #NODE_TYPE
   return SAPI().SciterNodeType(hnode, pNodeType)
 
-proc SciterNodeGetText*(hnode: HNODE; rcv: LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
+proc SciterNodeGetText*(hnode: HNODE; rcv: ptr LPCWSTR_RECEIVER; rcv_param: pointer): int32 {.
     inline, discardable, cdecl.} =
   return SAPI().SciterNodeGetText(hnode, rcv, rcv_param)
 
@@ -910,7 +910,7 @@ proc ValueNthElementKey*(pval: ptr VALUE; n: int32; pretval: ptr VALUE): uint32 
     discardable, cdecl.} =
   return SAPI().ValueNthElementKey(pval, n, pretval)
 
-proc ValueEnumElements*(pval: ptr VALUE; penum: KeyValueCallback; param: pointer): uint32 {.
+proc ValueEnumElements*(pval: ptr VALUE; penum: ptr KeyValueCallback; param: pointer): uint32 {.
     inline, discardable, cdecl.} =
   return SAPI().ValueEnumElements(pval, penum, param)
 
