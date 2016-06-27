@@ -57,10 +57,11 @@ proc newEventHandler*(): EventHandler =
 import tables
 var evct = newCountTable[EventHandler]()
 
-proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.cdecl.} =
+proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.stdcall.} =
     var pThis:EventHandler = cast[EventHandler](tag)
     if pThis == nil:
         return false
+    echo "evtg:", evtg, "->", uint32(HANDLE_BEHAVIOR_EVENT)
     case evtg
     # of SUBSCRIPTIONS_REQUEST:
     #   var p: ptr UINT = cast[ptr UINT](prms)
@@ -122,7 +123,6 @@ proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool
     return false
 
 proc Attach*[EventTarget](target:EventTarget, eh:EventHandler): EventTarget {.discardable.} =
-    echo "SciterWindowAttachEventHandler:", repr target, repr element_proc, repr eh
     when EventTarget is HWINDOW:
         SciterWindowAttachEventHandler(target, element_proc, eh, HANDLE_ALL)
         return target
