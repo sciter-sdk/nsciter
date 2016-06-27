@@ -23,7 +23,6 @@ xdef.nim:include/sciter-x-def.h
 	
 xbehavior.nim:include/sciter-x-behavior.h
 	c2nim -o:$@ $^
-	sed -i 's/SUBSCRIPTIONS_REQUEST = 0xFFFFFFFF/SUBSCRIPTIONS_REQUEST = 0x7FFFFFFF/g' $@
 	
 xdom.nim:include/sciter-x-dom.h
 	c2nim -o:$@ $^
