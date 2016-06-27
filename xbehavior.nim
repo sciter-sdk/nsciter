@@ -38,7 +38,7 @@ type
     HANDLE_EXCHANGE = 0x00001000, ## #* system drag-n-drop 
     HANDLE_GESTURE = 0x00002000, ## #* touch input events 
     HANDLE_ALL = 0x0000FFFF,    ## # all of them 
-    SUBSCRIPTIONS_REQUEST = 0x7FFFFFFF ## #* special value for getting subscription flags 
+    SUBSCRIPTIONS_REQUEST = 0xFFFFFFFF ## #* special value for getting subscription flags 
 
 
 ## #*Element callback function for all types of events. Similar to WndProc
