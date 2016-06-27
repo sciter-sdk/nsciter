@@ -143,7 +143,7 @@ typedef struct _ISciterAPI {
     BOOL    SCFN( SciterD2DFactory )(ID2D1Factory ** ppf);
     BOOL    SCFN( SciterDWFactory )(IDWriteFactory ** ppf);
   #else
-    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): bool {.stdcall.}
+    #@SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:pointer): bool {.stdcall.}
       SciterD2DFactory*: proc (ppf: pointer): bool {.stdcall.}
       SciterDWFactory*: proc (ppf: pointer): bool {.stdcall.}
     @#
@@ -339,9 +339,9 @@ typedef struct _ISciterAPI {
     BOOL SCFN( SciterRenderOnDirectXWindow ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer);
     BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
   #else
-    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): bool
+    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool
       SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): bool
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool
     @#
   #endif
 #endif
@@ -563,9 +563,9 @@ include loader
   inline  VOID    SCAPI SciterGetPPI (HWINDOW hWndSciter, UINT* px, UINT* py) { SAPI()->SciterGetPPI (hWndSciter,px,py); }
   inline  BOOL    SCAPI SciterGetViewExpando ( HWINDOW hwnd, VALUE* pval ) { return SAPI()->SciterGetViewExpando ( hwnd, pval ); }
 #ifdef WINDOWS
-  inline  BOOL    SCAPI SciterRenderD2D (HWINDOW hWndSciter, ID2D1RenderTarget* prt) { return SAPI()->SciterRenderD2D (hWndSciter,prt); }
-  inline  BOOL    SCAPI SciterD2DFactory (ID2D1Factory ** ppf) { return SAPI()->SciterD2DFactory (ppf); }
-  inline  BOOL    SCAPI SciterDWFactory (IDWriteFactory ** ppf) { return SAPI()->SciterDWFactory (ppf); }
+  inline  BOOL    SCAPI SciterRenderD2D (HWINDOW hWndSciter, void* prt) { return SAPI()->SciterRenderD2D (hWndSciter,prt); }
+  inline  BOOL    SCAPI SciterD2DFactory (void* ppf) { return SAPI()->SciterD2DFactory (ppf); }
+  inline  BOOL    SCAPI SciterDWFactory (void* ppf) { return SAPI()->SciterDWFactory (ppf); }
 #endif
   inline  BOOL    SCAPI SciterGraphicsCaps (LPUINT pcaps) { return SAPI()->SciterGraphicsCaps (pcaps); }
   inline  BOOL    SCAPI SciterSetHomeURL (HWINDOW hWndSciter, LPCWSTR baseUrl) { return SAPI()->SciterSetHomeURL (hWndSciter,baseUrl); }
@@ -708,9 +708,9 @@ include loader
   inline BOOL SCAPI Sciter_V2tv(HVM vm, const VALUE* value, tiscript_value* out_script_value) { return SAPI()->Sciter_V2tv(vm,value,out_script_value); }
 
 #ifdef WINDOWS
-  inline BOOL SCAPI SciterCreateOnDirectXWindow(HWINDOW hwnd, IDXGISwapChain* pSwapChain) { return SAPI()->SciterCreateOnDirectXWindow(hwnd,pSwapChain); }
+  inline BOOL SCAPI SciterCreateOnDirectXWindow(HWINDOW hwnd, void* pSwapChain) { return SAPI()->SciterCreateOnDirectXWindow(hwnd,pSwapChain); }
   inline BOOL SCAPI SciterRenderOnDirectXWindow(HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer) { return SAPI()->SciterRenderOnDirectXWindow(hwnd,elementToRenderOrNull,frontLayer); }
-  inline BOOL SCAPI SciterRenderOnDirectXTexture(HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface) { return SAPI()->SciterRenderOnDirectXTexture(hwnd,elementToRenderOrNull,surface); }
+  inline BOOL SCAPI SciterRenderOnDirectXTexture(HWINDOW hwnd, HELEMENT elementToRenderOrNull, void* surface) { return SAPI()->SciterRenderOnDirectXTexture(hwnd,elementToRenderOrNull,surface); }
 #endif
 
 

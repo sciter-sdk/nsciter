@@ -35,17 +35,20 @@ type
 
 when defined(windows):
   import winlean
+  const
+    whdr = "<windows.h>"
+    # d2hdr = "<D2d1.h>"
   type
     HWINDOW* = pointer 
     WPARAM* = ByteAddress
     LPARAM* = ByteAddress
     LRESULT* = ByteAddress
-    MSG* {.importc.} = object
-    ID2D1RenderTarget* {.importc.} = object
-    IDXGISwapChain* {.importc.} = object
-    IDXGISurface* {.importc.} = object
-    ID2D1Factory* {.importc.} = object
-    IDWriteFactory* {.importc.} = object
+    MSG* {.header:whdr, importc.} = object
+    # ID2D1RenderTarget* {.header:d2hdr, importc.} = object
+    # IDXGISwapChain* {.header:d2hdr, importc.} = object
+    # IDXGISurface* {.header:d2hdr, importc.} = object
+    # ID2D1Factory* {.header:d2hdr, importc.} = object
+    # IDWriteFactory* {.header:d2hdr, importc.} = object
 
   when hostCPU == "amd64":
     const

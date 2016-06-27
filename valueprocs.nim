@@ -240,6 +240,6 @@ proc pinvoke(tag: NativeFunctor;
 proc prelease(tag: NativeFunctor) {.cdecl.} =
     discard
 
-proc setNativeFunctor*(v:ptr Value, nf:NativeFunctor) =
-    v.ValueNativeFunctorSet(pinvoke, prelease, nf)
+# proc setNativeFunctor*(v:ptr Value, nf:NativeFunctor) =
+#     v.ValueNativeFunctorSet(pinvoke, prelease, nf)
 

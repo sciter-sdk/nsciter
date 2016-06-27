@@ -38,4 +38,17 @@ when defined(posix):
         gtk_main()
 
 when defined(windows):
-    discard
+    proc SetWindowText(wnd: HWINDOW, lpString: WideCString): bool {.stdcall,
+                                             dynlib: "user32", importc: "SetWindowTextW".}
+    proc GetMessage(lpMsg: ptr MSG, wnd: HWINDOW, wMsgFilterMin: uint32,
+                    wMsgFilterMax: uint32): bool {.stdcall, dynlib: "user32", importc: "GetMessageW".}
+    proc TranslateMessage(lpMsg: ptr MSG): bool {.stdcall, dynlib: "user32", importc: "TranslateMessage".}
+    proc DispatchMessage(lpMsg: ptr MSG): LONG{.stdcall, dynlib: "user32", importc: "DispatchMessageW".}
+    proc setTitle*(h:HWINDOW, title:string) = 
+        discard SetWindowText(h, newWideCString(title))
+
+    proc run*(hwnd: HWINDOW) =
+        var m:MSG
+        while GetMessage(m.addr, nil, 0, 0):
+            discard TranslateMessage(m.addr)
+            discard DispatchMessage(m.addr)

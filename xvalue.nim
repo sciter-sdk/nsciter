@@ -19,9 +19,6 @@ type
 
 
 type
-  NativeFunctor* = proc(args:seq[ptr Value]):ptr Value
-
-type
   VALUE_UNIT_TYPE* = enum
     UT_EM = 1,                  ## #height of the element's font. 
     UT_EX = 2,                  ## #height of letter 'x' 
@@ -70,13 +67,13 @@ type
 ## # Native functor
 
 type
-  NATIVE_FUNCTOR_INVOKE* = proc (tag: NativeFunctor; argc: uint32; argv: ptr VALUE;
+  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: uint32; argv: ptr VALUE;
                               retval: ptr VALUE) {.cdecl.}
 
 ## # retval may contain error definition
 
 type
-  NATIVE_FUNCTOR_RELEASE* = proc (tag: NativeFunctor) {.cdecl.}
+  NATIVE_FUNCTOR_RELEASE* = proc (tag: pointer) {.cdecl.}
 
 ## #*Callback function used with #ValueEnumElements().
 ## #  return TRUE to continue enumeration

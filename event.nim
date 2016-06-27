@@ -148,6 +148,8 @@ proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.di
     target.Attach(eh)
     return target
 
+type
+  NativeFunctor* = proc(args: seq[ptr Value]):ptr Value
 
 proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:NativeFunctor): EventTarget {.discardable.} =
     var eh = newEventHandler()

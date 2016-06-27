@@ -74,13 +74,13 @@ testCallback()
 proc nf(args: seq[ptr Value]):ptr Value=
     return newValue("nf ok")
 
-proc testNativeFunctor() =
-    wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
-        result = newValue()
-        result["i"] = newValue(1000)
-        result["str"] = newValue("a string")
-        var fn = newValue()
-        fn.setNativeFunctor(nf)
-        result["fn"] = fn
-    )
+# proc testNativeFunctor() =
+#     wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
+#         result = newValue()
+#         result["i"] = newValue(1000)
+#         result["str"] = newValue("a string")
+#         var fn = newValue()
+#         fn.setNativeFunctor(nf)
+#         result["fn"] = fn
+#     )
 wnd.run

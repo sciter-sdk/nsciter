@@ -46,7 +46,7 @@ type
     SciterGetPPI*: proc (hWndSciter: HWINDOW; px: ptr uint32; py: ptr uint32) {.cdecl.}
     SciterGetViewExpando*: proc (hwnd: HWINDOW; pval: ptr VALUE): bool {.cdecl.}
     when defined(windows):
-      SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:ptr ID2D1RenderTarget): bool {.stdcall.}
+      SciterRenderD2D*: proc (hWndSciter:HWINDOW, tgt:pointer): bool {.stdcall.}
       SciterD2DFactory*: proc (ppf: pointer): bool {.stdcall.}
       SciterDWFactory*: proc (ppf: pointer): bool {.stdcall.}
     SciterGraphicsCaps*: proc (pcaps: ptr uint32): bool {.cdecl.}
@@ -277,8 +277,8 @@ type
     ValueInvoke*: proc (pval: ptr VALUE; pthis: ptr VALUE; argc: uint32; argv: ptr VALUE;
                       pretval: ptr VALUE; url: WideCString): uint32 {.cdecl.}
     ValueNativeFunctorSet*: proc (pval: ptr VALUE;
-                                pinvoke: NATIVE_FUNCTOR_INVOKE;
-                                prelease: NATIVE_FUNCTOR_RELEASE; tag: NativeFunctor): uint32 {.
+                                pinvoke: ptr NATIVE_FUNCTOR_INVOKE;
+                                prelease: ptr NATIVE_FUNCTOR_RELEASE; tag: pointer): uint32 {.
         cdecl.}
     ValueIsNativeFunctor*: proc (pval: ptr VALUE): bool {.cdecl.} ## # tiscript VM API
     TIScriptAPI*: proc (): ptr tiscript_native_interface {.cdecl.}
@@ -301,9 +301,9 @@ type
     GetSciterGraphicsAPI*: proc (): LPSciterGraphicsAPI {.cdecl.}
     GetSciterRequestAPI*: proc (): LPSciterRequestAPI {.cdecl.}
     when defined(windows):
-      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:ptr IDXGISwapChain): bool
+      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool
       SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:ptr IDXGISurface): bool
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool
     for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field*: bool ## # 
                                                                              ## c2nim 
                                                                              ## needs 
@@ -405,14 +405,14 @@ proc SciterGetViewExpando*(hwnd: HWINDOW; pval: ptr VALUE): bool {.inline, disca
   return SAPI().SciterGetViewExpando(hwnd, pval)
 
 when defined(windows):
-  proc SciterRenderD2D*(hWndSciter: HWINDOW; prt: ptr ID2D1RenderTarget): bool {.
-      inline, discardable, cdecl.} =
+  proc SciterRenderD2D*(hWndSciter: HWINDOW; prt: pointer): bool {.inline, discardable,
+      cdecl.} =
     return SAPI().SciterRenderD2D(hWndSciter, prt)
 
-  proc SciterD2DFactory*(ppf: ptr ptr ID2D1Factory): bool {.inline, discardable, cdecl.} =
+  proc SciterD2DFactory*(ppf: pointer): bool {.inline, discardable, cdecl.} =
     return SAPI().SciterD2DFactory(ppf)
 
-  proc SciterDWFactory*(ppf: ptr ptr IDWriteFactory): bool {.inline, discardable, cdecl.} =
+  proc SciterDWFactory*(ppf: pointer): bool {.inline, discardable, cdecl.} =
     return SAPI().SciterDWFactory(ppf)
 
 proc SciterGraphicsCaps*(pcaps: ptr uint32): bool {.inline, discardable, cdecl.} =
@@ -934,8 +934,8 @@ proc ValueInvoke*(pval: ptr VALUE; pthis: ptr VALUE; argc: uint32; argv: ptr VAL
     cdecl.} =
   return SAPI().ValueInvoke(pval, pthis, argc, argv, pretval, url)
 
-proc ValueNativeFunctorSet*(pval: ptr VALUE; pinvoke: NATIVE_FUNCTOR_INVOKE;
-                           prelease: NATIVE_FUNCTOR_RELEASE; tag: NativeFunctor): uint32 {.
+proc ValueNativeFunctorSet*(pval: ptr VALUE; pinvoke: ptr NATIVE_FUNCTOR_INVOKE;
+                           prelease: ptr NATIVE_FUNCTOR_RELEASE; tag: pointer): uint32 {.
     inline, discardable, cdecl.} =
   return SAPI().ValueNativeFunctorSet(pval, pinvoke, prelease, tag)
 
@@ -953,7 +953,7 @@ proc Sciter_V2tv*(vm: HVM; value: ptr VALUE; out_script_value: ptr tiscript_valu
   return SAPI().Sciter_V2tv(vm, value, out_script_value)
 
 when defined(windows):
-  proc SciterCreateOnDirectXWindow*(hwnd: HWINDOW; pSwapChain: ptr IDXGISwapChain): bool {.
+  proc SciterCreateOnDirectXWindow*(hwnd: HWINDOW; pSwapChain: pointer): bool {.
       inline, discardable, cdecl.} =
     return SAPI().SciterCreateOnDirectXWindow(hwnd, pSwapChain)
 
@@ -965,6 +965,6 @@ when defined(windows):
 
   proc SciterRenderOnDirectXTexture*(hwnd: HWINDOW;
                                     elementToRenderOrNull: HELEMENT;
-                                    surface: ptr IDXGISurface): bool {.inline,
-      discardable, cdecl.} =
+                                    surface: pointer): bool {.inline, discardable,
+      cdecl.} =
     return SAPI().SciterRenderOnDirectXTexture(hwnd, elementToRenderOrNull, surface)
