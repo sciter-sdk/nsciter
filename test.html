@@ -8,19 +8,21 @@
     <button id="hello">Hello</button>
     <button id="nf">NativeFunctor</button>
     <script type="text/tiscript">
-        var btn = $(button#hello)
-        function cb(a,b) {
-            view.hello(this, a, b)
-            return 101010
-        }
-        btn.onClick = function(){
-            view.hello(1,2,"asdf", true, false)
-            view.cbCall(cb)
-        }
-        var nf = $(button#hello)
-        nf.onClick = function(){
-            var api = view.api()
-            println(api)
+        function self.ready() {
+            var btn = $(button#hello)
+            function cb(a,b) {
+                view.hello(this, a, b)
+                return 101010
+            }
+            btn.onClick = function(){
+                view.hello(1,2,"asdf", true, false)
+                view.cbCall(cb)
+            }
+            var nf = $(button#nf)
+            nf.onClick = function(){
+                var api = view.api()
+                view.hello("api field:", api.i, api.str, api.fn)
+            }
         }
     </script>
 </html>

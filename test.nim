@@ -56,13 +56,13 @@ var testVptr = proc()=
     var vvv = Value()
     echo vvv, "\tvvv.isNativeFunctor():", vvv.isNativeFunctor()
 testVptr()
-wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
+echo "dfm hello ret: ", wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
     echo "hello from script method"
     echo "args:", args
 )
 
 proc testCallback() =
-    echo "dfm ret: ", wnd.defineScriptingFunction("cbCall", proc(args:seq[ptr Value]):ptr Value=
+    echo "dfm cbCall ret: ", wnd.defineScriptingFunction("cbCall", proc(args:seq[ptr Value]):ptr Value=
         echo "cbCall args:", args
         var fn = args[0]
         var ret = fn.invoke(newValue(100), newValue("arg2"))
@@ -74,13 +74,15 @@ testCallback()
 proc nf(args: seq[ptr Value]):ptr Value=
     return newValue("nf ok")
 
-# proc testNativeFunctor() =
-#     wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
-#         result = newValue()
-#         result["i"] = newValue(1000)
-#         result["str"] = newValue("a string")
-#         var fn = newValue()
-#         fn.setNativeFunctor(nf)
-#         result["fn"] = fn
-#     )
+proc testNativeFunctor() =
+    wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
+        result = newValue()
+        result["i"] = newValue(1000)
+        result["str"] = newValue("a string")
+        var fn = newValue()
+        # fn.setNativeFunctor(nf)
+        result["fn"] = fn
+    )
+testNativeFunctor()
+echo HANDLE_SCRIPTING_METHOD_CALL, "->", ord(HANDLE_SCRIPTING_METHOD_CALL) 
 wnd.run
