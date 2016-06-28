@@ -4,3 +4,5 @@
 sciter
 sciter.html
 test
+sciter*.dll
+*.exe

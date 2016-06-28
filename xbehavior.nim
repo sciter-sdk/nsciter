@@ -30,6 +30,8 @@ type
     HANDLE_DRAW = 0x00000040,   ## #* drawing request (event) 
     HANDLE_DATA_ARRIVED = 0x00000080, ## #* requested data () has been delivered 
     HANDLE_BEHAVIOR_EVENT = 0x00000100, ## #* logical, synthetic events:
+                                     ## #                                                 BUTTON_CLICK, HYPERLINK_CLICK, etc.,
+                                     ## #                                                 a.k.a. notifications from intrinsic behaviors 
     HANDLE_METHOD_CALL = 0x00000200, ## #* behavior specific methods 
     HANDLE_SCRIPTING_METHOD_CALL = 0x00000400, ## #* behavior specific methods 
     HANDLE_TISCRIPT_METHOD_CALL = 0x00000800, ## #* behavior specific methods using direct tiscript::value's 

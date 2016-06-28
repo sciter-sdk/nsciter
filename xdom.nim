@@ -12,7 +12,7 @@
 ## # 
 
 type
-  HELEMENT* = pointer
+  HELEMENT* = distinct pointer
 
 ## #*DOM node handle.
 
