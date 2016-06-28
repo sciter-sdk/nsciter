@@ -121,37 +121,30 @@ proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool
       return false
     return false
 
-proc Attach*[EventTarget](target:EventTarget, eh:EventHandler): EventTarget {.discardable.} =
+proc Attach*[EventTarget](target:EventTarget, eh:EventHandler, mask:uint32 = HANDLE_ALL): int32 {.discardable.} =
     when EventTarget is HWINDOW:
-        SciterWindowAttachEventHandler(target, element_proc, eh, HANDLE_ALL)
-        return target
+        result = SciterWindowAttachEventHandler(target, element_proc, eh, mask)
     when EventTarget is HELEMENT:
-        SciterAttachEventHandler(target, element_proc, eh)
-        return target
-    echo "error: EventTarget must be HWINDOW or HWINDOW"
+        result = SciterAttachEventHandler(target, element_proc, eh)
 
-proc Detach*[EventTarget](target:EventTarget, eh:EventHandler): EventTarget {.discardable.} =
+proc Detach*[EventTarget](target:EventTarget, eh:EventHandler , mask:uint32 = HANDLE_ALL): int32 {.discardable.} =
     when EventTarget is HWINDOW:
-        SciterWindowDetachEventHandler(target, element_proc, eh, HANDLE_ALL)
-        return target
+        result = SciterWindowDetachEventHandler(target, element_proc, eh, mask)
     when EventTarget is HELEMENT:
-        SciterDetachEventHandler(target, element_proc, eh)
-        return target
-    echo "error: EventTarget must be HWINDOW or HWINDOW"
+        result = SciterDetachEventHandler(target, element_proc, eh)
 
-proc onClick*[EventTarget](target:EventTarget, handler:proc()): EventTarget {.discardable.} =
+proc onClick*[EventTarget](target:EventTarget, handler:proc()): int32 {.discardable.} =
     var eh = newEventHandler()
     eh.handle_event = proc(he:HELEMENT, params: ptr BEHAVIOR_EVENT_PARAMS ):bool =
         if params.cmd == BUTTON_CLICK:
             handler()
         return false
-    target.Attach(eh)
-    return target
+    result = target.Attach(eh, HANDLE_BEHAVIOR_EVENT)
 
 type
   NativeFunctor* = proc(args: seq[ptr Value]):ptr Value
 
-proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:NativeFunctor): EventTarget {.discardable.} =
+proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:NativeFunctor): int32 {.discardable.} =
     var eh = newEventHandler()
     eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool =
         if params.name != name:
@@ -165,5 +158,4 @@ proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:N
         if ret != nil:
             params.result = ret[]
         return true
-    target.Attach(eh)
-    return target
+    result = target.Attach(eh, HANDLE_SCRIPTING_METHOD_CALL)
