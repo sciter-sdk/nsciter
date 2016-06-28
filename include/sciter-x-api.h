@@ -339,9 +339,9 @@ typedef struct _ISciterAPI {
     BOOL SCFN( SciterRenderOnDirectXWindow ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, BOOL frontLayer);
     BOOL SCFN( SciterRenderOnDirectXTexture ) (HWINDOW hwnd, HELEMENT elementToRenderOrNull, IDXGISurface* surface);
   #else
-    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool
-      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool
+    #@SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool {.cdecl.}
+      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool {.cdecl.}
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool {.cdecl.}
     @#
   #endif
 #endif

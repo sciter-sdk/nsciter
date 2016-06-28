@@ -301,9 +301,9 @@ type
     GetSciterGraphicsAPI*: proc (): LPSciterGraphicsAPI {.cdecl.}
     GetSciterRequestAPI*: proc (): LPSciterRequestAPI {.cdecl.}
     when defined(windows):
-      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool
-      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool
-      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool
+      SciterCreateOnDirectXWindow*: proc (hwnd:HWINDOW, pSwapChain:pointer): bool {.cdecl.}
+      SciterRenderOnDirectXWindow*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, frontLayer:bool): bool {.cdecl.}
+      SciterRenderOnDirectXTexture*: proc (hwnd:HWINDOW, elementToRenderOrNull:HELEMENT, surface:pointer): bool {.cdecl.}
     for_c2nim_only_very_bad_patch_so_do_not_pay_attention_to_this_field*: bool ## # 
                                                                              ## c2nim 
                                                                              ## needs 
