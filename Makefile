@@ -23,6 +23,7 @@ xdef.nim:include/sciter-x-def.h
 	
 xbehavior.nim:include/sciter-x-behavior.h
 	c2nim -o:$@ $^
+	sed -i 's/EVENT_GROUPS\* \= enum/EVENT_GROUPS\* {\.size: sizeof(cint)\.} \= enum/g' $@
 	
 xdom.nim:include/sciter-x-dom.h
 	c2nim -o:$@ $^
