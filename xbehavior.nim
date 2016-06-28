@@ -19,7 +19,7 @@
 ## #       
 
 type
-  EVENT_GROUPS* = enum
+  EVENT_GROUPS* {.size: sizeof(cint).} = enum
     HANDLE_INITIALIZATION = 0x00000000, ## #* attached/detached 
     HANDLE_MOUSE = 0x00000001,  ## #* mouse events 
     HANDLE_KEY = 0x00000002,    ## #* key events 
