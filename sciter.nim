@@ -44,11 +44,15 @@ when defined(windows):
                     wMsgFilterMax: uint32): bool {.stdcall, dynlib: "user32", importc: "GetMessageW".}
     proc TranslateMessage(lpMsg: ptr MSG): bool {.stdcall, dynlib: "user32", importc: "TranslateMessage".}
     proc DispatchMessage(lpMsg: ptr MSG): LONG{.stdcall, dynlib: "user32", importc: "DispatchMessageW".}
+    proc UpdateWindow(wnd: HWINDOW): bool{.stdcall, dynlib: "user32", importc: "UpdateWindow".}
+    proc ShowWindow(wnd: HWINDOW, nCmdShow: int32): WINBOOL{.stdcall, dynlib: "user32", importc: "ShowWindow".}
     proc setTitle*(h:HWINDOW, title:string) = 
         discard SetWindowText(h, newWideCString(title))
 
     proc run*(hwnd: HWINDOW) =
         var m:MSG
+        discard hwnd.ShowWindow(5)
+        discard hwnd.UpdateWindow()
         while GetMessage(m.addr, nil, 0, 0):
             discard TranslateMessage(m.addr)
             discard DispatchMessage(m.addr)
