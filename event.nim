@@ -61,7 +61,6 @@ proc element_proc(tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool
     var pThis:EventHandler = cast[EventHandler](tag)
     if pThis == nil:
         return false
-    echo "evtg:", evtg, "->", uint32(HANDLE_BEHAVIOR_EVENT)
     case evtg
     # of SUBSCRIPTIONS_REQUEST:
     #   var p: ptr UINT = cast[ptr UINT](prms)
