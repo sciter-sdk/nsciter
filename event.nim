@@ -152,8 +152,9 @@ proc defineScriptingFunction*[EventTarget](target:EventTarget, name:string, fn:N
         var args = newSeq[ptr Value](params.argc)
         var base = cast[uint](params.argv)
         var step = cast[uint](sizeof(Value))
-        for idx in 0..params.argc-1:
-            args[int(idx)] = cast[ptr Value](base + step*uint(idx)) 
+        if params.argc > 0.uint32:
+            for idx in 0..params.argc-1:
+                args[int(idx)] = cast[ptr Value](base + step*uint(idx)) 
         var ret = fn(args)
         if ret != nil:
             params.result = ret[]
