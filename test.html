@@ -22,6 +22,7 @@
             nf.onClick = function(){
                 var api = view.api()
                 view.hello("api field:", api.i, api.str, api.fn)
+                view.hello("api.fn():", api.fn())
             }
         }
     </script>

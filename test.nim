@@ -72,6 +72,7 @@ proc testCallback() =
 testCallback()
 
 proc nf(args: seq[ptr Value]):ptr Value=
+    echo "NativeFunction called"
     return newValue("nf ok")
 
 proc testNativeFunctor() =
@@ -80,7 +81,7 @@ proc testNativeFunctor() =
         result["i"] = newValue(1000)
         result["str"] = newValue("a string")
         var fn = newValue()
-        # fn.setNativeFunctor(nf)
+        fn.setNativeFunctor(nf)
         result["fn"] = fn
     )
 testNativeFunctor()
