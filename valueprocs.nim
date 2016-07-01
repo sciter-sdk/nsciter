@@ -230,20 +230,22 @@ proc invoke*[VT:Value|ptr Value](x:VT, args:varargs[ptr Value]):Value =
 
 var nfs = newSeq[NativeFunctor]()
 
-proc pinvoke(tag: int; 
+proc pinvoke(tag: pointer; 
              argc: uint32; 
              argv: ptr VALUE;
              retval: ptr VALUE) {.cdecl.} =
-    var nf = nfs[tag]
+    var idx = cast[int](tag)
+    var nf = nfs[idx]
     var args = newSeq[ptr Value](1)
     retval.ValueInit()
     var r = nf(args)
     retval.ValueCopy(r)
 
-proc prelease(tag: int) {.cdecl.} =
+proc prelease(tag: pointer) {.cdecl.} =
     discard
 
 proc setNativeFunctor*(v:ptr Value, nf:NativeFunctor) =
     nfs.add(nf)
-    v.ValueNativeFunctorSet(pinvoke, prelease, nfs.len()-1)
+    var tag = cast[pointer](nfs.len()-1)
+    v.ValueNativeFunctorSet(pinvoke, prelease, tag)
 

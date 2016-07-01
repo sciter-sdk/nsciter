@@ -67,13 +67,13 @@ type
 ## # Native functor
 
 type
-  NATIVE_FUNCTOR_INVOKE* = proc (tag: int; argc: uint32; argv: ptr VALUE;
+  NATIVE_FUNCTOR_INVOKE* = proc (tag: pointer; argc: uint32; argv: ptr VALUE;
                               retval: ptr VALUE) {.cdecl.}
 
 ## # retval may contain error definition
 
 type
-  NATIVE_FUNCTOR_RELEASE* = proc (tag: int) {.cdecl.}
+  NATIVE_FUNCTOR_RELEASE* = proc (tag: pointer) {.cdecl.}
 
 ## #*Callback function used with #ValueEnumElements().
 ## #  return TRUE to continue enumeration
