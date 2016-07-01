@@ -65,166 +65,159 @@ proc isFunction*[VT: Value | ptr Value](v:VT):bool =
     return v.t == T_FUNCTION
 
 template xDefPtr(x, v:untyped) {.immediate.} =
-    var v:ptr Value = nil
+    var v:ptr Value
     when x is Value:
         var nx = x
         v = addr nx
     else:
         v = x
 
-proc isNativeFunctor*[VT:Value|ptr Value](x:VT):bool =
+proc isNativeFunctor*(x:Value):bool =
     xDefPtr(x, v)
     return v.ValueIsNativeFunctor()
 
-proc nullValue*(): ptr Value =
-    var v = cast[ptr Value](alloc(sizeof(Value))) 
-    v.t = T_NULL
-    return v
+proc nullValue*(): Value =
+    result = Value()
+    result.t = T_NULL
 
-proc clone*[VT:Value|ptr Value](x:VT):ptr Value =
+proc clone*(x:Value):Value =
     xDefPtr(x, v)
     var dst = nullValue()
-    dst.ValueCopy(v)
+    ValueCopy(dst.addr, v)
     return dst
 
-proc newValue*():ptr Value =
-    var v = cast[ptr Value](alloc(sizeof(Value))) 
-    v.ValueInit()
-    return v
+proc newValue*():Value =
+    result = Value()
+    ValueInit(result.addr)
 
-proc newValue*(dat:string):ptr Value =
+proc newValue*(dat:string):Value =
     var ws = newWideCString(dat)
     result = newValue()
-    result.ValueStringDataSet(ws, uint32(ws.len()), uint32(0))
+    ValueStringDataSet(result.addr, ws, uint32(ws.len()), uint32(0))
 
-proc newValue*(dat:int32):ptr Value=
+proc newValue*(dat:int32):Value=
     result = newValue()
-    result.ValueIntDataSet(dat, T_INT, 0)
+    ValueIntDataSet(result.addr, dat, T_INT, 0)
 
-proc newValue*(dat:float64):ptr Value =
+proc newValue*(dat:float64):Value =
     result = newValue()
-    result.ValueFloatDataSet(dat, T_FLOAT, 0)
+    ValueFloatDataSet(result.addr, dat, T_FLOAT, 0)
 
-proc newValue*(dat:bool):ptr Value =
+proc newValue*(dat:bool):Value =
     result = newValue()
     if dat:
-        result.ValueIntDataSet(1, T_INT, 0)
+        ValueIntDataSet(result.addr, 1, T_INT, 0)
     else:
-        result.ValueIntDataSet(0, T_INT, 0)
+        ValueIntDataSet(result.addr, 0, T_INT, 0)
 
-proc convertFromString*[VT:Value|ptr Value](x:VT, s:string, how:VALUE_STRING_CVT_TYPE) =
-    xDefPtr(x, v)
+proc convertFromString*(x:ptr Value, s:string, how:VALUE_STRING_CVT_TYPE) =
     var ws = newWideCString(s)
-    v.ValueFromString(ws, uint32(ws.len()), how)
+    x.ValueFromString(ws, uint32(ws.len()), how)
 
-proc convertToString*[VT:Value|ptr Value](x:VT, how:VALUE_STRING_CVT_TYPE):uint32 =
+proc convertToString*(x:ptr Value, how:VALUE_STRING_CVT_TYPE):uint32 =
     # converts value to T_STRING inplace
-    xDefPtr(x, v)
-    v.ValueToString(how)
+    x.ValueToString(how)
 
-proc getString*[VT:Value|ptr Value](x:VT):string =
-    xDefPtr(x, v)
+proc getString*(x:Value):string =
+    var xx = x
     var ws: WideCString
     var n:uint32
-    v.ValueStringData(addr ws, addr n)
+    ValueStringData(xx.addr, addr ws, addr n)
     return $(ws)
 
-proc `$`*(v: ptr Value):string =
+proc `$`*(v: Value):string =
     if v.isString():
         return v.getString()
     if v.isFunction() or v.isNativeFunctor() or v.isObjectFunction():
         return "<functor>"
     var nv = v.clone()
-    discard nv.convertToString(CVT_SIMPLE)
+    discard convertToString(nv.addr, CVT_SIMPLE)
     return nv.getString()
 
-proc `$`*(x: Value):string =
-    var xv = x
-    var v = addr xv
-    return $v
+proc getInt32*(x:ptr Value): int32 =
+    discard ValueIntData(x, addr result)
 
-proc getInt32*[VT:Value|ptr Value](x:VT): int32 =
-    xDefPtr(x, v)
-    discard ValueIntData(v, addr result)
+proc getInt*(x:Value): int =
+    var xx = x
+    result = cast[int](getInt32(xx.addr))
 
-proc getInt*[VT:Value|ptr Value](x:VT): int =
-    xDefPtr(x, v)
-    result = cast[int](getInt32(v))
-
-proc getBool*[VT:Value|ptr Value](x:VT): bool =
-    xDefPtr(x, v)
-    var i = getInt(v)
+proc getBool*(x:Value): bool =
+    var i = getInt(x)
     if i == 0:
         return false
     return true
 
-proc getFloat*[VT:Value|ptr Value](x:VT): float =
+proc getFloat*(x:Value): float =
     xDefPtr(x, v)
     var f:float64
     v.ValueFloatData(addr f)
     return float(f)
 
-proc getBytes*[VT:Value|ptr Value](x:VT): seq[byte] =
-    xDefPtr(x, v)
+proc getBytes*(x:ptr Value): seq[byte] =
     var p:pointer
     var size:uint32
-    v.ValueBinaryData(addr p, addr size)
+    ValueBinaryData(x, addr p, addr size)
     result = newSeq[byte](size)
     copyMem(result[0].addr, p, int(size)*sizeof(byte))
 
-proc setBytes*[VT:Value|ptr Value](x:VT, dat: var openArray[byte]) =
-    xDefPtr(x, v)
+proc getBytes*(x:var Value): seq[byte] =
+    return getBytes(x.addr)
+
+proc setBytes*(x:ptr Value, dat: var openArray[byte]) =
     var p = dat[0].addr
     var size = dat.len()*sizeof(byte)
-    v.ValueBinaryDataSet(p, uint32(size), T_BYTES, 0)
+    x.ValueBinaryDataSet(p, uint32(size), T_BYTES, 0)
+
+proc setBytes*(x:var Value, dat: var openArray[byte]) =
+    setBytes(x.addr, dat)
     
 # for array and object types
 
-proc len*[VT:Value|ptr Value](x:VT): int =
+proc len*(x:Value): int =
     xDefPtr(x, v)
     var n:int32 = 0
     v.ValueElementsCount(addr n)
     return int(n)
 
-proc enumerate*[VT:Value|ptr Value](x:VT, cb:KeyValueCallback): uint32 =
+proc enumerate*(x:Value, cb:KeyValueCallback): uint32 =
     xDefPtr(x, v)
     v.ValueEnumElements(cb, nil)
 
-proc `[]`*[I: Ordinal, VT:Value|ptr Value](x:VT; i: I): ptr Value =
+proc `[]`*[I: Ordinal, VT:Value|Value](x:Value; i: I): Value =
     xDefPtr(x, v)
     result = nullValue()
     v.ValueNthElementValue(i, result)
 
-proc `[]=`*[I: Ordinal, VT:Value|ptr Value](x:VT; i: I; y: VT) =
+proc `[]=`*[I: Ordinal, VT:Value|Value](x:Value; i: I; y: VT) =
     xDefPtr(x, v)
     xDefPtr(y, yp)
     ValueNthElementValueSet(v, i, yp)
 
-proc `[]`*[VT:Value|ptr Value](x:VT; name:string): ptr Value =
+proc `[]`*(x:Value; name:string): Value =
     xDefPtr(x, v)
     var key = newValue(name)
     result = nullValue()
-    v.ValueGetValueOfKey(key, result)
+    v.ValueGetValueOfKey(key.addr, result.addr)
 
-proc `[]=`*[VT:Value|ptr Value](x:VT; name:string; y: VT) =
+proc `[]=`*(x:Value; name:string; y: Value) =
     xDefPtr(x, v)
-    xDefPtr(y, yp)
+    var yy = y
     var key = newValue(name)
-    ValueSetValueToKey(v, key, yp)
+    ValueSetValueToKey(v, key.addr, yy.addr)
 
 ## value functions calls
 
-proc invokeWithSelf*[VT:Value|ptr Value](x:VT, self:VT, args:varargs[ptr Value]):Value =
-    xDefPtr(x, v)
-    xDefPtr(self, selfp)
+proc invokeWithSelf*(x:Value, self:Value, args:varargs[Value]):Value =
     result = Value()
+    var xx = x
+    var ss = self
     var clen = len(args)
     var cargs = newSeq[Value](clen)
     for i in 0..clen-1:
-        cargs[i] = args[i][]
-    v.ValueInvoke(selfp, uint32(len(args)), cargs[0].addr, result.addr, nil)
+        cargs[i] = args[i]
+    ValueInvoke(xx.addr, ss.addr, uint32(len(args)), cargs[0].addr, result.addr, nil)
     
-proc invoke*[VT:Value|ptr Value](x:VT, args:varargs[ptr Value]):Value =
+proc invoke*(x:Value, args:varargs[Value]):Value =
     var self = newValue()
     invokeWithSelf(x, self, args)
 
@@ -232,20 +225,21 @@ var nfs = newSeq[NativeFunctor]()
 
 proc pinvoke(tag: pointer; 
              argc: uint32; 
-             argv: ptr VALUE;
-             retval: ptr VALUE) {.cdecl.} =
+             argv: ptr Value;
+             retval: ptr Value) {.cdecl.} =
     var idx = cast[int](tag)
     var nf = nfs[idx]
-    var args = newSeq[ptr Value](1)
+    var args = newSeq[Value](1)
     retval.ValueInit()
     var r = nf(args)
-    retval.ValueCopy(r)
+    retval.ValueCopy(r.addr)
 
 proc prelease(tag: pointer) {.cdecl.} =
     discard
 
-proc setNativeFunctor*(v:ptr Value, nf:NativeFunctor) =
+proc setNativeFunctor*(v:Value, nf:NativeFunctor) =
     nfs.add(nf)
     var tag = cast[pointer](nfs.len()-1)
-    v.ValueNativeFunctorSet(pinvoke, prelease, tag)
+    var vv = v
+    ValueNativeFunctorSet(vv.addr, pinvoke, prelease, tag)
 

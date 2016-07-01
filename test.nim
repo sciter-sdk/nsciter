@@ -43,7 +43,7 @@ var testFn = proc() =
     var b:seq[byte] = @[byte(1),byte(2),byte(3),byte(4)]
     echo b
     var bv = nullValue()
-    bv.setBytes(b)
+    setBytes(bv.addr, b)
     echo "bv:", bv.getBytes()
     var o = nullValue()
     o["key"] = newValue(i)
@@ -56,13 +56,13 @@ var testVptr = proc()=
     var vvv = Value()
     echo vvv, "\tvvv.isNativeFunctor():", vvv.isNativeFunctor()
 testVptr()
-echo "dfm hello ret: ", wnd.defineScriptingFunction("hello", proc(args: seq[ptr Value]):ptr Value =
+echo "dfm hello ret: ", wnd.defineScriptingFunction("hello", proc(args: seq[Value]):Value =
     echo "hello from script method"
     echo "args:", args
 )
 
 proc testCallback() =
-    echo "dfm cbCall ret: ", wnd.defineScriptingFunction("cbCall", proc(args:seq[ptr Value]):ptr Value=
+    echo "dfm cbCall ret: ", wnd.defineScriptingFunction("cbCall", proc(args:seq[Value]):Value=
         echo "cbCall args:", args
         var fn = args[0]
         var ret = fn.invoke(newValue(100), newValue("arg2"))
@@ -71,12 +71,12 @@ proc testCallback() =
     )
 testCallback()
 
-proc nf(args: seq[ptr Value]):ptr Value=
+proc nf(args: seq[Value]):Value=
     echo "NativeFunction called"
     return newValue("nf ok")
 
 proc testNativeFunctor() =
-    wnd.defineScriptingFunction("api", proc(args:seq[ptr Value]):ptr Value =
+    wnd.defineScriptingFunction("api", proc(args:seq[Value]):Value =
         result = newValue()
         result["i"] = newValue(1000)
         result["str"] = newValue("a string")

@@ -142,21 +142,20 @@ proc onClick*(target:EventTarget, handler:proc()): int32 {.discardable.} =
     result = target.Attach(eh, HANDLE_BEHAVIOR_EVENT)
 
 type
-  NativeFunctor* = proc(args: seq[ptr Value]):ptr Value
+  NativeFunctor* = proc(args: seq[Value]):Value
 
 proc defineScriptingFunction*(target:EventTarget, name:string, fn:NativeFunctor): int32 {.discardable.} =
     var eh = newEventHandler()
     eh.handle_scripting_call = proc(he:HELEMENT, params: ptr SCRIPTING_METHOD_PARAMS):bool =
         if params.name != name:
             return false
-        var args = newSeq[ptr Value](params.argc)
+        var args = newSeq[Value](params.argc)
         var base = cast[uint](params.argv)
         var step = cast[uint](sizeof(Value))
         if params.argc > 0.uint32:
             for idx in 0..params.argc-1:
-                args[int(idx)] = cast[ptr Value](base + step*uint(idx)) 
-        var ret = fn(args)
-        if ret != nil:
-            params.result = ret[]
+                var p = cast[ptr Value](base + step*uint(idx)) 
+                args[int(idx)] = p[]
+        params.result = fn(args)
         return true
     result = target.Attach(eh, HANDLE_SCRIPTING_METHOD_CALL)
