@@ -50,8 +50,8 @@ namespace sciter
   }
 
   class window : public aux::asset
-               , public sciter::host<window>
-               , public sciter::event_handler
+              , public sciter::host<window>
+              , public sciter::event_handler
   {
   public:
     window( UINT creationFlags, RECT frame = RECT() );
@@ -82,8 +82,8 @@ namespace sciter
     static LRESULT SC_CALLBACK msg_delegate(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LPVOID pParam, BOOL* pHandled);
 #endif
   private:
-     HWINDOW _hwnd;
-   };
+    HWINDOW _hwnd;
+  };
 }
 
 #endif

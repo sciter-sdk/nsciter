@@ -1,10 +1,10 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
@@ -24,12 +24,12 @@
   #def SC_CALLBACK
   #def TISAPI
   #def EXTAPI
-  
+
   #prefix _
-  
+
   #discardableprefix Sciter
   #discardableprefix Value
-  
+
   #def UINT uint32
   #def INT int32
   #def UINT64 uint64
@@ -46,11 +46,11 @@
   #def BOOL bool
   #def double float64
   #def FLOAT_VALUE float64
-  
+
   #def WINDOWS windows
   #def LINUX posix
   #def OSX osx
-  
+
   #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
@@ -140,9 +140,9 @@
   struct METHOD_PARAMS {
     UINT methodID;
   };
-  struct REQUEST_PARAM { 
-    LPCWSTR name; 
-    LPCWSTR value; 
+  struct REQUEST_PARAM {
+    LPCWSTR name;
+    LPCWSTR value;
   };
 
   typedef struct METHOD_PARAMS METHOD_PARAMS;
@@ -201,41 +201,41 @@ typedef ElementEventProc* LPELEMENT_EVENT_PROC;
 
 enum ELEMENT_STATE_BITS
 {
-   STATE_LINK             = 0x00000001,
-   STATE_HOVER            = 0x00000002,
-   STATE_ACTIVE           = 0x00000004,
-   STATE_FOCUS            = 0x00000008,
-   STATE_VISITED          = 0x00000010,
-   STATE_CURRENT          = 0x00000020,  // current (hot) item
-   STATE_CHECKED          = 0x00000040,  // element is checked (or selected)
-   STATE_DISABLED         = 0x00000080,  // element is disabled
-   STATE_READONLY         = 0x00000100,  // readonly input element
-   STATE_EXPANDED         = 0x00000200,  // expanded state - nodes in tree view
-   STATE_COLLAPSED        = 0x00000400,  // collapsed state - nodes in tree view - mutually exclusive with
-   STATE_INCOMPLETE       = 0x00000800,  // one of fore/back images requested but not delivered
-   STATE_ANIMATING        = 0x00001000,  // is animating currently
-   STATE_FOCUSABLE        = 0x00002000,  // will accept focus
-   STATE_ANCHOR           = 0x00004000,  // anchor in selection (used with current in selects)
-   STATE_SYNTHETIC        = 0x00008000,  // this is a synthetic element - don't emit it's head/tail
-   STATE_OWNS_POPUP       = 0x00010000,  // this is a synthetic element - don't emit it's head/tail
-   STATE_TABFOCUS         = 0x00020000,  // focus gained by tab traversal
-   STATE_EMPTY            = 0x00040000,  // empty - element is empty (text.size() == 0 && subs.size() == 0)
-                                         //  if element has behavior attached then the behavior is responsible for the value of this flag.
-   STATE_BUSY             = 0x00080000,  // busy; loading
+  STATE_LINK             = 0x00000001,
+  STATE_HOVER            = 0x00000002,
+  STATE_ACTIVE           = 0x00000004,
+  STATE_FOCUS            = 0x00000008,
+  STATE_VISITED          = 0x00000010,
+  STATE_CURRENT          = 0x00000020,  // current (hot) item
+  STATE_CHECKED          = 0x00000040,  // element is checked (or selected)
+  STATE_DISABLED         = 0x00000080,  // element is disabled
+  STATE_READONLY         = 0x00000100,  // readonly input element
+  STATE_EXPANDED         = 0x00000200,  // expanded state - nodes in tree view
+  STATE_COLLAPSED        = 0x00000400,  // collapsed state - nodes in tree view - mutually exclusive with
+  STATE_INCOMPLETE       = 0x00000800,  // one of fore/back images requested but not delivered
+  STATE_ANIMATING        = 0x00001000,  // is animating currently
+  STATE_FOCUSABLE        = 0x00002000,  // will accept focus
+  STATE_ANCHOR           = 0x00004000,  // anchor in selection (used with current in selects)
+  STATE_SYNTHETIC        = 0x00008000,  // this is a synthetic element - don't emit it's head/tail
+  STATE_OWNS_POPUP       = 0x00010000,  // this is a synthetic element - don't emit it's head/tail
+  STATE_TABFOCUS         = 0x00020000,  // focus gained by tab traversal
+  STATE_EMPTY            = 0x00040000,  // empty - element is empty (text.size() == 0 && subs.size() == 0)
+                                        //  if element has behavior attached then the behavior is responsible for the value of this flag.
+  STATE_BUSY             = 0x00080000,  // busy; loading
 
-   STATE_DRAG_OVER        = 0x00100000,  // drag over the block that can accept it (so is current drop target). Flag is set for the drop target block
-   STATE_DROP_TARGET      = 0x00200000,  // active drop target.
-   STATE_MOVING           = 0x00400000,  // dragging/moving - the flag is set for the moving block.
-   STATE_COPYING          = 0x00800000,  // dragging/copying - the flag is set for the copying block.
-   STATE_DRAG_SOURCE      = 0x01000000,  // element that is a drag source.
-   STATE_DROP_MARKER      = 0x02000000,  // element is drop marker
+  STATE_DRAG_OVER        = 0x00100000,  // drag over the block that can accept it (so is current drop target). Flag is set for the drop target block
+  STATE_DROP_TARGET      = 0x00200000,  // active drop target.
+  STATE_MOVING           = 0x00400000,  // dragging/moving - the flag is set for the moving block.
+  STATE_COPYING          = 0x00800000,  // dragging/copying - the flag is set for the copying block.
+  STATE_DRAG_SOURCE      = 0x01000000,  // element that is a drag source.
+  STATE_DROP_MARKER      = 0x02000000,  // element is drop marker
 
-   STATE_PRESSED          = 0x04000000,  // pressed - close to active but has wider life span - e.g. in MOUSE_UP it
-                                         //   is still on; so behavior can check it in MOUSE_UP to discover CLICK condition.
-   STATE_POPUP            = 0x08000000,  // this element is out of flow - popup
+  STATE_PRESSED          = 0x04000000,  // pressed - close to active but has wider life span - e.g. in MOUSE_UP it
+                                        //   is still on; so behavior can check it in MOUSE_UP to discover CLICK condition.
+  STATE_POPUP            = 0x08000000,  // this element is out of flow - popup
 
-   STATE_IS_LTR           = 0x10000000,  // the element or one of its containers has dir=ltr declared
-   STATE_IS_RTL           = 0x20000000,  // the element or one of its containers has dir=rtl declared
+  STATE_IS_LTR           = 0x10000000,  // the element or one of its containers has dir=ltr declared
+  STATE_IS_RTL           = 0x20000000,  // the element or one of its containers has dir=rtl declared
 
 };
 
@@ -248,7 +248,7 @@ enum REQUEST_TYPE
 };
 
 /**Callback comparator function used with #SciterSortElements().
-   Shall return -1,0,+1 values to indicate result of comparison of two elements
+  Shall return -1,0,+1 values to indicate result of comparison of two elements
  **/
 typedef INT SC_CALLBACK ELEMENT_COMPARATOR( HELEMENT he1, HELEMENT he2, LPVOID param );
 
@@ -297,14 +297,14 @@ enum CTL_TYPE
     CTL_HIDDEN,
     CTL_URL,            ///< URL input element.
     CTL_TOOLBAR,
-    
+
     CTL_FORM,
     CTL_FILE,           ///< file input element.
     CTL_PATH,           ///< path input element.
     CTL_WINDOW,         ///< has HWND attached to it
 
-    CTL_LABEL,            
-    CTL_IMAGE,            ///< image/object.  
+    CTL_LABEL,
+    CTL_IMAGE,            ///< image/object.
 
 };
 

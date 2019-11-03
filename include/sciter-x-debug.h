@@ -1,10 +1,10 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
@@ -44,16 +44,16 @@ inline  VOID    SCAPI SciterSetupDebugOutput ( HWINDOW hwndOrNull, LPVOID param,
       {
         switch(severity)
         {
-           case OS_INFO     : print("info:"); break;
-           case OS_WARNING  : print("warning:"); break;
-           case OS_ERROR    : print("error:"); break;
+          case OS_INFO     : print("info:"); break;
+          case OS_WARNING  : print("warning:"); break;
+          case OS_ERROR    : print("error:"); break;
         }
         switch(subsystem)
         {
-           case OT_DOM: print("DOM: "); break;
-           case OT_CSSS: print("csss!: "); break;
-           case OT_CSS:  print("css: "); break;
-           case OT_TIS:  print("script: "); break;
+          case OT_DOM: print("DOM: "); break;
+          case OT_CSSS: print("csss!: "); break;
+          case OT_CSS:  print("css: "); break;
+          case OT_TIS:  print("script: "); break;
         }
         if(text[text_length])
         {

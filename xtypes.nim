@@ -1,15 +1,15 @@
 ## #
 ## #  The Sciter Engine of Terra Informatica Software, Inc.
 ## #  http://sciter.com
-## # 
+## #
 ## #  The code and information provided "as-is" without
 ## #  warranty of any kind, either expressed or implied.
-## # 
+## #
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
-## # 
+## #
 ## #
 ## #  Sciter basic types, platform isolation declarations
-## # 
+## #
 
 when not defined(windows):
   include widestr
@@ -39,7 +39,7 @@ when defined(windows):
     whdr = "<windows.h>"
     # d2hdr = "<D2d1.h>"
   type
-    HWINDOW* = pointer 
+    HWINDOW* = pointer
     WPARAM* = ByteAddress
     LPARAM* = ByteAddress
     LRESULT* = ByteAddress
@@ -57,7 +57,7 @@ when defined(windows):
   else:
     const
       TARGET_32* = true
-      SCITER_DLL_NAME* = "sciter32.dll" 
+      SCITER_DLL_NAME* = "sciter32.dll"
 
 when defined(posix):
   const

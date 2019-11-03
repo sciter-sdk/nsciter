@@ -1,30 +1,30 @@
 ## #
 ## #  The Sciter Engine of Terra Informatica Software, Inc.
 ## #  http://sciter.com
-## #  
+## #
 ## #  The code and information provided "as-is" without
 ## #  warranty of any kind, either expressed or implied.
-## #  
+## #
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
-## # 
+## #
 
-## #* #SC_LOAD_DATA notification return codes 
+## #* #SC_LOAD_DATA notification return codes
 
 type
   SC_LOAD_DATA_RETURN_CODES* = enum
-    LOAD_OK = 0,                ## #*< do default loading if data not set 
-    LOAD_DISCARD = 1,           ## #*< discard request completely 
+    LOAD_OK = 0,                ## #*< do default loading if data not set
+    LOAD_DISCARD = 1,           ## #*< discard request completely
     LOAD_DELAYED = 2, ## #*< data will be delivered later by the host application.
-                   ## #                         Host application must call SciterDataReadyAsync(,,, requestId) on each LOAD_DELAYED request to avoid memory leaks. 
+                  ## #                         Host application must call SciterDataReadyAsync(,,, requestId) on each LOAD_DELAYED request to avoid memory leaks.
     LOAD_MYSELF = 3 ## #*< you return LOAD_MYSELF result to indicate that your (the host) application took or will take care about HREQUEST in your code completely.
-                 ## #                         Use sciter-x-request.h[pp] API functions with SCN_LOAD_DATA::requestId handle . 
+                ## #                         Use sciter-x-request.h[pp] API functions with SCN_LOAD_DATA::requestId handle .
 
 
 ## #*Notifies that Sciter is about to download a referred resource.
-## # 
+## #
 ## #  \param lParam #LPSCN_LOAD_DATA.
 ## #  \return #SC_LOAD_DATA_RETURN_CODES
-## # 
+## #
 ## #  This notification gives application a chance to override built-in loader and
 ## #  implement loading of resources in its own way (for example images can be loaded from
 ## #  database or other resource). To do this set #SCN_LOAD_DATA::outData and
@@ -39,83 +39,83 @@ const
 
 ## #*This notification indicates that external data (for example image) download process
 ## #  completed.
-## # 
+## #
 ## #  \param lParam #LPSCN_DATA_LOADED
-## # 
+## #
 ## #  This notifiaction is sent for each external resource used by document when
 ## #  this resource has been completely downloaded. Sciter will send this
 ## #  notification asynchronously.
-## # 
+## #
 
 const
   SC_DATA_LOADED* = 0x00000002
 
 ## #*This notification is sent when all external data (for example image) has been downloaded.
-## # 
+## #
 ## #  This notification is sent when all external resources required by document
 ## #  have been completely downloaded. Sciter will send this notification
 ## #  asynchronously.
-## # 
+## #
 ## # obsolete #define SC_DOCUMENT_COMPLETE 0x03
 ## #   use DOCUMENT_COMPLETE DOM event.
-## #  
+## #
 ## #*This notification is sent on parsing the document and while processing
 ## #  elements having non empty style.behavior attribute value.
-## # 
+## #
 ## #  \param lParam #LPSCN_ATTACH_BEHAVIOR
-## # 
+## #
 ## #  Application has to provide implementation of #sciter::behavior interface.
 ## #  Set #SCN_ATTACH_BEHAVIOR::impl to address of this implementation.
-## # 
+## #
 
 const
   SC_ATTACH_BEHAVIOR* = 0x00000004
 
 ## #*This notification is sent when instance of the engine is destroyed.
 ## #  It is always final notification.
-## # 
+## #
 ## #  \param lParam #LPSCN_ENGINE_DESTROYED
-## # 
-## # 
+## #
+## #
 
 const
   SC_ENGINE_DESTROYED* = 0x00000005
 
 ## #*Posted notification.
-## # 
+## #
 ## #  \param lParam #LPSCN_POSTED_NOTIFICATION
-## # 
-## # 
+## #
+## #
 
 const
   SC_POSTED_NOTIFICATION* = 0x00000006
 
 ## #*This notification is sent when the engine encounters critical rendering error: e.g. DirectX gfx driver error.
 ## #   Most probably bad gfx drivers.
-## # 
+## #
 ## #  \param lParam #LPSCN_GRAPHICS_CRITICAL_FAILURE
-## # 
-## # 
+## #
+## #
 
 const
   SC_GRAPHICS_CRITICAL_FAILURE* = 0x00000007
 
 ## #*Notification callback structure.
-## # 
+## #
 
 type
   SCITER_CALLBACK_NOTIFICATION* = object
     code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-  
+
   LPSCITER_CALLBACK_NOTIFICATION* = ptr SCITER_CALLBACK_NOTIFICATION
   SciterHostCallback* = proc (pns: LPSCITER_CALLBACK_NOTIFICATION;
-                           callbackParam: pointer): uint32 {.cdecl.}
+                          callbackParam: pointer): uint32 {.cdecl.}
   LPSciterHostCallback* = ptr SciterHostCallback
 
 ## #*This structure is used by #SC_LOAD_DATA notification.
 ## # \copydoc SC_LOAD_DATA
-## # 
+## #
 
 type
   SCN_LOAD_DATA* = object
@@ -124,8 +124,8 @@ type
     uri*: WideCString          ## #*< [in] Zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
     outData*: pointer          ## #*< [in,out] pointer to loaded data to return. if data exists in the cache then this field contain pointer to it
     outDataSize*: uint32       ## #*< [in,out] loaded data size to return.
-    dataType*: uint32          ## #*< [in] SciterResourceType 
-    requestId*: HREQUEST       ## #*< [in] request handle that can be used with sciter-x-request API 
+    dataType*: uint32          ## #*< [in] SciterResourceType
+    requestId*: HREQUEST       ## #*< [in] request handle that can be used with sciter-x-request API
     principal*: HELEMENT
     initiator*: HELEMENT
 
@@ -133,7 +133,7 @@ type
 
 ## #*This structure is used by #SC_DATA_LOADED notification.
 ## # \copydoc SC_DATA_LOADED
-## # 
+## #
 
 type
   SCN_DATA_LOADED* = object
@@ -142,13 +142,13 @@ type
     uri*: WideCString          ## #*< [in] zero terminated string, fully qualified uri, for example "http://server/folder/file.ext".
     data*: pointer             ## #*< [in] pointer to loaded data.
     dataSize*: uint32          ## #*< [in] loaded data size (in bytes).
-    dataType*: uint32          ## #*< [in] SciterResourceType 
+    dataType*: uint32          ## #*< [in] SciterResourceType
     status*: uint32 ## #*< [in]
                   ## #                                         status = 0 (dataSize == 0) - unknown error.
                   ## #                                         status = 100..505 - http response status, Note: 200 - OK!
                   ## #                                         status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
-                  ## #                                 
-  
+                  ## #
+
   LPSCN_DATA_LOADED* = ptr SCN_DATA_LOADED
 
 ## #*This structure is used by #SC_ATTACH_BEHAVIOR notification.
@@ -162,7 +162,7 @@ type
     behaviorName*: cstring     ## #*< [in] zero terminated string, string appears as value of CSS behavior:"???" attribute.
     elementProc*: ptr ElementEventProc ## #*< [out] pointer to ElementEventProc function.
     elementTag*: pointer       ## #*< [out] tag value, passed as is into pointer ElementEventProc function.
-  
+
   LPSCN_ATTACH_BEHAVIOR* = ptr SCN_ATTACH_BEHAVIOR
 
 ## #*This structure is used by #SC_ENGINE_DESTROYED notification.
@@ -172,7 +172,7 @@ type
   SCN_ENGINE_DESTROYED* = object
     code*: uint32              ## #*< [in] one of the codes above.
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-  
+
   LPSCN_ENGINE_DESTROYED* = ptr SCN_ENGINE_DESTROYED
 
 ## #*This structure is used by #SC_ENGINE_DESTROYED notification.
@@ -193,9 +193,9 @@ type
 
 type
   SCN_GRAPHICS_CRITICAL_FAILURE* = object
-    code*: uint32              ## #*< [in] = SC_GRAPHICS_CRITICAL_FAILURE 
+    code*: uint32              ## #*< [in] = SC_GRAPHICS_CRITICAL_FAILURE
     hwnd*: HWINDOW             ## #*< [in] HWINDOW of the window this callback was attached to.
-  
+
   LPSCN_GRAPHICS_CRITICAL_FAILURE* = ptr SCN_GRAPHICS_CRITICAL_FAILURE
   SCRIPT_RUNTIME_FEATURES* = enum
     ALLOW_FILE_IO = 0x00000001, ALLOW_SOCKET_IO = 0x00000002, ALLOW_EVAL = 0x00000004,
@@ -217,13 +217,13 @@ type
                                 ## # 0 - normal drawing,
                                 ## # 1 - window has transparent background after calls DwmExtendFrameIntoClientArea() or DwmEnableBlurBehindWindow().
     SCITER_SET_GPU_BLACKLIST = 7, ## # hWnd = NULL,
-                               ## # value = LPCBYTE, json - GPU black list, see: gpu-blacklist.json resource.
+                              ## # value = LPCBYTE, json - GPU black list, see: gpu-blacklist.json resource.
     SCITER_SET_SCRIPT_RUNTIME_FEATURES = 8, ## # value - combination of SCRIPT_RUNTIME_FEATURES flags.
     SCITER_SET_GFX_LAYER = 9,   ## # hWnd = NULL, value - GFX_LAYER
     SCITER_SET_DEBUG_MODE = 10, ## # hWnd, value - TRUE/FALSE
-    SCITER_SET_UX_THEMING = 11, ## # hWnd = NULL, value - BOOL, TRUE - the engine will use "unisex" theme that is common for all platforms. 
-                             ## # That UX theme is not using OS primitives for rendering input elements. Use it if you want exactly
-                             ## # the same (modulo fonts) look-n-feel on all platforms.
+    SCITER_SET_UX_THEMING = 11, ## # hWnd = NULL, value - BOOL, TRUE - the engine will use "unisex" theme that is common for all platforms.
+                            ## # That UX theme is not using OS primitives for rendering input elements. Use it if you want exactly
+                            ## # the same (modulo fonts) look-n-feel on all platforms.
     SCITER_ALPHA_WINDOW = 12    ## #  hWnd, value - TRUE/FALSE - window uses per pixel alpha (e.g. WS_EX_LAYERED/UpdateLayeredWindow() window)
 
 
@@ -247,7 +247,7 @@ when defined(osx):
 elif defined(windows):
   type
     SciterWindowDelegate* = proc (hwnd: HWINDOW; msg: uint32; wParam: WPARAM;
-                               lParam: LPARAM; pParam: pointer; handled: ptr bool): LRESULT {.
+                              lParam: LPARAM; pParam: pointer; handled: ptr bool): LRESULT {.
         cdecl.}
 elif defined(posix):
   type
@@ -268,11 +268,11 @@ type
 
 
 ## #* SciterSetupDebugOutput - setup debug output function.
-## # 
+## #
 ## #   This output function will be used for reprting problems
 ## #   found while loading html and css documents.
-## # 
-## # 
+## #
+## #
 
 type
   OUTPUT_SUBSYTEMS* = enum

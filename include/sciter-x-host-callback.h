@@ -159,7 +159,7 @@ namespace sciter
 
       bool load_resource_data(LPCWSTR uri, LPCBYTE& pb, UINT& cb )
       {
-         return sciter::load_resource_data(static_cast< BASE* >(this)-> get_resource_instance(), uri, pb, cb );
+        return sciter::load_resource_data(static_cast< BASE* >(this)-> get_resource_instance(), uri, pb, cb );
       }
 
       bool load_file(LPCWSTR uri)

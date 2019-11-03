@@ -7,17 +7,17 @@
 #include "camera/camera-capture.h"
 #include "camera/camera-capture.cpp"
 
-namespace sciter 
+namespace sciter
 {
 /*
 
 BEHAVIOR: camera_stream
-   provides video frames from camera 
-COMMENTS: 
-   <video style="behavior:camera video" />
+  provides video frames from camera
+COMMENTS:
+  <video style="behavior:camera video" />
 SAMPLE:
-   See: samples/video/video-camera-behavior.htm
-*/
+  See: samples/video/video-camera-behavior.htm
+ */
 
 struct camera_stream: public event_handler
 {
@@ -33,18 +33,18 @@ struct camera_stream: public event_handler
       return true;
     }
 
-    virtual void attached  (HELEMENT he ) { } 
+    virtual void attached  (HELEMENT he ) { }
 
-    virtual void detached  (HELEMENT he ) { delete this; } 
-    virtual bool on_event (HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, UINT_PTR reason ) 
-    { 
+    virtual void detached  (HELEMENT he ) { delete this; }
+    virtual bool on_event (HELEMENT he, HELEMENT target, BEHAVIOR_EVENTS type, UINT_PTR reason )
+    {
       if(type != VIDEO_BIND_RQ)
         return false;
       // we handle only VIDEO_BIND_RQ requests here
 
       if( !reason )
-        return true; // first phase, consume the event to mark as we will provide frames 
-      
+        return true; // first phase, consume the event to mark as we will provide frames
+
       rendering_site = (sciter::video_destination*) reason;
       return true;
     }
@@ -68,13 +68,13 @@ struct camera_stream: public event_handler
       pcapt = camera::capture::create_instance(rendering_site,device);
       return sciter::value(true);
     }
-    
-	// scripting methods
+
+  // scripting methods
     BEGIN_FUNCTION_MAP
-      FUNCTION_0("devices",get_devices)    // devices() : (array of strings), get list of names of devices 
+      FUNCTION_0("devices",get_devices)    // devices() : (array of strings), get list of names of devices
       FUNCTION_1("streamFrom",stream_from) // streamFrom(indexOrName: int | string), start streaming from the camera
     END_FUNCTION_MAP
-   
+
 };
 
 struct camera_stream_factory: public behavior_factory {

@@ -1,16 +1,16 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) Terra Informatica Software, Inc.
  */
 
 /*
  * Sciter's get resource request object - represents requests made by Element/View.request() functions.
- * 
+ *
  *
  * C++ wrapper
  */
@@ -38,7 +38,7 @@ namespace sciter
     {
         sciter::astring* s = (sciter::astring*)param;
         *s = sciter::astring(str,str_length);
-    }  
+    }
 
 
 /*  struct writer
@@ -55,44 +55,44 @@ namespace sciter
   {
   protected:
     HREQUEST hrq;
-    
+
     request(): hrq(0) { ; }
-    
+
   public:
-  
-    request(HREQUEST h): hrq(h) { if(hrq) rapi()->RequestUse(hrq); }    
+
+    request(HREQUEST h): hrq(h) { if(hrq) rapi()->RequestUse(hrq); }
     request(const request& im): hrq(im.hrq) { if(hrq) rapi()->RequestUse(hrq); }
-    request& operator = (const request& im) 
-    { 
-      if(hrq) rapi()->RequestUnUse(hrq); 
-      hrq = im.hrq; rapi()->RequestUse(hrq); 
+    request& operator = (const request& im)
+    {
+      if(hrq) rapi()->RequestUnUse(hrq);
+      hrq = im.hrq; rapi()->RequestUse(hrq);
       return *this;
     }
-    
+
     bool is_valid() const { return hrq != 0; }
 
     ~request() {
-      rapi()->RequestUnUse( hrq ); 
+      rapi()->RequestUnUse( hrq );
     }
-    
+
     sciter::astring url() {
-      sciter::astring rv; 
-      rapi()->RequestUrl( hrq, _LPCSTR2STRING, &rv ); 
+      sciter::astring rv;
+      rapi()->RequestUrl( hrq, _LPCSTR2STRING, &rv );
       return rv;
     }
 
     sciter::astring content_url() {
-      sciter::astring rv; 
-      rapi()->RequestContentUrl( hrq, _LPCSTR2STRING, &rv ); 
+      sciter::astring rv;
+      rapi()->RequestContentUrl( hrq, _LPCSTR2STRING, &rv );
       return rv;
     }
-    
+
     SciterResourceType requested_type() {
       SciterResourceType rv = SciterResourceType();
       rapi()->RequestGetRequestedDataType( hrq, &rv );
       return rv;
     }
-    
+
     void succeeded( UINT status, LPCBYTE dataOrNull = NULL, UINT dataLength = 0 )
     {
       rapi()->RequestSetSucceeded( hrq, status, dataOrNull, dataLength);
@@ -107,7 +107,7 @@ namespace sciter
     {
       rapi()->RequestAppendDataChunk( hrq, data, dataLength);
     }
-    
+
   };
 
 }
@@ -116,4 +116,3 @@ namespace sciter
 
 
 #endif
-

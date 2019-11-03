@@ -125,7 +125,7 @@
 #endif
 #endif
 
-*/
+ */
 
 #ifdef UNICODE
 #define a2t( S ) aux::a2w(S)
@@ -203,9 +203,9 @@ namespace pod
 
       const T * data() const
       {
-         buffer* self = const_cast<buffer*>(this);
-         if(_size == _allocated) self->reserve(1);
-         self->_body[_size] = 0; return _body;
+        buffer* self = const_cast<buffer*>(this);
+        if(_size == _allocated) self->reserve(1);
+        self->_body[_size] = 0; return _body;
       }
 
       size_t length() const         { return _size; }
@@ -260,8 +260,8 @@ namespace utf8
         b |= (*pc++ & 0x3f) << 6;
         b |= (*pc++ & 0x3f);
         if(b == 0xFEFF &&
-           outbuf.length() == 0) // bom at start
-             continue; // skip it
+          outbuf.length() == 0) // bom at start
+            continue; // skip it
       }
       else if ((b & 0xf8) == 0xf0)
       {
@@ -393,23 +393,23 @@ namespace utf8
           }
         if (c < (1 << 7))
         {
-         T::push (BYTE(c));
+        T::push (BYTE(c));
         }
         else if (c < (1 << 11)) {
-         T::push (BYTE((c >> 6) | 0xc0));
-         T::push (BYTE((c & 0x3f) | 0x80));
+        T::push (BYTE((c >> 6) | 0xc0));
+        T::push (BYTE((c & 0x3f) | 0x80));
         }
         else if (c < (1 << 16)) {
-         T::push (BYTE((c >> 12) | 0xe0));
-         T::push (BYTE(((c >> 6) & 0x3f) | 0x80));
-         T::push (BYTE((c & 0x3f) | 0x80));
+        T::push (BYTE((c >> 12) | 0xe0));
+        T::push (BYTE(((c >> 6) & 0x3f) | 0x80));
+        T::push (BYTE((c & 0x3f) | 0x80));
         }
         else if (c < (1 << 21))
         {
-         T::push (BYTE((c >> 18) | 0xf0));
-         T::push (BYTE(((c >> 12) & 0x3f) | 0x80));
-         T::push (BYTE(((c >> 6) & 0x3f) | 0x80));
-         T::push (BYTE((c & 0x3f) | 0x80));
+        T::push (BYTE((c >> 18) | 0xf0));
+        T::push (BYTE(((c >> 12) & 0x3f) | 0x80));
+        T::push (BYTE(((c >> 6) & 0x3f) | 0x80));
+        T::push (BYTE((c & 0x3f) | 0x80));
         }
       }
       return *this;
@@ -457,7 +457,7 @@ namespace aux
 /*  inline bool wcseq(const WCHAR* s, const WCHAR* s1)
   {
     if( s && s1 )
-       return std::wcscmp(s,s1) == 0;
+      return std::wcscmp(s,s1) == 0;
     return false;
   } */
 
@@ -575,7 +575,7 @@ namespace aux
     }
     explicit w2a(slice<WCHAR> s):buffer(0), n(0)
     {
-       init(s.start,s.length);
+      init(s.start,s.length);
     }
     ~w2a() { if(buffer != local) delete[] buffer;  }
     size_t length() const { return n; }
@@ -676,7 +676,7 @@ namespace aux
 
   /** Integer to string converter.
       Use it as wostream << itow(234)
-  **/
+   **/
 
 template<typename CT>
   class itot
@@ -686,13 +686,13 @@ template<typename CT>
     itot(int n, int radix = 10)
     {
       static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-	  	CT* wstr = buffer;
-    	if (radix < 2 || radix > 35) { *wstr = 0; return; }   // validate radix
-		  int sign = n;	if (sign < 0) n = -n;
-		  do { *wstr++ = num[n % radix]; } while( n /= radix ); // conversion. number is reversed.
-	    if(sign<0) *wstr++ ='-';
-	    *wstr = 0;
-	    // reverse the string
+      CT* wstr = buffer;
+      if (radix < 2 || radix > 35) { *wstr = 0; return; }   // validate radix
+      int sign = n;	if (sign < 0) n = -n;
+      do { *wstr++ = num[n % radix]; } while( n /= radix ); // conversion. number is reversed.
+      if(sign<0) *wstr++ ='-';
+      *wstr = 0;
+      // reverse the string
       std::reverse(buffer,wstr);
     }
     operator const CT*() { return buffer; }
@@ -705,7 +705,7 @@ template<typename CT>
   /** Float to string converter.
       Use it as ostream << ftoa(234.1); or
       Use it as ostream << ftoa(234.1,"pt"); or
-  **/
+   **/
   class ftoa
   {
     char buffer[64];
@@ -721,7 +721,7 @@ template<typename CT>
   /** Float to wstring converter.
       Use it as wostream << ftow(234.1); or
       Use it as wostream << ftow(234.1,"pt"); or
-  **/
+   **/
   /*class ftow
   {
     WCHAR buffer[64];
@@ -739,7 +739,7 @@ template<typename CT>
   };*/
 
   /** string to integer parser. **/
-   inline int atoi(const char *s, int default_value = 0)
+  inline int atoi(const char *s, int default_value = 0)
   {
     if( !s ) return default_value;
     char *lastptr;
@@ -747,7 +747,7 @@ template<typename CT>
     return (lastptr != s)? (int)i : default_value;
   }
 
- /** wstring to integer parser. **/
+  /** wstring to integer parser. **/
   inline int wtoi(const WCHAR *s, int default_value = 0)
   {
     w2a at(s);

@@ -16,8 +16,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
                       int       nCmdShow)
 {
   ghInstance = hInstance;
-	UNREFERENCED_PARAMETER(hPrevInstance);
-	UNREFERENCED_PARAMETER(lpCmdLine);
+  UNREFERENCED_PARAMETER(hPrevInstance);
+  UNREFERENCED_PARAMETER(lpCmdLine);
   UNREFERENCED_PARAMETER(nCmdShow);
 
   OleInitialize(0); // for system drag-n-drop
@@ -28,11 +28,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   auto message_pump = []() -> int {
     MSG msg;
     // Main message loop:
-	  while (GetMessage(&msg, NULL, 0, 0))
-	  {
-  	  TranslateMessage(&msg);
-		  DispatchMessage(&msg);
-	  }
+    while (GetMessage(&msg, NULL, 0, 0))
+    {
+      TranslateMessage(&msg);
+      DispatchMessage(&msg);
+    }
     return (int) msg.wParam;
   };
 
@@ -41,12 +41,12 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   OleUninitialize();
 
   return r;
-	  
+
 }
 
 namespace sciter {
 
-  namespace application 
+  namespace application
   {
     const std::vector<sciter::string>& argv() {
       static std::vector<sciter::string> _argv;
@@ -60,7 +60,7 @@ namespace sciter {
         LocalFree(arglist);
       }
       return _argv;
-    } 
+    }
 
     HINSTANCE hinstance() {
       return ghInstance;
@@ -69,24 +69,24 @@ namespace sciter {
 
   bool window::load( aux::bytes utf8_html, const WCHAR* base_url)
   {
-     return FALSE != ::SciterLoadHtml(_hwnd,utf8_html.start,utf8_html.length, base_url);
+    return FALSE != ::SciterLoadHtml(_hwnd,utf8_html.start,utf8_html.length, base_url);
   }
   bool window::load( aux::chars utf8_html, const WCHAR* base_url)
   {
-     return FALSE != ::SciterLoadHtml(_hwnd,(LPCBYTE)utf8_html.start,utf8_html.length, base_url);
+    return FALSE != ::SciterLoadHtml(_hwnd,(LPCBYTE)utf8_html.start,utf8_html.length, base_url);
   }
   bool window::load( const WCHAR* url)
   {
-     return FALSE != ::SciterLoadFile(_hwnd,url);
+    return FALSE != ::SciterLoadFile(_hwnd,url);
   }
-  
+
   LRESULT window::on_message( HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, BOOL& pHandled )
   {
-     //switch(msg) {
-     //  case WM_SIZE: on_size(); break; 
-     //  case WM_MOVE: on_move(); break; 
-     //}
-     return 0;
+    //switch(msg) {
+    //  case WM_SIZE: on_size(); break;
+    //  case WM_MOVE: on_move(); break;
+    //}
+    return 0;
   }
 
   LRESULT SC_CALLBACK window::msg_delegate(HWINDOW hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LPVOID pParam, BOOL* pHandled)
@@ -94,15 +94,15 @@ namespace sciter {
     window* win = static_cast<window*>( pParam );
     return win->on_message( hwnd, msg, wParam, lParam,*pHandled);
   }
-    
-  void window::collapse() { 
-    if(_hwnd) ::ShowWindow(_hwnd, SW_MINIMIZE ); 
+
+  void window::collapse() {
+    if(_hwnd) ::ShowWindow(_hwnd, SW_MINIMIZE );
   }
-  void window::expand( bool maximize) { 
-    if(_hwnd) ::ShowWindow(_hwnd, maximize? SW_MAXIMIZE :SW_NORMAL ); 
+  void window::expand( bool maximize) {
+    if(_hwnd) ::ShowWindow(_hwnd, maximize? SW_MAXIMIZE :SW_NORMAL );
   }
   void window::dismiss() {
-    if(_hwnd) ::PostMessage(_hwnd, WM_CLOSE, 0, 0 ); 
+    if(_hwnd) ::PostMessage(_hwnd, WM_CLOSE, 0, 0 );
   }
 
   window::window( UINT creationFlags, RECT frame): _hwnd(NULL)
@@ -116,4 +116,3 @@ namespace sciter {
   }
 
 }
-

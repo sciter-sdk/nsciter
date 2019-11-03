@@ -170,7 +170,7 @@ proc setBytes*(x:ptr Value, dat: var openArray[byte]) =
 
 proc setBytes*(x:var Value, dat: var openArray[byte]) =
     setBytes(x.addr, dat)
-    
+
 # for array and object types
 
 proc len*(x:Value): int =
@@ -216,17 +216,17 @@ proc invokeWithSelf*(x:Value, self:Value, args:varargs[Value]):Value =
     for i in 0..clen-1:
         cargs[i] = args[i]
     ValueInvoke(xx.addr, ss.addr, uint32(len(args)), cargs[0].addr, result.addr, nil)
-    
+
 proc invoke*(x:Value, args:varargs[Value]):Value =
     var self = newValue()
     invokeWithSelf(x, self, args)
 
 var nfs = newSeq[NativeFunctor]()
 
-proc pinvoke(tag: pointer; 
-             argc: uint32; 
-             argv: ptr Value;
-             retval: ptr Value) {.cdecl.} =
+proc pinvoke(tag: pointer;
+            argc: uint32;
+            argv: ptr Value;
+            retval: ptr Value) {.cdecl.} =
     var idx = cast[int](tag)
     var nf = nfs[idx]
     var args = newSeq[Value](1)
@@ -242,4 +242,3 @@ proc setNativeFunctor*(v:Value, nf:NativeFunctor) =
     var tag = cast[pointer](nfs.len()-1)
     var vv = v
     ValueNativeFunctorSet(vv.addr, pinvoke, prelease, tag)
-

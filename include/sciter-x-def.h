@@ -1,10 +1,10 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
@@ -19,12 +19,12 @@
   #def SC_CALLBACK
   #def TISAPI
   #def EXTAPI
-  
+
   #prefix _
-  
+
   #discardableprefix Sciter
   #discardableprefix Value
-  
+
   #def UINT uint32
   #def INT int32
   #def UINT64 uint64
@@ -41,11 +41,11 @@
   #def BOOL bool
   #def double float64
   #def FLOAT_VALUE float64
-  
+
   #def WINDOWS windows
   #def LINUX posix
   #def OSX osx
-  
+
   #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
@@ -93,9 +93,9 @@ enum SC_LOAD_DATA_RETURN_CODES
   LOAD_OK = 0,      /**< do default loading if data not set */
   LOAD_DISCARD = 1, /**< discard request completely */
   LOAD_DELAYED = 2, /**< data will be delivered later by the host application.
-                         Host application must call SciterDataReadyAsync(,,, requestId) on each LOAD_DELAYED request to avoid memory leaks. */
+                        Host application must call SciterDataReadyAsync(,,, requestId) on each LOAD_DELAYED request to avoid memory leaks. */
   LOAD_MYSELF  = 3, /**< you return LOAD_MYSELF result to indicate that your (the host) application took or will take care about HREQUEST in your code completely.
-                         Use sciter-x-request.h[pp] API functions with SCN_LOAD_DATA::requestId handle . */
+                        Use sciter-x-request.h[pp] API functions with SCN_LOAD_DATA::requestId handle . */
 };
 
 /**Notifies that Sciter is about to download a referred resource.
@@ -110,7 +110,7 @@ enum SC_LOAD_DATA_RETURN_CODES
  * store pointer to this data. You can call #SciterDataReady() function instead
  * of filling these fields. This allows you to free your outData buffer
  * immediately.
-**/
+ **/
 #define SC_LOAD_DATA       0x01
 
 /**This notification indicates that external data (for example image) download process
@@ -131,8 +131,8 @@ enum SC_LOAD_DATA_RETURN_CODES
  * asynchronously.
  **/
 /* obsolete #define SC_DOCUMENT_COMPLETE 0x03
-   use DOCUMENT_COMPLETE DOM event.
-  */
+  use DOCUMENT_COMPLETE DOM event.
+ */
 
 
 /**This notification is sent on parsing the document and while processing
@@ -154,7 +154,7 @@ enum SC_LOAD_DATA_RETURN_CODES
 #define SC_ENGINE_DESTROYED 0x05
 
 /**Posted notification.
- 
+
  * \param lParam #LPSCN_POSTED_NOTIFICATION
  *
  **/
@@ -162,8 +162,8 @@ enum SC_LOAD_DATA_RETURN_CODES
 
 
 /**This notification is sent when the engine encounters critical rendering error: e.g. DirectX gfx driver error.
-   Most probably bad gfx drivers.
- 
+  Most probably bad gfx drivers.
+
  * \param lParam #LPSCN_GRAPHICS_CRITICAL_FAILURE
  *
  **/
@@ -221,10 +221,10 @@ typedef struct SCN_DATA_LOADED
     UINT     dataSize;         /**< [in] loaded data size (in bytes).*/
     UINT     dataType;         /**< [in] SciterResourceType */
     UINT     status;           /**< [in]
-                                         status = 0 (dataSize == 0) - unknown error.
-                                         status = 100..505 - http response status, Note: 200 - OK!
-                                         status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
-                                 */
+                                        status = 0 (dataSize == 0) - unknown error.
+                                        status = 100..505 - http response status, Note: 200 - OK!
+                                        status > 12000 - wininet error code, see ERROR_INTERNET_*** in wininet.h
+                                */
 } SCN_DATA_LOADED;
 
 typedef SCN_DATA_LOADED * LPSCN_DATA_LOADED;
@@ -299,24 +299,24 @@ enum GFX_LAYER
 
 enum SCITER_RT_OPTIONS
 {
-   SCITER_SMOOTH_SCROLL = 1,      // value:TRUE - enable, value:FALSE - disable, enabled by default
-   SCITER_CONNECTION_TIMEOUT = 2, // value: milliseconds, connection timeout of http client
-   SCITER_HTTPS_ERROR = 3,        // value: 0 - drop connection, 1 - use builtin dialog, 2 - accept connection silently
-   SCITER_FONT_SMOOTHING = 4,     // value: 0 - system default, 1 - no smoothing, 2 - std smoothing, 3 - clear type
+  SCITER_SMOOTH_SCROLL = 1,      // value:TRUE - enable, value:FALSE - disable, enabled by default
+  SCITER_CONNECTION_TIMEOUT = 2, // value: milliseconds, connection timeout of http client
+  SCITER_HTTPS_ERROR = 3,        // value: 0 - drop connection, 1 - use builtin dialog, 2 - accept connection silently
+  SCITER_FONT_SMOOTHING = 4,     // value: 0 - system default, 1 - no smoothing, 2 - std smoothing, 3 - clear type
 
-   SCITER_TRANSPARENT_WINDOW = 6, // Windows Aero support, value:
+  SCITER_TRANSPARENT_WINDOW = 6, // Windows Aero support, value:
                                   // 0 - normal drawing,
                                   // 1 - window has transparent background after calls DwmExtendFrameIntoClientArea() or DwmEnableBlurBehindWindow().
-   SCITER_SET_GPU_BLACKLIST  = 7, // hWnd = NULL,
+  SCITER_SET_GPU_BLACKLIST  = 7, // hWnd = NULL,
                                   // value = LPCBYTE, json - GPU black list, see: gpu-blacklist.json resource.
-   SCITER_SET_SCRIPT_RUNTIME_FEATURES = 8, // value - combination of SCRIPT_RUNTIME_FEATURES flags.
-   SCITER_SET_GFX_LAYER = 9,      // hWnd = NULL, value - GFX_LAYER
-   SCITER_SET_DEBUG_MODE = 10,    // hWnd, value - TRUE/FALSE
-   SCITER_SET_UX_THEMING = 11,    // hWnd = NULL, value - BOOL, TRUE - the engine will use "unisex" theme that is common for all platforms. 
+  SCITER_SET_SCRIPT_RUNTIME_FEATURES = 8, // value - combination of SCRIPT_RUNTIME_FEATURES flags.
+  SCITER_SET_GFX_LAYER = 9,      // hWnd = NULL, value - GFX_LAYER
+  SCITER_SET_DEBUG_MODE = 10,    // hWnd, value - TRUE/FALSE
+  SCITER_SET_UX_THEMING = 11,    // hWnd = NULL, value - BOOL, TRUE - the engine will use "unisex" theme that is common for all platforms.
                                   // That UX theme is not using OS primitives for rendering input elements. Use it if you want exactly
                                   // the same (modulo fonts) look-n-feel on all platforms.
 
-   SCITER_ALPHA_WINDOW  = 12,     //  hWnd, value - TRUE/FALSE - window uses per pixel alpha (e.g. WS_EX_LAYERED/UpdateLayeredWindow() window)
+  SCITER_ALPHA_WINDOW  = 12,     //  hWnd, value - TRUE/FALSE - window uses per pixel alpha (e.g. WS_EX_LAYERED/UpdateLayeredWindow() window)
 };
 
 typedef struct URL_DATA
@@ -342,17 +342,17 @@ typedef VOID SC_CALLBACK URL_DATA_RECEIVER( const URL_DATA* pUrlData, LPVOID par
 #endif
 
 enum SCITER_CREATE_WINDOW_FLAGS {
-   SW_CHILD      = (1 << 0), // child window only, if this flag is set all other flags ignored
-   SW_TITLEBAR   = (1 << 1), // toplevel window, has titlebar
-   SW_RESIZEABLE = (1 << 2), // has resizeable frame
-   SW_TOOL       = (1 << 3), // is tool window
-   SW_CONTROLS   = (1 << 4), // has minimize / maximize buttons
-   SW_GLASSY     = (1 << 5), // glassy window ( DwmExtendFrameIntoClientArea on windows )
-   SW_ALPHA      = (1 << 6), // transparent window ( e.g. WS_EX_LAYERED on Windows )
-   SW_MAIN       = (1 << 7), // main window of the app, will terminate the app on close
-   SW_POPUP      = (1 << 8), // the window is created as topmost window.
-   SW_ENABLE_DEBUG = (1 << 9), // make this window inspector ready
-   SW_OWNS_VM      = (1 << 10), // it has its own script VM
+  SW_CHILD      = (1 << 0), // child window only, if this flag is set all other flags ignored
+  SW_TITLEBAR   = (1 << 1), // toplevel window, has titlebar
+  SW_RESIZEABLE = (1 << 2), // has resizeable frame
+  SW_TOOL       = (1 << 3), // is tool window
+  SW_CONTROLS   = (1 << 4), // has minimize / maximize buttons
+  SW_GLASSY     = (1 << 5), // glassy window ( DwmExtendFrameIntoClientArea on windows )
+  SW_ALPHA      = (1 << 6), // transparent window ( e.g. WS_EX_LAYERED on Windows )
+  SW_MAIN       = (1 << 7), // main window of the app, will terminate the app on close
+  SW_POPUP      = (1 << 8), // the window is created as topmost window.
+  SW_ENABLE_DEBUG = (1 << 9), // make this window inspector ready
+  SW_OWNS_VM      = (1 << 10), // it has its own script VM
 };
 
 
@@ -365,10 +365,10 @@ enum SCITER_CREATE_WINDOW_FLAGS {
 
 enum OUTPUT_SUBSYTEMS
 {
-   OT_DOM = 0,       // html parser & runtime
-   OT_CSSS,          // csss! parser & runtime
-   OT_CSS,           // css parser
-   OT_TIS,           // TIS parser & runtime
+  OT_DOM = 0,       // html parser & runtime
+  OT_CSSS,          // csss! parser & runtime
+  OT_CSS,           // css parser
+  OT_TIS,           // TIS parser & runtime
 };
 enum OUTPUT_SEVERITY
 {
@@ -380,4 +380,3 @@ enum OUTPUT_SEVERITY
 typedef VOID (SC_CALLBACK* DEBUG_OUTPUT_PROC)(LPVOID param, UINT subsystem /*OUTPUT_SUBSYTEMS*/, UINT severity, LPCWSTR text, UINT text_length);
 
 #endif
-

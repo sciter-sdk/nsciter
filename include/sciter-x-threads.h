@@ -1,10 +1,10 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
@@ -37,7 +37,7 @@
       class mutex
       {
         CRITICAL_SECTION cs;
-     public:
+    public:
         void lock()     { EnterCriticalSection(&cs); }
         void unlock()   { LeaveCriticalSection(&cs); }
         mutex()         { InitializeCriticalSection(&cs); }
@@ -150,8 +150,8 @@
       thread_ctx(const F& f, const P& p): _f(f),_p(p) {
 
         DWORD dwThreadID;
-		    HANDLE hThread = ::CreateThread(NULL, 0, ThreadProc, this, 0, &dwThreadID);
-		    assert(hThread != NULL);
+        HANDLE hThread = ::CreateThread(NULL, 0, ThreadProc, this, 0, &dwThreadID);
+        assert(hThread != NULL);
         ::CloseHandle(hThread);
       }
     public:
@@ -217,8 +217,8 @@
             _var.notify_one();
         }
         void wait(mutex& m) {
-           std::unique_lock<mutex> lock(m);
-           _var.wait(lock);
+          std::unique_lock<mutex> lock(m);
+          _var.wait(lock);
         }
         void wait(unsigned int ms = unsigned(-1)) {
             std::unique_lock<std::mutex> lock(_mtx);
@@ -233,12 +233,12 @@
       inline void sleep(uint ms) { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); }
       inline void yield() { std::this_thread::yield(); }
 
-     }
-     template<typename F, typename P>
-     inline void thread( F f, P p )
-     {
+    }
+    template<typename F, typename P>
+    inline void thread( F f, P p )
+    {
           new std::thread(f,p); // will leak the instance?
-     }
+    }
 
   }
 
