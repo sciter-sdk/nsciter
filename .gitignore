@@ -1,8 +1,64 @@
 /nimcache/
 *.log
-*.so
 sciter
 sciter.html
 test
-sciter*.dll
+
+## ============
+## Binary files
+## ============
+
+## Object files
+###############
+*.elf
+*.ko
+*.o
+*.obj
+
+## Static libraries
+###################
+*.a
+*.la
+*.lib
+*.lo
+
+## Shared objects
+#################
+*.dll
+*.dylib
+*.so
+*.so.*
+
+## Executables
+##############
+*.app
 *.exe
+*.out
+
+############################
+## COMMON IGNORE PATTERNS ##
+############################
+
+## Linux
+########
+*~
+.directory
+.fuse_hidden*
+.nfs*
+.Trash-*
+
+## macOS
+########
+*.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Icon
+
+## Windows
+##########
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+.BIN/
