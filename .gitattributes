@@ -1,0 +1,40 @@
+* text=auto
+
+## Nim files
+############
+*.nim       text eol=lf
+*.nim.cfg   text eol=lf
+*.nimble    text eol=lf
+*.nimf      text eol=lf     linguist-language=Nim
+*.nims      text eol=lf
+
+## C++ includes
+###############
+*.cpp   text
+*.h     text
+*.hpp   text
+*.mm    text
+
+## Shell/CMD scripts
+####################
+*.bat   text eol=crlf
+*.sh    text eol=lf
+
+## Documentation
+################
+*.md      text
+*.rst     text
+LICENSE   text
+
+## Miscellanea
+##############
+*.html     text
+Makefile   text eol=lf
+
+## Repository settings
+######################
+.editorconfig    text eol=lf
+.gitattributes   text eol=lf
+.gitconfig       text eol=lf
+.gitignore       text eol=lf
+.gitmodules      text eol=lf

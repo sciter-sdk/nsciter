@@ -9,12 +9,12 @@
   #def SC_CALLBACK
   #def TISAPI
   #def EXTAPI
-  
+
   #prefix _
-  
+
   #discardableprefix Sciter
   #discardableprefix Value
-  
+
   #def UINT uint32
   #def INT int32
   #def UINT64 uint64
@@ -31,11 +31,11 @@
   #def BOOL bool
   #def double float64
   #def FLOAT_VALUE float64
-  
+
   #def WINDOWS windows
   #def LINUX posix
   #def OSX osx
-  
+
   #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
@@ -92,9 +92,9 @@ typedef tiscript_VM* HVM;
 // pinned tiscript_value, val here will survive GC.
 typedef struct tiscript_pvalue
 {
-   tiscript_value val;
-   struct tiscript_VM* vm;
-   void *d1,*d2;
+  tiscript_value val;
+  struct tiscript_VM* vm;
+  void *d1,*d2;
 } tiscript_pvalue;
 
 #ifndef C2NIM
@@ -183,16 +183,16 @@ typedef struct tiscript_const_def
 
 typedef struct tiscript_class_def
 {
-   const char*   name;      // having this name
-   tiscript_method_def*   methods;    // with these methods
-   tiscript_prop_def*     props;      // with these properties
-   tiscript_const_def*    consts;     // with these constants (if any)
-   tiscript_get_item*     get_item;   // var v = obj[idx]
-   tiscript_set_item*     set_item;   // obj[idx] = v
-   tiscript_finalizer*    finalizer;  // destructor of native objects
-   tiscript_iterator*     iterator;   // for(var el in collecton) handler
-   tiscript_on_gc_copy*   on_gc_copy; // called by GC to notify that 'self' is moved to new location
-   tiscript_value         prototype;  // superclass, prototype for the class (or 0)
+  const char*   name;      // having this name
+  tiscript_method_def*   methods;    // with these methods
+  tiscript_prop_def*     props;      // with these properties
+  tiscript_const_def*    consts;     // with these constants (if any)
+  tiscript_get_item*     get_item;   // var v = obj[idx]
+  tiscript_set_item*     set_item;   // obj[idx] = v
+  tiscript_finalizer*    finalizer;  // destructor of native objects
+  tiscript_iterator*     iterator;   // for(var el in collecton) handler
+  tiscript_on_gc_copy*   on_gc_copy; // called by GC to notify that 'self' is moved to new location
+  tiscript_value         prototype;  // superclass, prototype for the class (or 0)
 } tiscript_class_def;
 
 typedef struct tiscript_native_interface
@@ -238,7 +238,7 @@ typedef struct tiscript_native_interface
   bool (TISAPI *get_symbol_value)(tiscript_value v, const WCHAR** psz);
   bool (TISAPI *get_string_value)(tiscript_value v, const WCHAR** pdata, unsigned* plength);
   bool (TISAPI *get_bytes)(tiscript_value v, unsigned char** pb, unsigned* pblen);
-  bool (TISAPI *get_datetime)(tiscript_VM*, tiscript_value v, unsigned long long* dt); 
+  bool (TISAPI *get_datetime)(tiscript_VM*, tiscript_value v, unsigned long long* dt);
                                             // dt - 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (UTC)
                                             // a.k.a. FILETIME in Windows
 
@@ -263,81 +263,81 @@ typedef struct tiscript_native_interface
           tiscript_value        zns           // in this namespace object (or 0 if global)
       );
 
-   // object
-   tiscript_value    (TISAPI *create_object)(tiscript_VM*, tiscript_value of_class); // of_class == 0 - "Object"
-   bool     (TISAPI *set_prop)(tiscript_VM*,tiscript_value obj, tiscript_value key, tiscript_value tiscript_value);
-   tiscript_value    (TISAPI *get_prop)(tiscript_VM*,tiscript_value obj, tiscript_value key);
-   bool     (TISAPI *for_each_prop)(tiscript_VM*, tiscript_value obj, tiscript_object_enum* cb, void* tag);
-   void*    (TISAPI *get_instance_data)(tiscript_value obj);
-   void     (TISAPI *set_instance_data)(tiscript_value obj, void* data);
+  // object
+  tiscript_value    (TISAPI *create_object)(tiscript_VM*, tiscript_value of_class); // of_class == 0 - "Object"
+  bool     (TISAPI *set_prop)(tiscript_VM*,tiscript_value obj, tiscript_value key, tiscript_value tiscript_value);
+  tiscript_value    (TISAPI *get_prop)(tiscript_VM*,tiscript_value obj, tiscript_value key);
+  bool     (TISAPI *for_each_prop)(tiscript_VM*, tiscript_value obj, tiscript_object_enum* cb, void* tag);
+  void*    (TISAPI *get_instance_data)(tiscript_value obj);
+  void     (TISAPI *set_instance_data)(tiscript_value obj, void* data);
 
-   // array
-   tiscript_value    (TISAPI *create_array)(tiscript_VM*, unsigned of_size);
-   bool     (TISAPI *set_elem)(tiscript_VM*, tiscript_value obj, unsigned idx, tiscript_value tiscript_value);
-   tiscript_value    (TISAPI *get_elem)(tiscript_VM*, tiscript_value obj, unsigned idx);
-   tiscript_value    (TISAPI *set_array_size)(tiscript_VM*, tiscript_value obj, unsigned of_size);
-   unsigned (TISAPI *get_array_size)(tiscript_VM*, tiscript_value obj);
+  // array
+  tiscript_value    (TISAPI *create_array)(tiscript_VM*, unsigned of_size);
+  bool     (TISAPI *set_elem)(tiscript_VM*, tiscript_value obj, unsigned idx, tiscript_value tiscript_value);
+  tiscript_value    (TISAPI *get_elem)(tiscript_VM*, tiscript_value obj, unsigned idx);
+  tiscript_value    (TISAPI *set_array_size)(tiscript_VM*, tiscript_value obj, unsigned of_size);
+  unsigned (TISAPI *get_array_size)(tiscript_VM*, tiscript_value obj);
 
-   // eval
-   bool     (TISAPI *eval)(tiscript_VM*, tiscript_value ns, tiscript_stream* input, bool template_mode, tiscript_value* pretval);
-   bool     (TISAPI *eval_string)(tiscript_VM*, tiscript_value ns, const WCHAR* script, unsigned script_length, tiscript_value* pretval);
-   // call function (method)
-   bool     (TISAPI *call)(tiscript_VM*, tiscript_value obj, tiscript_value function, const tiscript_value* argv, unsigned argn, tiscript_value* pretval);
+  // eval
+  bool     (TISAPI *eval)(tiscript_VM*, tiscript_value ns, tiscript_stream* input, bool template_mode, tiscript_value* pretval);
+  bool     (TISAPI *eval_string)(tiscript_VM*, tiscript_value ns, const WCHAR* script, unsigned script_length, tiscript_value* pretval);
+  // call function (method)
+  bool     (TISAPI *call)(tiscript_VM*, tiscript_value obj, tiscript_value function, const tiscript_value* argv, unsigned argn, tiscript_value* pretval);
 
-   // compiled bytecodes
-   bool     (TISAPI *compile)( tiscript_VM* pvm, tiscript_stream* input, tiscript_stream* output_bytecodes, bool template_mode );
-   bool     (TISAPI *loadbc)( tiscript_VM* pvm, tiscript_stream* input_bytecodes );
+  // compiled bytecodes
+  bool     (TISAPI *compile)( tiscript_VM* pvm, tiscript_stream* input, tiscript_stream* output_bytecodes, bool template_mode );
+  bool     (TISAPI *loadbc)( tiscript_VM* pvm, tiscript_stream* input_bytecodes );
 
-   // throw error
-   void     (TISAPI *throw_error)( tiscript_VM*, const WCHAR* error);
+  // throw error
+  void     (TISAPI *throw_error)( tiscript_VM*, const WCHAR* error);
 
-   // arguments access
-   unsigned (TISAPI *get_arg_count)( tiscript_VM* pvm );
-   tiscript_value    (TISAPI *get_arg_n)( tiscript_VM* pvm, unsigned n );
+  // arguments access
+  unsigned (TISAPI *get_arg_count)( tiscript_VM* pvm );
+  tiscript_value    (TISAPI *get_arg_n)( tiscript_VM* pvm, unsigned n );
 
-   // path here is global "path" of the object, something like
-   // "one"
-   // "one.two", etc.
-   bool     (TISAPI *get_value_by_path)(tiscript_VM* pvm, tiscript_value* v, const char* path);
+  // path here is global "path" of the object, something like
+  // "one"
+  // "one.two", etc.
+  bool     (TISAPI *get_value_by_path)(tiscript_VM* pvm, tiscript_value* v, const char* path);
 
-   // pins
-   void     (TISAPI *pin)(tiscript_VM*, tiscript_pvalue* pp);
-   void     (TISAPI *unpin)(tiscript_pvalue* pp);
+  // pins
+  void     (TISAPI *pin)(tiscript_VM*, tiscript_pvalue* pp);
+  void     (TISAPI *unpin)(tiscript_pvalue* pp);
 
-   // create native_function_value and native_property_value,
-   // use this if you want to add native functions/properties in runtime to exisiting classes or namespaces (including global ns)
-   tiscript_value (TISAPI *native_function_value)(tiscript_VM* pvm, tiscript_method_def* p_method_def);
-   tiscript_value (TISAPI *native_property_value)(tiscript_VM* pvm, tiscript_prop_def* p_prop_def);
+  // create native_function_value and native_property_value,
+  // use this if you want to add native functions/properties in runtime to exisiting classes or namespaces (including global ns)
+  tiscript_value (TISAPI *native_function_value)(tiscript_VM* pvm, tiscript_method_def* p_method_def);
+  tiscript_value (TISAPI *native_property_value)(tiscript_VM* pvm, tiscript_prop_def* p_prop_def);
 
-   // Schedule execution of the pfunc(prm) in the thread owning this VM.
-   // Used when you need to call scripting methods from threads other than main (GUI) thread
-   // It is safe to call tiscript functions inside the pfunc.
-   // returns 'true' if scheduling of the call was accepted, 'false' when failure (VM has no dispatcher attached).
-   bool           (TISAPI *post)(tiscript_VM* pvm, tiscript_callback* pfunc, void* prm);
+  // Schedule execution of the pfunc(prm) in the thread owning this VM.
+  // Used when you need to call scripting methods from threads other than main (GUI) thread
+  // It is safe to call tiscript functions inside the pfunc.
+  // returns 'true' if scheduling of the call was accepted, 'false' when failure (VM has no dispatcher attached).
+  bool           (TISAPI *post)(tiscript_VM* pvm, tiscript_callback* pfunc, void* prm);
 
-   // Introduce alien VM to the host VM:
-   // Calls method found on "host_method_path" (if there is any) on the pvm_host
-   // notifying the host about other VM (alien) creation. Return value of script function "host_method_path" running in pvm_host is passed
-   // as a parametr of a call to function at "alien_method_path".
-   // One of possible uses of this function:
-   // Function at "host_method_path" creates async streams that will serve a role of stdin, stdout and stderr for the alien vm.
-   // This way two VMs can communicate with each other.
-   //unsigned      (TISAPI *introduce_vm)(tiscript_VM* pvm_host, const char* host_method_path,  tiscript_VM* pvm_alien, const char* alien_method_path);
+  // Introduce alien VM to the host VM:
+  // Calls method found on "host_method_path" (if there is any) on the pvm_host
+  // notifying the host about other VM (alien) creation. Return value of script function "host_method_path" running in pvm_host is passed
+  // as a parametr of a call to function at "alien_method_path".
+  // One of possible uses of this function:
+  // Function at "host_method_path" creates async streams that will serve a role of stdin, stdout and stderr for the alien vm.
+  // This way two VMs can communicate with each other.
+  //unsigned      (TISAPI *introduce_vm)(tiscript_VM* pvm_host, const char* host_method_path,  tiscript_VM* pvm_alien, const char* alien_method_path);
 
-   bool  (TISAPI *set_remote_std_streams)(tiscript_VM* pvm, tiscript_pvalue* input, tiscript_pvalue* output, tiscript_pvalue* error);
+  bool  (TISAPI *set_remote_std_streams)(tiscript_VM* pvm, tiscript_pvalue* input, tiscript_pvalue* output, tiscript_pvalue* error);
 
-   // support of multi-return values from native fucntions, n here is a number 1..64
-   bool  (TISAPI *set_nth_retval)(tiscript_VM* pvm, int n, tiscript_value ns );
-   // returns number of props in object, elements in array, or bytes in byte array.
-   int   (TISAPI *get_length)(tiscript_VM* pvm, tiscript_value obj );
-   // for( var val in coll ) {...}
-   bool  (TISAPI *get_next)(tiscript_VM* pvm, tiscript_value* obj, tiscript_value* pos, tiscript_value* val);
-   // for( var (key,val) in coll ) {...}
-   bool  (TISAPI *get_next_key_value)(tiscript_VM* pvm, tiscript_value* obj, tiscript_value* pos, tiscript_value* key, tiscript_value* val);
+  // support of multi-return values from native fucntions, n here is a number 1..64
+  bool  (TISAPI *set_nth_retval)(tiscript_VM* pvm, int n, tiscript_value ns );
+  // returns number of props in object, elements in array, or bytes in byte array.
+  int   (TISAPI *get_length)(tiscript_VM* pvm, tiscript_value obj );
+  // for( var val in coll ) {...}
+  bool  (TISAPI *get_next)(tiscript_VM* pvm, tiscript_value* obj, tiscript_value* pos, tiscript_value* val);
+  // for( var (key,val) in coll ) {...}
+  bool  (TISAPI *get_next_key_value)(tiscript_VM* pvm, tiscript_value* obj, tiscript_value* pos, tiscript_value* key, tiscript_value* val);
 
-   // associate extra data pointer with the VM
-   bool  (TISAPI *set_extra_data)(tiscript_VM* pvm, void* data);
-   void* (TISAPI *get_extra_data)(tiscript_VM* pvm);
+  // associate extra data pointer with the VM
+  bool  (TISAPI *set_extra_data)(tiscript_VM* pvm, void* data);
+  void* (TISAPI *get_extra_data)(tiscript_VM* pvm);
 
 } tiscript_native_interface;
 

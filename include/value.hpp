@@ -32,12 +32,12 @@
   {
 
     template<typename TC>
-      inline size_t str_length(const TC* src ) { 
+      inline size_t str_length(const TC* src ) {
         if(!src) return 0;
         size_t cnt = 0; while( *src++ ) ++cnt;
         return cnt;
       }
-    
+
     // wide (utf16) string
     typedef std::basic_string<WCHAR> string;
     // ascii or utf8 string
@@ -45,9 +45,9 @@
 
     typedef std::runtime_error script_error;
 
-    // value by key bidirectional proxy/accessor 
+    // value by key bidirectional proxy/accessor
     class value_key_a;
-    // value by index bidirectional proxy/accessor 
+    // value by index bidirectional proxy/accessor
     class value_idx_a;
     class value;
 
@@ -63,7 +63,7 @@
       //void* get(const void* defv) { return 0; } // and this one too is disabled
     public:
       value()                 { ValueInit(this); }
-     ~value()                 { ValueClear(this); }
+    ~value()                 { ValueClear(this); }
       value(const value& src) { ValueInit(this); ValueCopy(this,&src); }
       value(const VALUE& src) { ValueInit(this); ValueCopy(this,&src); }
 
@@ -87,28 +87,28 @@
 #ifdef CPP11
       value( const native_function_t& nfr );
 #endif
-          
+
       static value currency( INT64 v )  { value t; ValueInt64DataSet(&t, v, T_CURRENCY, 0); return t;}
       static value date( INT64 v, bool is_utc = true /* true if ft is UTC*/ )      { value t; ValueInt64DataSet(&t, v, T_DATE, is_utc);  return t;}
 #ifdef WIN32
-      static value date( FILETIME ft, bool is_utc = true /* true if ft is UTC*/ )  { value t; ValueInt64DataSet(&t, *((INT64*)&ft), T_DATE, is_utc); return t;} 
+      static value date( FILETIME ft, bool is_utc = true /* true if ft is UTC*/ )  { value t; ValueInt64DataSet(&t, *((INT64*)&ft), T_DATE, is_utc); return t;}
 #endif
       static value symbol( aux::wchars wc ) { value t; ValueInit(&t); ValueStringDataSet(&t, LPCWSTR(wc.start), wc.length , 0xFFFF); return t; }
 
       // string-symbol
-      value( const char* s ) 
-      { 
+      value( const char* s )
+      {
         aux::a2w as(s);
         ValueInit(this); ValueStringDataSet(this, LPCWSTR(as.c_str()), UINT(as.length()), UT_STRING_SYMBOL);
       }
-            
-      static value make_string( const char* s ) 
-      { 
+
+      static value make_string( const char* s )
+      {
         aux::a2w as(s);
         return value(as.chars());
       }
       static value make_string( const WCHAR* s )
-      { 
+      {
         return value( aux::chars_of(s) );
       }
 
@@ -119,7 +119,7 @@
         return v;
       }
 
-      static value make_error(const WCHAR* s) // returns string representing error. 
+      static value make_error(const WCHAR* s) // returns string representing error.
                                               // if such value is used as a return value from native function
                                               // the script runtime will throw an error in script rather than returning that value.
       {
@@ -146,12 +146,12 @@
       bool is_dom_element() const { return t == T_DOM_OBJECT; }
       // if it is a native functor reference
       bool is_native_function() const { return !!ValueIsNativeFunctor(this); }
-      
+
       bool is_null() const { return t == T_NULL; }
 
       static value null() { value n; n.t = T_NULL; return n; }
 
-      bool operator == (const value& rs) const 
+      bool operator == (const value& rs) const
       {
         if( this == &rs ) return true;
         int r = ValueCompare( this, &rs );
@@ -163,29 +163,29 @@
           assert(false);
         return false;
       }
-      bool operator != (const value& rs) const 
+      bool operator != (const value& rs) const
       {
         return !(operator==(rs));
       }
 
 
-      int get(int defv) const 
+      int get(int defv) const
       {
         int v;
-        if(ValueIntData(this,&v) == HV_OK) return v; 
+        if(ValueIntData(this,&v) == HV_OK) return v;
         return defv;
       }
-      double get(double defv) const 
+      double get(double defv) const
       {
         double v;
-        if(ValueFloatData(this,&v) == HV_OK) return v; 
+        if(ValueFloatData(this,&v) == HV_OK) return v;
         return defv;
       }
       string get(const WCHAR* defv) const
       {
         aux::wchars wc;
         if(ValueStringData(this, (LPCWSTR*) &wc.start,&wc.length) == HV_OK)
-          return aux::make_string(wc); 
+          return aux::make_string(wc);
         return string(defv);
       }
       aux::wchars get_chars() const
@@ -194,7 +194,7 @@
         ValueStringData(this,(LPCWSTR*)&s.start,&s.length);
         return s;
       }
-      aux::bytes get_bytes() const 
+      aux::bytes get_bytes() const
       {
         aux::bytes bs;
         ValueBinaryData(this,&bs.start,&bs.length);
@@ -203,17 +203,17 @@
 
 #ifdef WIN32
       FILETIME get_date() const
-      { 
+      {
         INT64 v;
-        if(ValueInt64Data(this,&v) == HV_OK) return *((FILETIME*)&v); 
+        if(ValueInt64Data(this,&v) == HV_OK) return *((FILETIME*)&v);
         return FILETIME();
       }
 #endif
 
-      bool get(bool defv) const 
+      bool get(bool defv) const
       {
         int v;
-        if(ValueIntData(this,&v) == HV_OK) return v != 0; 
+        if(ValueIntData(this,&v) == HV_OK) return v != 0;
         return defv;
       }
 
@@ -222,7 +222,7 @@
       static value from_string(const WCHAR* s, unsigned int len = 0, VALUE_STRING_CVT_TYPE ct = CVT_SIMPLE)
       {
         value t;
-        if( s ) 
+        if( s )
         {
           if(len == 0) len = (unsigned int)str_length(s);
           ValueFromString( &t, LPCWSTR(s), len, ct );
@@ -255,7 +255,7 @@
 
       // if it is an array or map returns number of elements there, otherwise - 0
       // if it is a function - returns number of arguments
-      int length() const 
+      int length() const
       {
         int n = 0;
         ValueElementsCount( this, &n);
@@ -307,12 +307,12 @@
         ValueEnumElements(const_cast<value*>(this), &enum_cb::_callback, &cb);
       }
 
-      // calls cbf for each key/value pair found in T_OBJECT or T_MAP  
+      // calls cbf for each key/value pair found in T_OBJECT or T_MAP
       void each_key_value(key_value_cb cbf) const
       {
         ValueEnumElements(const_cast<value*>(this), &enum_cb::lambda_callback, &cbf);
       }
-      
+
       value key(int n) const
       {
         value r;
@@ -329,7 +329,7 @@
         ValueNthElementValueSet( this, n, &v);
       }
 
-      void append(const value& v) 
+      void append(const value& v)
       {
         ValueNthElementValueSet( this, length(), &v);
       }
@@ -354,7 +354,7 @@
         return r;
       }
 
-      
+
       // T_OBJECT and T_DOM_OBJECT only, get value of object's data slot
       void* get_object_data() const
       {
@@ -377,14 +377,14 @@
       bool is_object_class() const    {  return t == T_OBJECT && u == UT_OBJECT_CLASS; }  // that is TS class
       bool is_object_error() const    {  return t == T_OBJECT && u == UT_OBJECT_ERROR; }  // that is TS error
 
-      
+
       // T_OBJECT only, set value of object's data slot
       void set_object_data(void* pv)
       {
         assert(u == UT_OBJECT_NATIVE);
         ValueBinaryDataSet(this,(LPCBYTE)pv,1,T_OBJECT,0);
       }
-      
+
       // T_OBJECT only, class name of the object: e.g. Array, Function, etc. or custom class name.
       //std_wstring get_object_class_name() const
       //{
@@ -392,7 +392,7 @@
       //  return get(L"");
       //}
       // T_OBJECT/UT_OBJECT_FUNCTION only, call TS function
-      // 'self' here is what will be known as 'this' inside the function, can be undefined for invocations of global functions 
+      // 'self' here is what will be known as 'this' inside the function, can be undefined for invocations of global functions
       value call( int argc, const value* argv, value self = value(), const WCHAR* url_or_script_name = 0) const
       {
         value rv;
@@ -412,31 +412,31 @@
       }
 
 //#endif //defined(HAS_TISCRIPT)
-          
+
       // "smart" or "soft" equality test
       static bool equal(const value& v1, const value& v2)
       {
         if( v1 == v2 ) return true; // strict comparison
         switch ( v1.t > v2.t? v1.t: v2.t )
         {
-           case T_BOOL:
-             {
-               bool const r1 = v1.get(false);
-               bool const r2 = v2.get(!r1);
-               return r1 == r2;
-             }
-           case T_INT:
-             {
-               int const r1 = v1.get(0);
-               int const r2 = v2.get(-r1);
-               return r1 == r2;
-             }
-           case T_FLOAT:
-             {
-               double const r1 = v1.get(0.0);
-               double const r2 = v2.get(-r1);
-               return r1 == r2;
-             }
+          case T_BOOL:
+            {
+              bool const r1 = v1.get(false);
+              bool const r2 = v2.get(!r1);
+              return r1 == r2;
+            }
+          case T_INT:
+            {
+              int const r1 = v1.get(0);
+              int const r2 = v2.get(-r1);
+              return r1 == r2;
+            }
+          case T_FLOAT:
+            {
+              double const r1 = v1.get(0.0);
+              double const r2 = v2.get(-r1);
+              return r1 == r2;
+            }
         }
         return false;
       }
@@ -450,8 +450,8 @@
     template<> inline string value::get<string>() const     { return to_string(); }
     //template<> inline const value& value::get<const value&>() const  { return *this; }
     template<> inline value value::get<value>() const       { return *this; }
-      
-    // value by key bidirectional proxy/accessor 
+
+    // value by key bidirectional proxy/accessor
     class value_key_a
     {
       friend class value;
@@ -466,10 +466,10 @@
       operator const value() const              { return col.get_item(key); }
     };
 
-    inline value_key_a 
+    inline value_key_a
         value::operator[](const value& key) { return value_key_a(*this, key); }
 
-    // value by index bidirectional proxy/accessor 
+    // value by index bidirectional proxy/accessor
     class value_idx_a
     {
       friend class value;
@@ -484,7 +484,7 @@
       operator const value() const              { return col.get_item(idx); }
     };
 
-    inline value_idx_a 
+    inline value_idx_a
         value::operator[](int idx) { return value_idx_a(*this, idx); }
 
   }
@@ -499,9 +499,9 @@
       native_function(const native_function_t& f): func(f) { assert(f); }
       virtual ~native_function() {}
 
-      virtual bool invoke( unsigned int argc, const VALUE* argv, VALUE* retval ) 
+      virtual bool invoke( unsigned int argc, const VALUE* argv, VALUE* retval )
       {
-        if( func ) { 
+        if( func ) {
           ValueInit(retval);
           value r = func(argc,static_cast<const value*>(argv));
           ValueCopy(retval,&r);
@@ -515,14 +515,14 @@
       native_function(const native_function& f);
       native_function& operator=(const native_function& f);
     public:
-      static VOID invoke_impl( VOID* tag, UINT argc, const VALUE* argv, VALUE* retval) 
+      static VOID invoke_impl( VOID* tag, UINT argc, const VALUE* argv, VALUE* retval)
       {
         native_function* self = static_cast<native_function*>(tag);
         ValueInit(retval);
         value r = self->func(argc,static_cast<const value*>(argv));
         ValueCopy(retval,&r);
       }
-      static VOID release_impl( VOID* tag ) 
+      static VOID release_impl( VOID* tag )
       {
         native_function* self = static_cast<native_function*>(tag);
         delete self;
@@ -530,98 +530,98 @@
     };
 
     inline value::value( const native_function_t& nfr ) {
-      ValueInit(this); 
+      ValueInit(this);
       native_function* pnf = new native_function(nfr);
       ValueNativeFunctorSet(this, native_function::invoke_impl, native_function::release_impl, pnf );
     }
 
     // vfunc(native function) is a wrapper that produces sciter::value from native function
-    // see uminimal sample 
-    template<typename R> 
+    // see uminimal sample
+    template<typename R>
     inline value vfunc( R(*func)() ) {
-      return value([func](unsigned int argc, const value* argv) -> value { R r = func(); return value(r); }); 
+      return value([func](unsigned int argc, const value* argv) -> value { R r = func(); return value(r); });
     }
-    template<typename R, typename T1> 
+    template<typename R, typename T1>
     inline value vfunc( R(*func)(T1 t1) ) {
-      return value([func](unsigned int argc, const value* argv) -> value { 
-          R r = func(argc >= 1? argv[0].get<T1>(): T1() ); 
-          return value(r); 
-      }); 
+      return value([func](unsigned int argc, const value* argv) -> value {
+          R r = func(argc >= 1? argv[0].get<T1>(): T1() );
+          return value(r);
+      });
     }
-    template<typename R, typename T1, typename T2> 
+    template<typename R, typename T1, typename T2>
     inline value vfunc( R(*func)(T1 t1,T2 t2) ) {
-      return value([func](unsigned int argc, const value* argv) -> value { 
+      return value([func](unsigned int argc, const value* argv) -> value {
           R r = func(argc >= 1? argv[0].get<T1>(): T1(),
-                    argc >= 2? argv[1].get<T2>(): T2() ); 
-          return value(r); 
-      }); 
+                    argc >= 2? argv[1].get<T2>(): T2() );
+          return value(r);
+      });
     }
-    template<typename R, typename T1, typename T2, typename T3> 
+    template<typename R, typename T1, typename T2, typename T3>
     inline value vfunc( R(*func)(T1 t1,T2 t2,T3 t3) ) {
-      return value([func](unsigned int argc, const value* argv) -> value { 
+      return value([func](unsigned int argc, const value* argv) -> value {
           R r = func(argc >= 1? argv[0].get<T1>(): T1(),
                     argc >= 2? argv[1].get<T2>(): T2(),
-                    argc >= 3? argv[2].get<T3>(): T3()); 
-          return value(r); 
-      }); 
+                    argc >= 3? argv[2].get<T3>(): T3());
+          return value(r);
+      });
     }
-    template<typename R, typename T1, typename T2, typename T3, typename T4> 
+    template<typename R, typename T1, typename T2, typename T3, typename T4>
     inline value vfunc( R(*func)(T1 t1,T2 t2,T3 t3,T4 t4) ) {
-      return value([func](unsigned int argc, const value* argv) -> value { 
+      return value([func](unsigned int argc, const value* argv) -> value {
           R r = func(argc >= 1? argv[0].get<T1>(): T1(),
                     argc >= 2? argv[1].get<T2>(): T2(),
                     argc >= 3? argv[2].get<T3>(): T3(),
-                    argc >= 4? argv[3].get<T4>(): T4()); 
-          return value(r); 
-      }); 
+                    argc >= 4? argv[3].get<T4>(): T4());
+          return value(r);
+      });
     }
 
     // versions of the above but for generic std::function
     template<typename R>
-      inline value vfunc( std::function<R()> func ) 
+      inline value vfunc( std::function<R()> func )
       {
-         return value([func](unsigned int argc, const value* argv) -> value { 
-            R r = func(); return value(r); 
-         }); 
+        return value([func](unsigned int argc, const value* argv) -> value {
+            R r = func(); return value(r);
+        });
       }
 
     template<typename R,typename P0>
       inline value vfunc( std::function<R(P0)> func )
       {
-        return value([func](unsigned int argc, const value* argv) -> value { 
-          R r = func(argc >= 1? argv[0].get<P0>(): P0() ); 
-          return value(r); }); 
+        return value([func](unsigned int argc, const value* argv) -> value {
+          R r = func(argc >= 1? argv[0].get<P0>(): P0() );
+          return value(r); });
       }
     template<typename R,typename P0,typename P1>
       inline value vfunc( std::function<R(P0,P1)> func )
       {
-        return value([func](unsigned int argc, const value* argv) -> value { 
+        return value([func](unsigned int argc, const value* argv) -> value {
           R r = func(argc >= 1? argv[0].get<P0>(): P0(),
-                     argc >= 2? argv[1].get<P1>(): P1() ); 
-          return value(r); }); 
+                    argc >= 2? argv[1].get<P1>(): P1() );
+          return value(r); });
       }
 
-    template<typename R, typename P0, typename P1, typename P2> 
-      inline value vfunc( std::function<R(P0,P1,P2)> func ) 
+    template<typename R, typename P0, typename P1, typename P2>
+      inline value vfunc( std::function<R(P0,P1,P2)> func )
       {
-        return value([func](unsigned int argc, const value* argv) -> value { 
+        return value([func](unsigned int argc, const value* argv) -> value {
           R r = func(argc >= 1? argv[0].get<P0>(): P0(),
                     argc >= 2? argv[1].get<P1>(): P1(),
-                    argc >= 3? argv[2].get<P2>(): P2()); 
-          return value(r); }); 
+                    argc >= 3? argv[2].get<P2>(): P2());
+          return value(r); });
       }
 
-    template<typename R, typename P0, typename P1, typename P2, typename P3> 
+    template<typename R, typename P0, typename P1, typename P2, typename P3>
       inline value vfunc( std::function<R(P0,P1,P2,P3)> func ) {
-        return value([func](unsigned int argc, const value* argv) -> value { 
+        return value([func](unsigned int argc, const value* argv) -> value {
             R r = func(argc >= 1? argv[0].get<P0>(): P0(),
                       argc >= 2? argv[1].get<P1>(): P1(),
                       argc >= 3? argv[2].get<P2>(): P2(),
-                      argc >= 4? argv[3].get<P3>(): P3()); 
-            return value(r); }); 
+                      argc >= 4? argv[3].get<P3>(): P3());
+            return value(r); });
       }
 
-      
+
   }
 #endif
 

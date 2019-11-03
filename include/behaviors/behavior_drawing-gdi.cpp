@@ -10,8 +10,8 @@ BEHAVIOR: gdi-drawing
   - draws content layer using GDI primitives.
 
 SAMPLE:
-   See: samples/behaviors/gdi-drawing.htm
-*/
+  See: samples/behaviors/gdi-drawing.htm
+ */
 
 // dib (bitmap) combined with DC
 
@@ -79,14 +79,14 @@ class dib32
     unsigned  height() const { return _height; }
     void* bits() const { return _bits; }
     BYTE* bytes() const { return (BYTE*)_bits; }
-    HDC   DC() const 
-    { 
+    HDC   DC() const
+    {
       if(!_dc) {
         _dc = ::CreateCompatibleDC(NULL);
         if (_dc)
           _old_bitmap = (HBITMAP)::SelectObject(_dc,_bitmap);
       }
-      return _dc; 
+      return _dc;
     }
 
     HBITMAP   detach() { auto r = _bitmap; _bitmap = 0; return r; }
@@ -109,8 +109,8 @@ struct gdi_drawing: public event_handler
 
     virtual void attached  (HELEMENT he ) { }
     virtual void detached  (HELEMENT he ) { delete this; }
-    
-    virtual bool handle_draw   (HELEMENT he, DRAW_PARAMS& params ) 
+
+    virtual bool handle_draw   (HELEMENT he, DRAW_PARAMS& params )
     {
       if( params.cmd != DRAW_CONTENT ) return false; // drawing only content layer
 
@@ -128,7 +128,7 @@ struct gdi_drawing: public event_handler
       gfx.draw_image(&img, POS(params.area.left), POS(params.area.top));
 
       return true;
-    
+
     }
 
     void do_draw( HDC hdc, unsigned width, unsigned height ) {

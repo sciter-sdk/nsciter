@@ -1,17 +1,17 @@
 /*
  * The Sciter Engine of Terra Informatica Software, Inc.
  * http://sciter.com
- * 
+ *
  * The code and information provided "as-is" without
  * warranty of any kind, either expressed or implied.
- * 
+ *
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
 /*
- * Sciter windowless engine instance 
- * 
- * !!!! NOT READY YET !!!!  
+ * Sciter windowless engine instance
+ *
+ * !!!! NOT READY YET !!!!
  */
 
 
@@ -36,27 +36,27 @@ namespace sciter
   // Create scilite, will use internal bitmap buffer
   BOOL SCAPI SciliteCreate(scilite** out, scilite_host* in);
 
-#ifdef SCILITE_USE_D2D   
+#ifdef SCILITE_USE_D2D
   BOOL SCAPI SciliteCreateOnD2DRenderingTarget(scilite** out, scilite_host* in, ID2D1RenderTarget *pRT, ID2D1Factory* pDF, IDWriteFactory* pDWF = 0 );
 #endif
-#ifdef SCILITE_USE_GDIPLUS   
+#ifdef SCILITE_USE_GDIPLUS
   BOOL SCAPI SciliteCreateOnGDIPPGraphics(scilite** out, scilite_host* in,Gdiplus::Graphics* pGfx);
 #endif
-#ifdef SCILITE_USE_COREGRAPHICS   
+#ifdef SCILITE_USE_COREGRAPHICS
   BOOL SCAPI SciliteCreateOnGDIPPGraphics(scilite** out, scilite_host* in,CGContextRef pGfx);
 #endif
-#ifdef SCILITE_USE_CAIRO   
+#ifdef SCILITE_USE_CAIRO
   BOOL SCAPI SciliteCreateOnCairoGraphics(scilite** out, scilite_host* in, cairo_t *cr);
 #endif
-  
+
   #define SCILITE_INAME "scilite.sciter.com"
- 
-  
+
+
   //|
   //| that is windowless sciter engine per se
   //|
 
-  class scilite: public aux::iasset 
+  class scilite: public aux::iasset
   {
   public:
 
@@ -71,13 +71,13 @@ namespace sciter
 
     virtual bool     accept_url_data(LPCWSTR url, LPCBYTE data, UINT data_size, LPVOID request_id) = 0;
 
-    virtual bool     traverse_mouse_event( UINT mouse_cmd, POINT pt, UINT buttons, UINT alt_state ) = 0; 
-    virtual bool     traverse_keyboard_event( UINT mouse_cmd, POINT pt, UINT buttons, UINT alt_state ) = 0; 
-    virtual bool     traverse_focus_event( UINT focus_cmd ) = 0; 
-    virtual bool     traverse_timer_event( UINT_PTR timer_id ) = 0; 
+    virtual bool     traverse_mouse_event( UINT mouse_cmd, POINT pt, UINT buttons, UINT alt_state ) = 0;
+    virtual bool     traverse_keyboard_event( UINT mouse_cmd, POINT pt, UINT buttons, UINT alt_state ) = 0;
+    virtual bool     traverse_focus_event( UINT focus_cmd ) = 0;
+    virtual bool     traverse_timer_event( UINT_PTR timer_id ) = 0;
 
-    virtual bool     get_invalid_area( RECT& rc_invalid ) = 0; 
-    
+    virtual bool     get_invalid_area( RECT& rc_invalid ) = 0;
+
   };
 
   #define SCILITE_HOST_INAME "host.scilite.sciter.com"
@@ -85,11 +85,11 @@ namespace sciter
   //|
   //| scilite outbound interface
   //|
-  class scilite_host: public aux::asset 
+  class scilite_host: public aux::asset
   {
   public:
-    virtual bool  get_interface(const char* name, iasset** out) 
-    { 
+    virtual bool  get_interface(const char* name, iasset** out)
+    {
       if( aux::streq(name,SCILITE_HOST_INAME) ) { this->add_ref(); *out = this; return true; }
       return scilite_host::get_interface(name,out);
     }

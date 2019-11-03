@@ -21,12 +21,12 @@ namespace camera {
   bool device_list::enumerate_devices()
   {
       HRESULT hr = S_OK;
-      
+
       com::ptr<IMFAttributes> pAttributes;
 
       clear();
 
-      // Initialize an attribute store. We will use this to 
+      // Initialize an attribute store. We will use this to
       // specify the enumeration parameters.
 
       hr = MFCreateAttributes(pAttributes.target(), 1);
@@ -35,7 +35,7 @@ namespace camera {
       if (SUCCEEDED(hr))
       {
           hr = pAttributes->SetGUID(
-              MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE, 
+              MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE,
               MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID
               );
       }
@@ -84,8 +84,8 @@ namespace camera {
       WCHAR *pszName = 0;
 
       hr = pp_devices[index]->GetAllocatedString(
-          MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, 
-          &pszName, 
+          MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME,
+          &pszName,
           NULL
           );
 
@@ -124,7 +124,7 @@ namespace camera {
         devices.get_device( source_name_or_index.get(0),pActivator);
       else if( source_name_or_index.is_string() )
         devices.get_device( source_name_or_index.get(L""),pActivator);
-      else 
+      else
         return nullptr;
 
       if(!pActivator)
@@ -144,7 +144,7 @@ namespace camera {
   //  constructor
   //-------------------------------------------------------------------
 
-  capture::capture(sciter::video_destination* pdst ) : 
+  capture::capture(sciter::video_destination* pdst ) :
       m_pReader(NULL),
       m_nRefCount(0),
       m_bFirstSample(FALSE),
@@ -200,7 +200,7 @@ namespace camera {
 
   HRESULT capture::QueryInterface(REFIID riid, void** ppv)
   {
-      static const QITAB qit[] = 
+      static const QITAB qit[] =
       {
           QITABENT(capture, IMFSourceReaderCallback),
           { 0 },
@@ -254,27 +254,27 @@ namespace camera {
 
           hr = pSample->SetSampleTime(llTimeStamp);
 
-          if (FAILED(hr)) 
+          if (FAILED(hr))
             goto done;
 
           com::ptr<IMFMediaBuffer> pBuffer;
 
           hr = pSample->ConvertToContiguousBuffer(pBuffer.target());
-          if (FAILED(hr)) 
-            goto done; 
+          if (FAILED(hr))
+            goto done;
 
           LPBYTE data; DWORD maxLength, length;
 
           hr = pBuffer->Lock(&data,&maxLength,&length);
           if (FAILED(hr))
-            goto done; 
+            goto done;
 
-          if(!dest->render_frame(data,length)) { 
+          if(!dest->render_frame(data,length)) {
             pBuffer->Unlock();
-            goto done; 
+            goto done;
           }
           pBuffer->Unlock();
-          if (FAILED(hr)) 
+          if (FAILED(hr))
             goto done;
       }
 
@@ -291,7 +291,7 @@ namespace camera {
   done:
       if (FAILED(hr))
       {
-        if(dest) 
+        if(dest)
           dest->stop_streaming();
       }
       return hr;
@@ -301,7 +301,7 @@ namespace camera {
   //-------------------------------------------------------------------
   // OpenMediaSource
   //
-  // Set up preview for a specified media source. 
+  // Set up preview for a specified media source.
   //-------------------------------------------------------------------
 
   HRESULT capture::OpenMediaSource(IMFMediaSource *pSource)
@@ -336,7 +336,7 @@ namespace camera {
   //-------------------------------------------------------------------
 
   bool capture::start_capture(
-      IMFActivate *pActivate, 
+      IMFActivate *pActivate,
       const encoding_parameters& param
       )
   {
@@ -350,7 +350,7 @@ namespace camera {
 
       // Create the media source for the device.
       hr = pActivate->ActivateObject(
-          __uuidof(IMFMediaSource), 
+          __uuidof(IMFMediaSource),
           (void**) pSource.target()
           );
 
@@ -400,7 +400,7 @@ namespace camera {
   //-------------------------------------------------------------------
   // EndCaptureSession
   //
-  // Stop the capture session. 
+  // Stop the capture session.
   //
   // NOTE: This method resets the object's state to State_NotReady.
   // To start another capture session, call SetCaptureFile.
@@ -420,19 +420,19 @@ namespace camera {
   }
 
 
-  bool capture::is_capturing() 
-  { 
+  bool capture::is_capturing()
+  {
       sciter::sync::critical_section _(m_lock);
 
       return dest && dest->is_alive();
-  
+
   }
 
   //-------------------------------------------------------------------
   //  check_device_lost
   //  Checks whether the video capture device was removed.
   //
-  //  The application calls this method when is receives a 
+  //  The application calls this method when is receives a
   //  WM_DEVICECHANGE message.
   //-------------------------------------------------------------------
 
@@ -443,7 +443,7 @@ namespace camera {
       DEV_BROADCAST_DEVICEINTERFACE *pDi = NULL;
 
       deviceLost = false;
-    
+
       if (!is_capturing())
       {
           return true;
@@ -487,20 +487,20 @@ namespace camera {
   {
       color_space = sciter::COLOR_SPACE_UNKNOWN;
       // The list of acceptable types.
-      GUID subtypes[] = { 
-          MFVideoFormat_NV12, 
-          MFVideoFormat_YUY2, 
-          MFVideoFormat_RGB32, 
-          MFVideoFormat_RGB24, 
+      GUID subtypes[] = {
+          MFVideoFormat_NV12,
+          MFVideoFormat_YUY2,
+          MFVideoFormat_RGB32,
+          MFVideoFormat_RGB24,
           MFVideoFormat_IYUV
       };
 
       sciter::COLOR_SPACE color_spaces[] = {
-        sciter::COLOR_SPACE_NV12, 
+        sciter::COLOR_SPACE_NV12,
         sciter::COLOR_SPACE_YUY2,
         sciter::COLOR_SPACE_RGB32,
         sciter::COLOR_SPACE_RGB24,
-        sciter::COLOR_SPACE_IYUV // a.k.a. I420  
+        sciter::COLOR_SPACE_IYUV // a.k.a. I420
       };
 
       HRESULT hr = S_OK;
@@ -509,10 +509,10 @@ namespace camera {
 
       com::ptr<IMFMediaType> pType;
 
-      // If the source's native format matches any of the formats in 
+      // If the source's native format matches any of the formats in
       // the list, prefer the native format.
 
-      // Note: The camera might support multiple output formats, 
+      // Note: The camera might support multiple output formats,
       // including a range of frame dimensions. The application could
       // provide a list to the user and have the user select the
       // camera's output format. That is outside the scope of this
@@ -535,8 +535,8 @@ namespace camera {
           if (subtype == subtypes[i])
           {
               hr = pReader->SetCurrentMediaType(
-                  (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 
-                  NULL, 
+                  (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM,
+                  NULL,
                   pType
                   );
 
@@ -570,14 +570,14 @@ namespace camera {
       if (SUCCEEDED(hr))
       {
           hr = m_pReader->GetCurrentMediaType(
-              (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM, 
+              (DWORD)MF_SOURCE_READER_FIRST_VIDEO_STREAM,
               pType.target()
               );
       }
 
       if (SUCCEEDED(hr))
       {
-          // Register the color converter DSP for this process, in the video 
+          // Register the color converter DSP for this process, in the video
           // processor category. This will enable the sink writer to enumerate
           // the color converter when the sink writer attempts to match the
           // media types.
@@ -593,8 +593,8 @@ namespace camera {
               NULL
               );
 
-           hr = MFGetAttributeSize(pType, MF_MT_FRAME_SIZE, &m_width, &m_height);
-           assert(hr != MF_E_ATTRIBUTENOTFOUND);
+          hr = MFGetAttributeSize(pType, MF_MT_FRAME_SIZE, &m_width, &m_height);
+          assert(hr != MF_E_ATTRIBUTENOTFOUND);
 
       }
 
@@ -602,4 +602,3 @@ namespace camera {
   }
 
 }
- 

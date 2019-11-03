@@ -2,7 +2,7 @@
 #include "sciter-x.h"
 #include "sciter-x-behavior.h"
 #include "sciter-x-graphics.hpp"
-#include <time.h>   
+#include <time.h>
 
 namespace sciter
 {
@@ -11,8 +11,8 @@ BEHAVIOR: native-clock
   - draws content layer using sciter-x-graphics.hpp primitives.
 
 SAMPLE:
-   See: samples/behaviors/native-drawing.htm
-*/
+  See: samples/behaviors/native-drawing.htm
+ */
 
 struct native_clock: public event_handler
 {
@@ -23,11 +23,11 @@ struct native_clock: public event_handler
     virtual bool subscription( HELEMENT he, UINT& event_groups )
     {
       event_groups = HANDLE_DRAW   // it does drawing
-                   | HANDLE_TIMER; // and handles timer
+                  | HANDLE_TIMER; // and handles timer
       return true;
     }
 
-    virtual void attached  (HELEMENT he ) 
+    virtual void attached  (HELEMENT he )
     {
       dom::element(he).start_timer(1000);
     }
@@ -40,7 +40,7 @@ struct native_clock: public event_handler
       return true; // keep ticking
     }
 
-    virtual bool handle_draw   (HELEMENT he, DRAW_PARAMS& params ) 
+    virtual bool handle_draw   (HELEMENT he, DRAW_PARAMS& params )
     {
       if( params.cmd != DRAW_CONTENT ) return false; // drawing only content layer
 
@@ -59,12 +59,12 @@ struct native_clock: public event_handler
       gfx.state_save();
 
       gfx.translate(params.area.left + w / 2.0f,params.area.top + h / 2.0f);
-      gfx.scale(scale,scale);    
+      gfx.scale(scale,scale);
       gfx.rotate(-PI/2);
       gfx.line_color(0);
       gfx.line_width(8.f);
       gfx.line_cap(SCITER_LINE_CAP_ROUND);
-       
+
       // Hour marks
       gfx.state_save();
         gfx.line_color(gcolor(0x32,0x5F,0xA2));
@@ -89,7 +89,7 @@ struct native_clock: public event_handler
       int min = timeinfo.tm_min;
       int hr  = timeinfo.tm_hour;
       hr = hr >= 12 ? hr - 12 : hr;
-  
+
       // draw Hours
       gfx.state_save();
         gfx.rotate( hr*(PI/6) + (PI/360)*min + (PI/21600)*sec );
@@ -105,7 +105,7 @@ struct native_clock: public event_handler
         gfx.line_color(gcolor(0x32,0x5F,0xA2));
         gfx.line(-28,0,100,0);
       gfx.state_restore();
-      
+
       // draw seconds
       gfx.state_save();
         gfx.rotate(sec * PI/30);
@@ -114,15 +114,15 @@ struct native_clock: public event_handler
         gfx.line_width(6);
         gfx.line(-30,0,83,0);
         gfx.ellipse(0,0,10,10);
-    
+
         gfx.fill_color(0);
         gfx.ellipse(95,0,10,10);
       gfx.state_restore();
-    
+
       gfx.state_restore();
 
       return false;
-    
+
     }
 
 };

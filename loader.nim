@@ -15,9 +15,9 @@ proc SAPI*():ptr ISciterAPI {.inline, cdecl.} =
   let p = cast[SciterAPI_ptr](procPtr)
   api = p()
   return api
-  
+
 proc gapi*():LPSciterGraphicsAPI {.inline, cdecl.} =
   return SAPI().GetSciterGraphicsAPI()
-  
+
 proc rapi*():LPSciterRequestAPI {.inline, cdecl.} =
   return SAPI().GetSciterRequestAPI()

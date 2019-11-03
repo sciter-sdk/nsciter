@@ -25,7 +25,7 @@ namespace tiscript
 
   inline HVM  create_vm(unsigned features = 0xffffffff, unsigned heap_size = 1*1024*1024, unsigned stack_size = 64*1024 )
   {
-     return ni()->create_vm(features,heap_size, stack_size);
+    return ni()->create_vm(features,heap_size, stack_size);
   }
   inline void destroy_vm(HVM vm) { ni()->destroy_vm(vm); }
 
@@ -104,12 +104,12 @@ namespace tiscript
                                                                                   // sequence of bytes.
                                                                                   // Be notified: Bytes is a citizen of GCable heap. Use pinned thing to hold it
   inline value        v_bytes(const unsigned char* data, unsigned datalen) { HVM vm = get_current_vm(); assert(vm);
-                                                                             return v_bytes(vm,data,datalen); }
+                                                                            return v_bytes(vm,data,datalen); }
 
   // convert value to string represenatation.
   inline std::ustring to_string(HVM vm,value v) { return c_string(ni()->to_string(vm,v)); }
   inline std::ustring to_string(value v) { HVM vm = get_current_vm(); assert(vm);
-                                           return to_string(vm,v); }
+                                          return to_string(vm,v); }
 
   // path here is a global "path" of the object, something like: "one", "one.two", etc.
   inline value        value_by_path(HVM vm, const char* path) { value r = v_undefined(); ni()->get_value_by_path(vm, &r, path); return r; }

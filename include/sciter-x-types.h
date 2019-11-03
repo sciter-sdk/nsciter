@@ -136,10 +136,10 @@
 
   typedef struct tagRECT
   {
-     INT    left;
-     INT    top;
-     INT    right;
-     INT    bottom;
+    INT    left;
+    INT    top;
+    INT    right;
+    INT    bottom;
   } RECT, *LPRECT;
   typedef const RECT * LPCRECT;
 
@@ -198,10 +198,10 @@
 
   typedef struct tagRECT
   {
-     INT    left;
-     INT    top;
-     INT    right;
-     INT    bottom;
+    INT    left;
+    INT    top;
+    INT    right;
+    INT    bottom;
   } RECT, *LPRECT;
   typedef const RECT * LPCRECT;
 
@@ -284,6 +284,3 @@ typedef VOID SC_CALLBACK LPCBYTE_RECEIVER( LPCBYTE str, UINT num_bytes, LPVOID p
 
 
 #endif
-
-
-

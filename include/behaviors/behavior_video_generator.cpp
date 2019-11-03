@@ -9,14 +9,14 @@ namespace sciter
 /*
 BEHAVIOR: video_generated_stream
   - provides synthetic video frames.
-	- this code is here solely for the demo purposes - how
-	  to connect your own video frame stream with the rendering site
+  - this code is here solely for the demo purposes - how
+    to connect your own video frame stream with the rendering site
 
 COMMENTS:
-   <video style="behavior:video-generator video" />
+  <video style="behavior:video-generator video" />
 SAMPLE:
-   See: samples/video/video-generator-behavior.htm
-*/
+  See: samples/video/video-generator-behavior.htm
+ */
 
 struct video_generated_stream: public event_handler
 {
@@ -50,19 +50,19 @@ struct video_generated_stream: public event_handler
 
 
       rendering_site = (sciter::video_destination*) reason;
-			aux::asset_ptr<sciter::fragmented_video_destination> fsite;
+      aux::asset_ptr<sciter::fragmented_video_destination> fsite;
 
       if(rendering_site->get_interface(FRAGMENTED_VIDEO_DESTINATION_INAME,(aux::iasset**)fsite.target()))
       {
-			  //start_generation( rendering_site );
+        //start_generation( rendering_site );
         sciter::thread(generation_thread,fsite);
       }
 
       return true;
     }
 
-		static void generation_thread(sciter::fragmented_video_destination* dst) {
-		  aux::asset_ptr<sciter::fragmented_video_destination> rendering_site = dst;
+    static void generation_thread(sciter::fragmented_video_destination* dst) {
+      aux::asset_ptr<sciter::fragmented_video_destination> rendering_site = dst;
       // simulate video stream
       sciter::sync::sleep(100);
 
@@ -110,7 +110,7 @@ struct video_generated_stream: public event_handler
         rendering_site->render_frame_part((const unsigned char*)figure,sizeof(figure),xpos,ypos,FRAGMENT_WIDTH,FRAGMENT_HEIGHT);
       }
 
-		}
+    }
 
 };
 

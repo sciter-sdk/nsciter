@@ -20,12 +20,12 @@
   #def SC_CALLBACK
   #def TISAPI
   #def EXTAPI
-  
+
   #prefix _
-  
+
   #discardableprefix Sciter
   #discardableprefix Value
-  
+
   #def UINT uint32
   #def INT int32
   #def UINT64 uint64
@@ -42,11 +42,11 @@
   #def BOOL bool
   #def double float64
   #def FLOAT_VALUE float64
-  
+
   #def WINDOWS windows
   #def LINUX posix
   #def OSX osx
-  
+
   #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
@@ -360,24 +360,24 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
     EXTERN_C ISciterAPI* SCAPI SciterAPI();
 
     inline ISciterAPI* SAPI( ISciterAPI* ext = nullptr ) {
-       static ISciterAPI* _api = nullptr;
-       if( ext ) _api = ext;
-       if( !_api )
-       {
+      static ISciterAPI* _api = nullptr;
+      if( ext ) _api = ext;
+      if( !_api )
+      {
           _api = SciterAPI();
           tiscript::ni( _api->TIScriptAPI() );
-       }
-       assert(_api);
-       return _api;
+      }
+      assert(_api);
+      return _api;
     }
 
 #elif defined(WINDOWS)
 
     inline ISciterAPI* SAPI( ISciterAPI* ext = NULL ) {
-       static ISciterAPI* _api = NULL;
-       if( ext ) _api = ext;
-       if( !_api )
-       {
+      static ISciterAPI* _api = NULL;
+      if( ext ) _api = ext;
+      if( !_api )
+      {
           HMODULE hm = LoadLibrary( TEXT(SCITER_DLL_NAME) );
           //#if defined(WIN64) || defined(_WIN64)
           //  TEXT("sciter64.dll")
@@ -397,13 +397,13 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
             }
 
           }
-       }
-       assert(_api);
-       if( !_api ) {
-         //::MessageBox(NULL, TEXT("Sciter engine not found, quiting"),TEXT("Error"),MB_OK);
-         exit(-1);
-       }
-       return _api;
+      }
+      assert(_api);
+      if( !_api ) {
+        //::MessageBox(NULL, TEXT("Sciter engine not found, quiting"),TEXT("Error"),MB_OK);
+        exit(-1);
+      }
+      return _api;
     }
 
 
@@ -473,8 +473,8 @@ typedef ISciterAPI* (SCAPI *SciterAPI_ptr)();
 
             if (readlink ("/proc/self/exe", folderpath, sizeof(folderpath)) != -1)
             {
-               dirname (folderpath);
-               //strcat  (pathbuf, "/");
+              dirname (folderpath);
+              //strcat  (pathbuf, "/");
             }
 
             void* lib_sciter_handle = dlopen(SCITER_DLL_NAME, RTLD_LOCAL|RTLD_LAZY);

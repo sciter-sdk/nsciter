@@ -1,6 +1,6 @@
 type
   tiscript_VM* = object
-  
+
 
 ## # TIScript virtual machine
 
@@ -68,7 +68,7 @@ type
 
 type
   tiscript_object_enum* = proc (c: ptr tiscript_VM; key: tiscript_value;
-                             tiscript_value: tiscript_value; tag: pointer): bool {.
+                            tiscript_value: tiscript_value; tag: pointer): bool {.
       cdecl.}
 
 ## # true - continue enumeartion
@@ -93,7 +93,7 @@ type
     handler*: ptr tiscript_method ## # or tiscript_tagged_method if tag is not 0
     tag*: pointer
     payload*: tiscript_value   ## # must be zero
-  
+
   tiscript_prop_def* = object
     dispatch*: pointer         ## # a.k.a. VTBL
     name*: cstring
@@ -129,7 +129,7 @@ type
     `iterator`*: ptr tiscript_iterator ## # for(var el in collecton) handler
     on_gc_copy*: ptr tiscript_on_gc_copy ## # called by GC to notify that 'self' is moved to new location
     prototype*: tiscript_value ## # superclass, prototype for the class (or 0)
-  
+
   tiscript_native_interface* = object
     create_vm*: proc (features: cuint; ## # create new tiscript_VM [and make it current for the thread].
     ## # destroy tiscript_VM
@@ -168,11 +168,11 @@ type
     get_bool_value*: proc (v: tiscript_value; pb: ptr bool): bool {.cdecl.}
     get_symbol_value*: proc (v: tiscript_value; psz: ptr ptr Utf16Char): bool {.cdecl.}
     get_string_value*: proc (v: tiscript_value; pdata: ptr ptr Utf16Char;
-                           plength: ptr cuint): bool {.cdecl.}
+                          plength: ptr cuint): bool {.cdecl.}
     get_bytes*: proc (v: tiscript_value; pb: ptr ptr cuchar; pblen: ptr cuint): bool {.cdecl.}
     get_datetime*: proc (a2: ptr tiscript_VM; v: tiscript_value; dt: ptr culonglong): bool {.
         cdecl.} ## # dt - 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 (UTC)
-               ## # a.k.a. FILETIME in Windows
+              ## # a.k.a. FILETIME in Windows
     nothing_value*: proc (): tiscript_value {.cdecl.} ## # special value that designates "does not exist" result.
     undefined_value*: proc (): tiscript_value {.cdecl.}
     null_value*: proc (): tiscript_value {.cdecl.}
@@ -185,10 +185,10 @@ type
     bytes_value*: proc (a2: ptr tiscript_VM; data: ptr byte; data_length: cuint): tiscript_value {.
         cdecl.}
     datetime_value*: proc (a2: ptr tiscript_VM; dt: culonglong): tiscript_value {.cdecl.}
-    to_string*: proc (a2: ptr tiscript_VM; v: tiscript_value): tiscript_value {.cdecl.} ## # 
-                                                                               ## define 
-                                                                               ## native 
-                                                                               ## class
+    to_string*: proc (a2: ptr tiscript_VM; v: tiscript_value): tiscript_value {.cdecl.} ## #
+                                                                              ## define
+                                                                              ## native
+                                                                              ## class
     define_class*: proc (vm: ptr tiscript_VM; cls: ptr tiscript_class_def; zns: tiscript_value): tiscript_value {.
         cdecl.}               ## # object
     ## # in this tiscript_VM
@@ -197,7 +197,7 @@ type
     create_object*: proc (a2: ptr tiscript_VM; of_class: tiscript_value): tiscript_value {.
         cdecl.}               ## # of_class == 0 - "Object"
     set_prop*: proc (a2: ptr tiscript_VM; obj: tiscript_value; key: tiscript_value;
-                   tiscript_value: tiscript_value): bool {.cdecl.}
+                  tiscript_value: tiscript_value): bool {.cdecl.}
     get_prop*: proc (a2: ptr tiscript_VM; obj: tiscript_value; key: tiscript_value): tiscript_value {.
         cdecl.}
     for_each_prop*: proc (a2: ptr tiscript_VM; obj: tiscript_value;
@@ -206,23 +206,23 @@ type
     set_instance_data*: proc (obj: tiscript_value; data: pointer) {.cdecl.} ## # array
     create_array*: proc (a2: ptr tiscript_VM; of_size: cuint): tiscript_value {.cdecl.}
     set_elem*: proc (a2: ptr tiscript_VM; obj: tiscript_value; idx: cuint;
-                   tiscript_value: tiscript_value): bool {.cdecl.}
+                  tiscript_value: tiscript_value): bool {.cdecl.}
     get_elem*: proc (a2: ptr tiscript_VM; obj: tiscript_value; idx: cuint): tiscript_value {.
         cdecl.}
     set_array_size*: proc (a2: ptr tiscript_VM; obj: tiscript_value; of_size: cuint): tiscript_value {.
         cdecl.}
-    get_array_size*: proc (a2: ptr tiscript_VM; obj: tiscript_value): cuint {.cdecl.} ## # 
-                                                                             ## eval
+    get_array_size*: proc (a2: ptr tiscript_VM; obj: tiscript_value): cuint {.cdecl.} ## #
+                                                                            ## eval
     eval*: proc (a2: ptr tiscript_VM; ns: tiscript_value; input: ptr tiscript_stream;
-               template_mode: bool; pretval: ptr tiscript_value): bool {.cdecl.}
+              template_mode: bool; pretval: ptr tiscript_value): bool {.cdecl.}
     eval_string*: proc (a2: ptr tiscript_VM; ns: tiscript_value; script: ptr Utf16Char;
-                      script_length: cuint; pretval: ptr tiscript_value): bool {.cdecl.} ## 
-                                                                                  ## # 
-                                                                                  ## call 
-                                                                                  ## function 
+                      script_length: cuint; pretval: ptr tiscript_value): bool {.cdecl.} ##
+                                                                                  ## #
+                                                                                  ## call
+                                                                                  ## function
                                                                                   ## (method)
     call*: proc (a2: ptr tiscript_VM; obj: tiscript_value; function: tiscript_value;
-               argv: ptr tiscript_value; argn: cuint; pretval: ptr tiscript_value): bool {.
+              argv: ptr tiscript_value; argn: cuint; pretval: ptr tiscript_value): bool {.
         cdecl.}               ## # compiled bytecodes
     compile*: proc (pvm: ptr tiscript_VM; input: ptr tiscript_stream;
                   output_bytecodes: ptr tiscript_stream; template_mode: bool): bool {.
@@ -232,49 +232,49 @@ type
     throw_error*: proc (a2: ptr tiscript_VM; error: ptr Utf16Char) {.cdecl.} ## # arguments access
     get_arg_count*: proc (pvm: ptr tiscript_VM): cuint {.cdecl.}
     get_arg_n*: proc (pvm: ptr tiscript_VM; n: cuint): tiscript_value {.cdecl.} ## # path here is global "path" of the object, something like
-                                                                       ## # "one"
-                                                                       ## # 
-                                                                       ## "one.two", etc.
+                                                                      ## # "one"
+                                                                      ## #
+                                                                      ## "one.two", etc.
     get_value_by_path*: proc (pvm: ptr tiscript_VM; v: ptr tiscript_value; path: cstring): bool {.
         cdecl.}               ## # pins
     pin*: proc (a2: ptr tiscript_VM; pp: ptr tiscript_pvalue) {.cdecl.}
     unpin*: proc (pp: ptr tiscript_pvalue) {.cdecl.} ## # create native_function_value and native_property_value,
-                                               ## # use this if you want to add native functions/properties in runtime to exisiting classes or namespaces (including global ns)
+                                              ## # use this if you want to add native functions/properties in runtime to exisiting classes or namespaces (including global ns)
     native_function_value*: proc (pvm: ptr tiscript_VM;
                                 p_method_def: ptr tiscript_method_def): tiscript_value {.
         cdecl.}
     native_property_value*: proc (pvm: ptr tiscript_VM;
                                 p_prop_def: ptr tiscript_prop_def): tiscript_value {.
         cdecl.} ## # Schedule execution of the pfunc(prm) in the thread owning this VM.
-               ## # Used when you need to call scripting methods from threads other than main (GUI) thread
-               ## # It is safe to call tiscript functions inside the pfunc.
-               ## # returns 'true' if scheduling of the call was accepted, 'false' when failure (VM has no dispatcher attached).
+              ## # Used when you need to call scripting methods from threads other than main (GUI) thread
+              ## # It is safe to call tiscript functions inside the pfunc.
+              ## # returns 'true' if scheduling of the call was accepted, 'false' when failure (VM has no dispatcher attached).
     post*: proc (pvm: ptr tiscript_VM; pfunc: ptr tiscript_callback; prm: pointer): bool {.
         cdecl.} ## # Introduce alien VM to the host VM:
-               ## # Calls method found on "host_method_path" (if there is any) on the pvm_host
-               ## # notifying the host about other VM (alien) creation. Return value of script function "host_method_path" running in pvm_host is passed
-               ## # as a parametr of a call to function at "alien_method_path".
-               ## # One of possible uses of this function:
-               ## # Function at "host_method_path" creates async streams that will serve a role of stdin, stdout and stderr for the alien vm.
-               ## # This way two VMs can communicate with each other.
-               ## #unsigned      (TISAPI *introduce_vm)(tiscript_VM* pvm_host, const char* host_method_path,  tiscript_VM* pvm_alien, const char* alien_method_path);
+              ## # Calls method found on "host_method_path" (if there is any) on the pvm_host
+              ## # notifying the host about other VM (alien) creation. Return value of script function "host_method_path" running in pvm_host is passed
+              ## # as a parametr of a call to function at "alien_method_path".
+              ## # One of possible uses of this function:
+              ## # Function at "host_method_path" creates async streams that will serve a role of stdin, stdout and stderr for the alien vm.
+              ## # This way two VMs can communicate with each other.
+              ## #unsigned      (TISAPI *introduce_vm)(tiscript_VM* pvm_host, const char* host_method_path,  tiscript_VM* pvm_alien, const char* alien_method_path);
     set_remote_std_streams*: proc (pvm: ptr tiscript_VM; input: ptr tiscript_pvalue;
-                                 output: ptr tiscript_pvalue;
-                                 error: ptr tiscript_pvalue): bool {.cdecl.} ## # support of 
-                                                                        ## multi-return values from native 
+                                output: ptr tiscript_pvalue;
+                                error: ptr tiscript_pvalue): bool {.cdecl.} ## # support of
+                                                                        ## multi-return values from native
                                                                         ## fucntions, n here is a number 1..64
     set_nth_retval*: proc (pvm: ptr tiscript_VM; n: cint; ns: tiscript_value): bool {.
         cdecl.}               ## # returns number of props in object, elements in array, or bytes in byte array.
     get_length*: proc (pvm: ptr tiscript_VM; obj: tiscript_value): cint {.cdecl.} ## # for( var val in coll ) {...}
     get_next*: proc (pvm: ptr tiscript_VM; obj: ptr tiscript_value;
-                   pos: ptr tiscript_value; val: ptr tiscript_value): bool {.cdecl.} ## # 
-                                                                             ## for( var 
-                                                                             ## (key,val) in 
-                                                                             ## coll ) 
-                                                                             ## {...}
+                  pos: ptr tiscript_value; val: ptr tiscript_value): bool {.cdecl.} ## #
+                                                                            ## for( var
+                                                                            ## (key,val) in
+                                                                            ## coll )
+                                                                            ## {...}
     get_next_key_value*: proc (pvm: ptr tiscript_VM; obj: ptr tiscript_value;
-                             pos: ptr tiscript_value; key: ptr tiscript_value;
-                             val: ptr tiscript_value): bool {.cdecl.} ## # associate extra data pointer with the VM
+                            pos: ptr tiscript_value; key: ptr tiscript_value;
+                            val: ptr tiscript_value): bool {.cdecl.} ## # associate extra data pointer with the VM
     set_extra_data*: proc (pvm: ptr tiscript_VM; data: pointer): bool {.cdecl.}
     get_extra_data*: proc (pvm: ptr tiscript_VM): pointer {.cdecl.}
 

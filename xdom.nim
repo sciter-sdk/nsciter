@@ -1,15 +1,15 @@
 ## #
 ## #  The Sciter Engine of Terra Informatica Software, Inc.
 ## #  http://sciter.com
-## #  
+## #
 ## #  The code and information provided "as-is" without
 ## #  warranty of any kind, either expressed or implied.
-## #  
+## #
 ## #  (C) 2003-2015, Terra Informatica Software, Inc.
-## # 
+## #
 ## #
 ## #  DOM access methods, plain C interface
-## # 
+## #
 
 type
   HELEMENT* = distinct pointer
@@ -41,7 +41,7 @@ type
 ## #  - \b SCDOM_INVALID_PARAMETER - parameter is invalid, e.g. pointer is null
 ## #  - \b SCDOM_OPERATION_FAILED - operation failed, e.g. invalid html in
 ## #    #SciterSetElementHtml()
-## # 
+## #
 
 const
   int32* = int32
@@ -64,9 +64,9 @@ type
   ELEMENT_AREAS* = enum
     CONTENT_BOX = 0x00000000,   ## # content (inner)  box
     ROOT_RELATIVE = 0x00000001, ## # - or this flag if you want to get Sciter window relative coordinates,
-                             ## #   otherwise it will use nearest windowed container e.g. popup window.
+                            ## #   otherwise it will use nearest windowed container e.g. popup window.
     SELF_RELATIVE = 0x00000002, ## # - "or" this flag if you want to get coordinates relative to the origin
-                             ## #   of element iself.
+                            ## #   of element iself.
     CONTAINER_RELATIVE = 0x00000003, ## # - position inside immediate container.
     VIEW_RELATIVE = 0x00000004, ## # - position relative to view - Sciter window
     PADDING_BOX = 0x00000010,   ## # content + paddings
@@ -97,7 +97,7 @@ type
 ## #  \param evtg \b UINT, group identifier of the event, value is one of EVENT_GROUPS
 ## #  \param prms \b LPVOID, pointer to group specific parameters structure.
 ## #  \return TRUE if event was handled, FALSE otherwise.
-## # 
+## #
 
 type
   ElementEventProc* = proc (tag: pointer; he: HELEMENT; evtg: uint32; prms: pointer): bool {.
@@ -105,10 +105,10 @@ type
   LPELEMENT_EVENT_PROC* = ptr ElementEventProc
   ELEMENT_STATE_BITS* = enum
     STATE_LINK = 0x00000001, STATE_HOVER = 0x00000002, STATE_ACTIVE = 0x00000004,
-    STATE_FOCUS = 0x00000008, STATE_VISITED = 0x00000010, STATE_CURRENT = 0x00000020, ## # 
-                                                                             ## current 
-                                                                             ## (hot) 
-                                                                             ## item
+    STATE_FOCUS = 0x00000008, STATE_VISITED = 0x00000010, STATE_CURRENT = 0x00000020, ## #
+                                                                            ## current
+                                                                            ## (hot)
+                                                                            ## item
     STATE_CHECKED = 0x00000040, ## # element is checked (or selected)
     STATE_DISABLED = 0x00000080, ## # element is disabled
     STATE_READONLY = 0x00000100, ## # readonly input element
@@ -122,7 +122,7 @@ type
     STATE_OWNS_POPUP = 0x00010000, ## # this is a synthetic element - don't emit it's head/tail
     STATE_TABFOCUS = 0x00020000, ## # focus gained by tab traversal
     STATE_EMPTY = 0x00040000, ## # empty - element is empty (text.size() == 0 && subs.size() == 0)
-                           ## #  if element has behavior attached then the behavior is responsible for the value of this flag.
+                          ## #  if element has behavior attached then the behavior is responsible for the value of this flag.
     STATE_BUSY = 0x00080000,    ## # busy; loading
     STATE_DRAG_OVER = 0x00100000, ## # drag over the block that can accept it (so is current drop target). Flag is set for the drop target block
     STATE_DROP_TARGET = 0x00200000, ## # active drop target.
@@ -131,7 +131,7 @@ type
     STATE_DRAG_SOURCE = 0x01000000, ## # element that is a drag source.
     STATE_DROP_MARKER = 0x02000000, ## # element is drop marker
     STATE_PRESSED = 0x04000000, ## # pressed - close to active but has wider life span - e.g. in MOUSE_UP it
-                             ## #   is still on; so behavior can check it in MOUSE_UP to discover CLICK condition.
+                            ## #   is still on; so behavior can check it in MOUSE_UP to discover CLICK condition.
     STATE_POPUP = 0x08000000,   ## # this element is out of flow - popup
     STATE_IS_LTR = 0x10000000,  ## # the element or one of its containers has dir=ltr declared
     STATE_IS_RTL = 0x20000000   ## # the element or one of its containers has dir=rtl declared
@@ -147,7 +147,7 @@ type
 
 ## #*Callback comparator function used with #SciterSortElements().
 ## #   Shall return -1,0,+1 values to indicate result of comparison of two elements
-## # 
+## #
 
 type
   ELEMENT_COMPARATOR* = proc (he1: HELEMENT; he2: HELEMENT; param: pointer): int32 {.
@@ -176,7 +176,7 @@ type
     CTL_TOOLBAR, CTL_FORM, CTL_FILE, ## #/< file input element.
     CTL_PATH,                 ## #/< path input element.
     CTL_WINDOW,               ## #/< has HWND attached to it
-    CTL_LABEL, CTL_IMAGE       ## #/< image/object.  
+    CTL_LABEL, CTL_IMAGE       ## #/< image/object.
 
 const
   CTL_UNKNOWN = CTL_NO          ## #/< This dom element has no behavior at all.
@@ -189,4 +189,3 @@ type
 type
   NODE_INS_TARGET* = enum
     NIT_BEFORE, NIT_AFTER, NIT_APPEND, NIT_PREPEND
-

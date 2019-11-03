@@ -8,7 +8,7 @@
  * (C) 2003-2015, Terra Informatica Software, Inc.
  */
 
- /*
+/*
  * Sciter's platform independent graphics interface. Used in custom behaviors / event handlers to draw on element's surface in native code.
  *
  * Essentially this mimics Graphics object as close as possible.
@@ -26,12 +26,12 @@
   #def SC_CALLBACK
   #def TISAPI
   #def EXTAPI
-  
+
   #prefix _
-  
+
   #discardableprefix Sciter
   #discardableprefix Value
-  
+
   #def UINT uint32
   #def INT int32
   #def UINT64 uint64
@@ -48,11 +48,11 @@
   #def BOOL bool
   #def double float64
   #def FLOAT_VALUE float64
-  
+
   #def WINDOWS windows
   #def LINUX posix
   #def OSX osx
-  
+
   #def SCITER_VALUE Value
   #def RECT Rect
   #def POINT Point
@@ -185,9 +185,9 @@ struct SciterGraphicsAPI
 
   GRAPHIN_RESULT
         SCFN(imageGetInfo)( HIMG himg,
-             UINT* width,
-             UINT* height,
-             BOOL* usesAlpha );
+            UINT* width,
+            UINT* height,
+            BOOL* usesAlpha );
 
   //GRAPHIN_RESULT
   //      SCFN(imageGetPixels)( HIMG himg,
@@ -389,8 +389,8 @@ struct SciterGraphicsAPI
   // draws img onto the graphics surface with current transformation applied (scale, rotation).
   GRAPHIN_RESULT
         SCFN(gDrawImage) ( HGFX hgfx, HIMG himg, POS x, POS y,
-                           DIM* w /*= 0*/, DIM* h /*= 0*/, UINT* ix /*= 0*/, UINT* iy /*= 0*/, UINT* iw /*= 0*/, UINT* ih, /*= 0*/
-                           float* opacity /*= 0, if provided is in 0.0 .. 1.0*/ );
+                          DIM* w /*= 0*/, DIM* h /*= 0*/, UINT* ix /*= 0*/, UINT* iy /*= 0*/, UINT* iw /*= 0*/, UINT* ih, /*= 0*/
+                          float* opacity /*= 0, if provided is in 0.0 .. 1.0*/ );
 
   // SECTION: coordinate space
 

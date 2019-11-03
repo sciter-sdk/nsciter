@@ -50,15 +50,15 @@ namespace sciter {
 
   bool window::load( aux::bytes utf8_html, const WCHAR* base_url)
   {
-     return FALSE != SAPI()->SciterLoadHtml(_hwnd,utf8_html.start,utf8_html.length, base_url);
+    return FALSE != SAPI()->SciterLoadHtml(_hwnd,utf8_html.start,utf8_html.length, base_url);
   }
   bool window::load( aux::chars utf8_html, const WCHAR* base_url)
   {
-     return FALSE != SAPI()->SciterLoadHtml(_hwnd,(LPCBYTE)utf8_html.start,utf8_html.length, base_url);
+    return FALSE != SAPI()->SciterLoadHtml(_hwnd,(LPCBYTE)utf8_html.start,utf8_html.length, base_url);
   }
   bool window::load( const WCHAR* url)
   {
-     return FALSE != SAPI()->SciterLoadFile(_hwnd,url);
+    return FALSE != SAPI()->SciterLoadFile(_hwnd,url);
   }
 
   void window::collapse() {

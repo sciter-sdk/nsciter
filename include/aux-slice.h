@@ -46,8 +46,8 @@ namespace aux
     inline size_t wcslen( const CT* s ) { const CT *p = s; while (*p) p++; return p - s; }
 
 template <typename T >
-   struct slice
-   {
+  struct slice
+  {
       const T*       start;
       unsigned int   length;
 
@@ -171,7 +171,7 @@ template <typename T >
 
       bool like(const T* pattern) const;
 
-   };
+  };
 
   #define MAKE_SLICE( T, D ) slice<T>(D, sizeof(D) / sizeof(D[0]))
 
@@ -247,24 +247,24 @@ template <typename T >
   inline wchars  chars_of( const WCHAR *t )   {  return t? wchars(t,(unsigned int)wcslen(t)):wchars(); }
   inline chars   chars_of( const char *t )    {  return t? chars(t,(unsigned int)strlen(t)):chars(); }
 
-  
+
 
   template<typename T>
-     slice<T> chars_of( const std::basic_string<T> &s ) {  return slice<T>(s.c_str(), s.length()); }
+    slice<T> chars_of( const std::basic_string<T> &s ) {  return slice<T>(s.c_str(), s.length()); }
 
   template<typename T>
-     slice<T> elements_of( const std::vector<T> &s ) {  return slice<T>(s.cbegin(), s.size()); }
+    slice<T> elements_of( const std::vector<T> &s ) {  return slice<T>(s.cbegin(), s.size()); }
 
   template<typename T, int size>
-     slice<T> elements_of(T (& arr)[size]){ return slice<T>(&arr[0],size);}
+    slice<T> elements_of(T (& arr)[size]){ return slice<T>(&arr[0],size);}
 
   template<typename T, int size>
-     slice<T> elements_of(const T (& arr)[size]){ return slice<T>(&arr[0],size);}
+    slice<T> elements_of(const T (& arr)[size]){ return slice<T>(&arr[0],size);}
 
   template<typename T>
-     std::basic_string<T> make_string( aux::slice<T> s ) { return std::basic_string<T>(s.start, s.length); }
+    std::basic_string<T> make_string( aux::slice<T> s ) { return std::basic_string<T>(s.start, s.length); }
 
-   // simple tokenizer
+  // simple tokenizer
   template <typename T >
       class tokens
       {
@@ -332,12 +332,12 @@ template <typename T >
     private:
       void set ( CT from, CT to, bool v )
       {
-         for ( unsigned i = charcode(from); i <= charcode(to); ++i )
-         {
-           unsigned int bit = i & 7;
-           unsigned int octet = i >> 3;
-           if( v ) codes[octet] |= 1 << bit; else codes[octet] &= ~(1 << bit);
-         }
+        for ( unsigned i = charcode(from); i <= charcode(to); ++i )
+        {
+          unsigned int bit = i & 7;
+          unsigned int octet = i >> 3;
+          if( v ) codes[octet] |= 1 << bit; else codes[octet] &= ~(1 << bit);
+        }
       }
       void init ( unsigned char v )  { memset(codes,v,(SET_SIZE >> 3)); }
     public:
@@ -441,49 +441,49 @@ template <typename T >
   template <typename T>
       inline unsigned int to_uint(slice<T>& span, unsigned int base = 10)
   {
-     unsigned int result = 0,value;
-     const T *cp = span.start;
-     const T *pend = span.end();
+    unsigned int result = 0,value;
+    const T *cp = span.start;
+    const T *pend = span.end();
 
-     while ( cp < pend && is_space(*cp) ) ++cp;
+    while ( cp < pend && is_space(*cp) ) ++cp;
 
-     if (!base)
-     {
-         base = 10;
-         if (*cp == '0') {
-             base = 8;
-             cp++;
-             if ((toupper(*cp) == 'X') && is_xdigit(cp[1])) {
-                     cp++;
-                     base = 16;
-             }
-         }
-     }
-     else if (base == 16)
-     {
-         if (cp[0] == '0' && toupper(cp[1]) == 'X')
-             cp += 2;
-     }
-     while ( cp < pend && is_xdigit(*cp) &&
+    if (!base)
+    {
+        base = 10;
+        if (*cp == '0') {
+            base = 8;
+            cp++;
+            if ((toupper(*cp) == 'X') && is_xdigit(cp[1])) {
+                    cp++;
+                    base = 16;
+            }
+        }
+    }
+    else if (base == 16)
+    {
+        if (cp[0] == '0' && toupper(cp[1]) == 'X')
+            cp += 2;
+    }
+    while ( cp < pend && is_xdigit(*cp) &&
             (value = is_digit(*cp) ? *cp-'0' : toupper(*cp)-'A'+10) < base) {
-             result = result*base + value;
-             cp++;
-     }
-     span.length = (unsigned int)(cp - span.start);
-     return result;
+            result = result*base + value;
+            cp++;
+    }
+    span.length = (unsigned int)(cp - span.start);
+    return result;
   }
 
   template <typename T>
       int to_int(slice<T>& span, unsigned int base = 10)
   {
 
-     while (span.length > 0 && is_space(span[0]) ) { ++span.start; --span.length; }
-     if(span[0] == '-')
-     {
+    while (span.length > 0 && is_space(span[0]) ) { ++span.start; --span.length; }
+    if(span[0] == '-')
+    {
         ++span.start; --span.length;
         return - int(to_uint(span,base));
-     }
-     return to_uint(span,base);
+    }
+    return to_uint(span,base);
   }
 
 }

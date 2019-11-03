@@ -42,17 +42,17 @@ template fastRuneAt(s: cstring, i: int, result: expr, doInc = true) =
     #assert(ord(s[i+1]) shr 6 == 0b10)
     #assert(ord(s[i+2]) shr 6 == 0b10)
     result = (ord(s[i]) and ones(4)) shl 12 or
-             (ord(s[i+1]) and ones(6)) shl 6 or
-             (ord(s[i+2]) and ones(6))
+            (ord(s[i+1]) and ones(6)) shl 6 or
+            (ord(s[i+2]) and ones(6))
     when doInc: inc(i, 3)
   elif ord(s[i]) shr 3 == 0b11110:
     #assert(ord(s[i+1]) shr 6 == 0b10)
     #assert(ord(s[i+2]) shr 6 == 0b10)
     #assert(ord(s[i+3]) shr 6 == 0b10)
     result = (ord(s[i]) and ones(3)) shl 18 or
-             (ord(s[i+1]) and ones(6)) shl 12 or
-             (ord(s[i+2]) and ones(6)) shl 6 or
-             (ord(s[i+3]) and ones(6))
+            (ord(s[i+1]) and ones(6)) shl 12 or
+            (ord(s[i+2]) and ones(6)) shl 6 or
+            (ord(s[i+3]) and ones(6))
     when doInc: inc(i, 4)
   else:
     result = 0xFFFD

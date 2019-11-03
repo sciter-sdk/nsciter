@@ -30,7 +30,7 @@ namespace aux {
       inline long _dec(counter_t& v)               {    return __sync_add_and_fetch(&v,-1);  }
       inline long _set(counter_t& v, long nv)      {    return __sync_lock_test_and_set(&v,nv);  }
       inline long _set_when_eq(counter_t& v, long to_set, long eq_to) { return __sync_val_compare_and_swap(&v,eq_to,to_set);
-                                                                       /*long t(v); if(t == eq_to) v = to_set; return t;*/ }
+                                                                      /*long t(v); if(t == eq_to) v = to_set; return t;*/ }
     #else
 
       typedef std::atomic<long> counter_t;
@@ -106,38 +106,38 @@ namespace aux {
   class asset_ptr
   {
   protected:
-	  R* p;
+    R* p;
 
   public:
-	  typedef R asset_t;
+    typedef R asset_t;
 
-	  asset_ptr():p(0)                        {}
-	  asset_ptr(R* lp):p(0)                   { if (lp) (p = lp)->add_ref();	}
+    asset_ptr():p(0)                        {}
+    asset_ptr(R* lp):p(0)                   { if (lp) (p = lp)->add_ref();	}
     asset_ptr(const asset_ptr<R>& cp):p(0)  { if (cp.p) (p = cp.p)->add_ref();	}
 
-	  ~asset_ptr()                  { if (p)	p->release();}
-	  operator R*() const	          {	return p;	}
+    ~asset_ptr()                  { if (p)	p->release();}
+    operator R*() const	          {	return p;	}
     R* operator->() const         { assert(p != 0); return p; }
 
     bool operator!() const        {	return p == 0;	}
     operator bool() const         { return  p != 0;	}
-	  bool operator!=(R* pR) const  {	return p != pR;	}
-	  bool operator==(R* pR) const  {	return p == pR;	}
+    bool operator!=(R* pR) const  {	return p != pR;	}
+    bool operator==(R* pR) const  {	return p == pR;	}
 
-	  // release the interface and set it to NULL
-	  void release()                {	if (p)	{ R* pt = p; p = 0; pt->release(); }}
+    // release the interface and set it to NULL
+    void release()                {	if (p)	{ R* pt = p; p = 0; pt->release(); }}
 
     // attach to an existing interface (does not AddRef)
-	  void attach(R* p2)            { release();	p = p2;	}
-	  // detach the interface (does not Release)
-	  R* detach()                   {	R* pt = p; p = 0;	return pt; }
+    void attach(R* p2)            { release();	p = p2;	}
+    // detach the interface (does not Release)
+    R* detach()                   {	R* pt = p; p = 0;	return pt; }
 
     static R* assign(R* &pp, R* lp)
     {
-	    if (lp != 0) lp->add_ref();
-	    if (pp) pp->release();
-	    pp = lp;
-	    return lp;
+      if (lp != 0) lp->add_ref();
+      if (pp) pp->release();
+      pp = lp;
+      return lp;
     }
 
     R* operator=(R* lp)                   { if(p != lp) return assign(p, lp); return p;	}
@@ -158,22 +158,22 @@ namespace com {
   class ptr
   {
   protected:
-	  T* p;
+    T* p;
 
   public:
-	  typedef T asset_t;
+    typedef T asset_t;
 
-	  ptr():p(0)                    {}
-	  ptr(T* lp):p(0)               { if (lp) (p = lp)->AddRef();	}
+    ptr():p(0)                    {}
+    ptr(T* lp):p(0)               { if (lp) (p = lp)->AddRef();	}
     ptr(const ptr<T>& cp):p(0)    { if (cp.p) (p = cp.p)->AddRef();	}
 
-	  ~ptr()
+    ~ptr()
     {
         ULONG c = 0;
         if (p)
           c = p->Release();
     }
-	  operator T*() const	          {	return p;	}
+    operator T*() const	          {	return p;	}
     T* operator->() const         { assert(p != 0); return p; }
 
     // used as target T** pointer to pointer - in places receiving newly created objects (initially add-refed)
@@ -181,23 +181,23 @@ namespace com {
 
     bool operator!() const        {	return p == 0;	}
     operator bool() const         { return p != 0;	}
-	  bool operator!=(T* pT) const  {	return p != pT;	}
-	  bool operator==(T* pT) const  {	return p == pT;	}
+    bool operator!=(T* pT) const  {	return p != pT;	}
+    bool operator==(T* pT) const  {	return p == pT;	}
 
-	  // release the interface and set it to NULL
-	  void release()                {	if (p)	{ T* pt = p; p = 0; pt->Release(); }}
+    // release the interface and set it to NULL
+    void release()                {	if (p)	{ T* pt = p; p = 0; pt->Release(); }}
 
     // attach to an existing interface (does not AddRef)
-	  void attach(T* p2)            { release();	p = p2;	}
-	  // detach the interface (does not Release)
-	  T* detach()                   {	T* pt = p; p = 0;	return pt; }
+    void attach(T* p2)            { release();	p = p2;	}
+    // detach the interface (does not Release)
+    T* detach()                   {	T* pt = p; p = 0;	return pt; }
 
     static T* assign(T* &pp, T* lp)
     {
-	    if (lp != 0) lp->AddRef();
-	    if (pp) pp->Release();
-	    pp = lp;
-	    return lp;
+      if (lp != 0) lp->AddRef();
+      if (pp) pp->Release();
+      pp = lp;
+      return lp;
     }
 
     T* operator=(T* lp)               { if(p != lp) return assign(p, lp); return p;	}
